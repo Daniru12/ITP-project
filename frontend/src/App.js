@@ -5,6 +5,7 @@ import FeaturedProducts from './components/FeaturedProducts';
 import Newsletter from './components/Newsletter';
 import Footer from './components/Footer';
 
+//test
 function App() {
   return (
     <div className="min-h-screen bg-gray-100">
