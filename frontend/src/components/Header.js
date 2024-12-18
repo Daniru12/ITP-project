@@ -1,5 +1,6 @@
 import React from 'react';
 import { ShoppingCart, Search, Menu } from 'react-feather';
+import { Link } from 'react-router-dom';
 
 function Header() {
   return (
@@ -9,10 +10,10 @@ function Header() {
           EcoShop
         </a>
         <div className="hidden md:flex space-x-4">
-          <a href="/products" className="text-gray-600 hover:text-gray-800">Products</a>
-          <a href="/categories" className="text-gray-600 hover:text-gray-800">Categories</a>
-          <a href="/about" className="text-gray-600 hover:text-gray-800">About</a>
-          <a href="/contact" className="text-gray-600 hover:text-gray-800">Contact</a>
+          <Link to="/products" className="text-gray-600 hover:text-gray-800">Products</Link>
+          <Link to="/categories" className="text-gray-600 hover:text-gray-800">Categories</Link>
+          <Link to="/about" className="text-gray-600 hover:text-gray-800">About</Link>
+          <Link to="/contact" className="text-gray-600 hover:text-gray-800">Contact</Link>
         </div>
         <div className="flex items-center space-x-4">
           <button className="text-gray-600 hover:text-gray-800">
