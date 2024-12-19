@@ -1,0 +1,38 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.navbar .logo-link {
+    font-size: 1.em; /* Increased logo size */
+    font-weight: bold;
+    color: #FF6347; /* Orange color */
+    text-decoration: none; /* Remove underline */
+}
+
+.navbar .logo-link:hover {
+    color: #FF4500; /* Darker shade of orange on hover */
+}
+
+.navbar nav ul {
+    list-style-type: none;
+    display: flex;
+}
+
+.navbar nav ul li {
+    margin-left: 25px; /* Increased space between links */
+}
+
+.navbar nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    font-size: 1.2em; /* Slightly larger font for nav links */
+    transition: color 0.3s ease;
+}
+
+.navbar nav ul li a:hover {
+    color: #FF6347; /* Hover color change */
+}

@@ -1,0 +1,95 @@
+/* General Styling */
+.about-us-container {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.about-header {
+    text-align: center;
+    margin-bottom: 40px;
+    background-color: #ff6347d5; /* Orange footer */
+    color: white;
+}
+
+.about-header h1 {
+    font-size: 3em;
+    color: #ffffff; /* Orange color for header */
+    font-weight: bold;
+}
+
+.about-header p {
+    font-size: 1.2em;
+    color: #555;
+}
+
+/* Content Section */
+.about-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 20px;
+    align-items: center; /* Ensures image and text are vertically aligned */
+}
+
+.about-image {
+    flex: 1;
+    max-width: 50%; /* Adjust to allow space for text */
+}
+
+.about-image img {
+    width: 100%; /* Ensure the image fills the container */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.about-text {
+    flex: 2;
+    max-width: 50%; /* Take the remaining space for text */
+    font-size: 1.1em;
+}
+
+.about-text h2 {
+    font-size: 2em;
+    color: #FF6347; /* Orange color for subheaders */
+    margin-bottom: 10px;
+}
+
+.about-text p {
+    margin-bottom: 20px;
+    line-height: 1.6;
+    color: #555;
+}
+
+.about-text ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.about-text ul li {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+/* Footer Styling */
+.about-footer {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 1.2em;
+    color: #555;
+    padding: 20px;
+    background-color: #FF6347; /* Orange footer */
+    color: white;
+}
+
+.about-footer p {
+    margin: 0;
+    font-size: 1em; /* Slightly smaller font for the footer text */
+}
+
+.about-footer .designer {
+    font-size: 1.1em; /* Slightly larger font for designer attribution */
+    font-weight: bold;
+    color: white;
+}

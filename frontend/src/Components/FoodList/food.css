@@ -1,0 +1,122 @@
+/* Container settings */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header styling */
+header {
+    background-color: #0d253e;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+header h1 {
+    font-size: 36px;
+}
+
+/* Menu styling */
+.menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+/* Item card styling */
+.item {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 48%;
+    margin-bottom: 20px;
+    text-align: center;
+    padding: 20px;
+    transition: transform 0.3s;
+}
+
+.item img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+.item h2 {
+    font-size: 22px;
+    color: #333;
+    margin-top: 15px;
+}
+
+.item p {
+    font-size: 16px;
+    color: #7f8c8d;
+}
+
+.item .price {
+    font-size: 18px;
+    color: #e74c3c;
+    margin-top: 10px;
+}
+
+.item button {
+    background-color: #2C3E50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for the button */
+.item button:hover {
+    background-color: #34495e;
+}
+
+/* Hover effect for items */
+.item:hover {
+    transform: scale(1.05);
+}
+
+/* Section for special offers */
+.hy {
+    background-color: #fab049;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+/* Remove underline from the Link inside the button */
+.logo-link {
+    text-decoration: none; /* Removes underline from Link */
+    display: inline-block;
+}
+
+/* Link inside the button */
+button.logo-link {
+    background-color: #0d253e;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+/* Hover effect for the button with Link inside */
+button.logo-link:hover {
+    background-color: #2C3E50;
+}
+
+/* Make sure the Link element behaves correctly */
+button.logo-link > a {
+    color: white;
+    text-decoration: none;
+}

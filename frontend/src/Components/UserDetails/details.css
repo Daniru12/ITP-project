@@ -1,0 +1,124 @@
+/* General Section */
+.user-section {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: rgba(249, 249, 249, 0.8); /* Slightly transparent background */
+    backdrop-filter: blur(4px); /* Apply blur effect */
+     
+    position: relative; 
+  }
+  
+  /* Header */
+  .user-section h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Search Container */
+  .search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .search-input {
+    width: 800px; /* Increase the width */
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 8px 0 0 8px;
+    font-size: 14px;
+    outline: none;
+  }
+  
+  
+  .search-btn {
+    padding: 10px 20px;
+    border: none;
+    background-color: #ff4d4f;
+    color: #fff;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .search-btn:hover {
+    background-color: #e04345;
+  }
+  
+  /* User List Grid */
+  .user-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 10px;
+  }
+  
+  /* User Item Cards */
+  .user-item {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .user-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* User Photo */
+  .user-photo {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+  }
+  
+  /* User Details */
+  .user-details {
+    padding: 15px;
+    text-align: center;
+  }
+  
+  .user-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  .user-email {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  /* Action Buttons */
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .whatsapp-btn {
+    background-color: #25D366;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .whatsapp-btn:hover {
+    background-color: #1ebe57;
+  }
+  
+  /* No Results */
+  .no-results {
+    text-align: center;
+    color: #777;
+    font-size: 16px;
+  }
+  

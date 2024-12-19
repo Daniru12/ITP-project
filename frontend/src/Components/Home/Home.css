@@ -1,0 +1,133 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('burger.jpg'); /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: rgba(255, 255, 255, 0.7); /* Transparent white background for the header */
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar .logo {
+    font-size: 2.5em; /* Increased logo size */
+    font-weight: bold;
+    color: #FF6347; /* Orange color */
+    text-decoration: none; /* Remove underline */
+  }
+  
+  .navbar .logo-link {
+    text-decoration: none; /* Remove underline */
+    color: #FF6347; /* Orange color */
+  }
+  
+  .navbar .logo-link:hover {
+    color: #FF4500; /* Darker shade of orange on hover */
+  }
+
+.navbar nav ul {
+    list-style-type: none;
+    display: flex;
+}
+
+.navbar nav ul li {
+    margin-left: 25px; /* Increased space between links */
+}
+
+.navbar nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    font-size: 1.2em; /* Slightly larger font for nav links */
+    transition: color 0.3s ease;
+}
+
+.navbar nav ul li a:hover {
+    color: #FF6347; /* Hover color change */
+}
+.hero {
+    display: flex;
+    justify-content: center; /* Center the content horizontally in the hero section */
+    align-items: center; /* Center the content vertically in the hero section */
+    flex-direction: column; /* Align items vertically */
+    padding: 80px 50px; /* Increased padding for bigger content area */
+    background-color: rgba(244, 244, 244, 0.); /* Slightly transparent background */
+    border-radius: 15px; /* Rounded corners */
+    max-width: 1300px; /* Increase max width */
+    width: 100%;
+    height: 80vh; /* Full height of the viewport */
+    position: relative;
+    z-index: 0;
+    margin-top: 50px; /* Space between header and hero */
+    
+    text-align: center; /* Center the text in the hero section */
+}
+
+.hero .content {
+    max-width: 60%; /* Increase width of the text container */
+}
+
+.hero h1 {
+    font-size: 4em; /* Larger heading for more impact */
+    color: #FF6347;
+    line-height: 1.2;
+    font-weight: bold;
+}
+
+.hero p {
+    font-size: 1.5em; /* Bigger paragraph text */
+    margin-top: 15px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.hero button {
+    margin-top: 30px;
+    padding: 15px 30px; /* Larger button padding */
+    font-size: 1.2em;
+    background-color: #FF6347;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.hero button:hover {
+    background-color: #FF4500; /* Darker button color on hover */
+    transform: scale(1.05); /* Slight scale up on hover for effect */
+}
+
+.hero .burger-image img {
+    max-width: 45%; /* Increase burger image size */
+    height: auto;
+    border-radius: 10px; /* Rounded corners for the image */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for the image */
+}
+
+.link{
+    text-decoration: none; /* Remove underline */
+    color: #e1e1e1; /* Orange color */
+    font-size: 1.5em;
+    font-weight: bold;
+}

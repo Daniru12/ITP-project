@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+<<<<<<< Updated upstream
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -15,6 +16,22 @@
     "react-feather": "^2.0.10",
     "react-router-dom": "^7.0.2",
     "react-scripts": "5.0.1",
+=======
+    "@emailjs/browser": "^4.4.1",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "ajv": "^6.12.6",
+    "ajv-keywords": "^3.5.2",
+    "axios": "^1.7.9",
+    "react": "^19.0.0",
+    "react-bootstrap": "^2.10.6",
+    "react-dom": "^19.0.0",
+    "react-pdf": "^9.1.1",
+    "react-router-dom": "^7.0.2",
+    "react-scripts": "^5.0.1",
+    "react-to-print": "^3.0.2",
+>>>>>>> Stashed changes
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -40,8 +57,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+<<<<<<< Updated upstream
   },
   "devDependencies": {
     "tailwindcss": "^3.4.16"
+=======
+>>>>>>> Stashed changes
   }
 }
