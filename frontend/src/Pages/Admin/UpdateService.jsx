@@ -144,158 +144,146 @@ const UpdateService = () => {
     }
   };
 
-  // Render the form
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-6">Update Service Details</h2>
-      
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Basic Service Information */}
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-4">Basic Information</h3>
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="bg-white rounded-xl shadow-sm p-8">
+          <h2 className="text-3xl font-bold text-[#333333] mb-8">Update Service Details</h2>
           
-          {/* Service Name */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Service Name
-            </label>
-            <input
-              type="text"
-              name="service_name"
-              value={service.service_name}
-              onChange={handleChange}
-              className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
-          </div>
-
-          {/* Service Category */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Category
-            </label>
-            <select
-              name="service_category"
-              value={service.service_category}
-              onChange={handleChange}
-              className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
-              required
-            >
-              <option value="">Select Category</option>
-              <option value="pet_grooming">Pet Grooming</option>
-              <option value="pet_boarding">Pet Boarding</option>
-              <option value="pet_training">Pet Training</option>
-            </select>
-          </div>
-
-          {/* Description */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Description
-            </label>
-            <textarea
-              name="description"
-              value={service.description}
-              onChange={handleChange}
-              rows="4"
-              className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
-          </div>
-
-          {/* Availability Toggle */}
-          <div className="mb-4">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                name="is_available"
-                checked={service.is_available}
-                onChange={(e) => handleChange({
-                  target: { name: 'is_available', value: e.target.checked }
-                })}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <span className="ml-2 text-sm text-gray-700">Service is Available</span>
-            </label>
-          </div>
-        </div>
-
-        {/* Package Information */}
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold mb-4">Package Details</h3>
-          
-          {/* Map through package types */}
-          {['basic', 'premium', 'luxury'].map((packageType) => (
-            <div key={packageType} className="mb-6 last:mb-0">
-              <h4 className="text-md font-medium mb-3 capitalize">{packageType} Package</h4>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Price */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Price ($)
-                  </label>
-                  <input
-                    type="number"
-                    value={service.packages[packageType].price}
-                    onChange={(e) => handlePackageChange(packageType, 'price', e.target.value)}
-                    className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
-                    required
-                  />
-                </div>
-
-                {/* Duration */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Duration (minutes)
-                  </label>
-                  <input
-                    type="number"
-                    value={service.packages[packageType].duration}
-                    onChange={(e) => handlePackageChange(packageType, 'duration', e.target.value)}
-                    className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Includes */}
-              <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Included Services (one per line)
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="space-y-6">
+              <div>
+                <label className="block text-base font-medium text-[#333333] mb-2">
+                  Service Name
                 </label>
-                <textarea
-                  value={service.packages[packageType].includes.join('\n')}
-                  onChange={(e) => handleIncludesChange(packageType, e.target.value)}
-                  rows="4"
-                  className="w-full p-2 border rounded focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Enter included services..."
+                <input
+                  type="text"
+                  name="service_name"
+                  value={service.service_name}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#347486] focus:ring-2 focus:ring-[#347486]/20 transition-all duration-300"
                   required
                 />
               </div>
-            </div>
-          ))}
-        </div>
 
-        {/* Form Buttons */}
-        <div className="flex gap-4">
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 
-                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          >
-            Save Changes
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate('/admin/Services')}
-            className="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 
-                     focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-          >
-            Cancel
-          </button>
+              <div>
+                <label className="block text-base font-medium text-[#333333] mb-2">
+                  Category
+                </label>
+                <select
+                  name="service_category"
+                  value={service.service_category}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#347486] focus:ring-2 focus:ring-[#347486]/20 transition-all duration-300"
+                  required
+                >
+                  <option value="">Select Category</option>
+                  <option value="pet_grooming">Pet Grooming</option>
+                  <option value="pet_boarding">Pet Boarding</option>
+                  <option value="pet_training">Pet Training</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-base font-medium text-[#333333] mb-2">
+                  Description
+                </label>
+                <textarea
+                  name="description"
+                  value={service.description}
+                  onChange={handleChange}
+                  rows="4"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#347486] focus:ring-2 focus:ring-[#347486]/20 transition-all duration-300"
+                  required
+                />
+              </div>
+
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="is_available"
+                  checked={service.is_available}
+                  onChange={(e) => handleChange({
+                    target: { name: 'is_available', value: e.target.checked }
+                  })}
+                  className="h-5 w-5 rounded border-gray-300 text-[#347486] focus:ring-[#347486]"
+                />
+                <label className="ml-2 text-base text-gray-700">
+                  Service is Available
+                </label>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <h3 className="text-xl font-bold text-[#333333] mb-4">Package Details</h3>
+              
+              {['basic', 'premium', 'luxury'].map((packageType) => (
+                <div key={packageType} className="bg-gray-50 p-6 rounded-xl space-y-4">
+                  <h4 className="text-lg font-medium text-[#333333] capitalize">{packageType} Package</h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-base font-medium text-[#333333] mb-2">
+                        Price ($)
+                      </label>
+                      <input
+                        type="number"
+                        value={service.packages[packageType].price}
+                        onChange={(e) => handlePackageChange(packageType, 'price', e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#347486] focus:ring-2 focus:ring-[#347486]/20 transition-all duration-300"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-base font-medium text-[#333333] mb-2">
+                        Duration (minutes)
+                      </label>
+                      <input
+                        type="number"
+                        value={service.packages[packageType].duration}
+                        onChange={(e) => handlePackageChange(packageType, 'duration', e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#347486] focus:ring-2 focus:ring-[#347486]/20 transition-all duration-300"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-base font-medium text-[#333333] mb-2">
+                      Included Services (one per line)
+                    </label>
+                    <textarea
+                      value={service.packages[packageType].includes.join('\n')}
+                      onChange={(e) => handleIncludesChange(packageType, e.target.value)}
+                      rows="4"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#347486] focus:ring-2 focus:ring-[#347486]/20 transition-all duration-300"
+                      placeholder="Enter included services..."
+                      required
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex gap-4 pt-6">
+              <button
+                type="submit"
+                className="flex-1 bg-[#347486] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#2a5d6b] transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#347486] focus:ring-offset-2"
+              >
+                Save Changes
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/admin/Services')}
+                className="flex-1 bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
   );
 };

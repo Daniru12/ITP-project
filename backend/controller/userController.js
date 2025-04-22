@@ -58,6 +58,11 @@ export function loginUser(req, res) {
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
     } else {
+      // Check if account is active
+      if (!user.isActive) {
+        return res.status(403).json({ message: "Your account has been deactivated. Please contact support." });
+      }
+
       const isPasswordValid = bcrypt.compareSync(data.password, user.password);
 
       if (isPasswordValid) {
@@ -71,7 +76,7 @@ export function loginUser(req, res) {
             user_type: user.user_type,
             profile_picture: user.profile_picture,
             loyalty_points: user.loyalty_points,
-            
+            isActive: user.isActive
           },
           process.env.JWT_SECRET,
         );
@@ -520,6 +525,45 @@ export const adminUpdateService = async (req, res) => {
     console.error("Error updating service:", error);
     res.status(500).json({
       message: "Error updating service",
+      error: error.message
+    });
+  }
+};
+
+export const deactivateAccount = async (req, res) => {
+  try {
+    // Check if user is admin
+    if (req.user.user_type !== "admin") {
+      return res.status(403).json({
+        message: "Only admin can deactivate accounts"
+      });
+    }
+
+    const { userId } = req.params;
+    const { isActive } = req.body;
+
+    // Find and update the user
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { isActive },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    res.status(200).json({
+      message: `Account ${isActive ? 'activated' : 'deactivated'} successfully`,
+      user: user
+    });
+
+  } catch (error) {
+    console.error("Error in deactivateAccount:", error);
+    res.status(500).json({
+      message: "Error updating account status",
       error: error.message
     });
   }

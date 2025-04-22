@@ -5,27 +5,28 @@ import { FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { FiX } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import HamsterLoader from '../../components/HamsterLoader';
+
 const PetDetailsModal = ({ pet, onClose }) => {
   if (!pet) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-2xl p-6 relative">
+      <div className="bg-white rounded-xl w-full max-w-2xl p-8 relative">
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+          className="absolute top-6 right-6 text-gray-500 hover:text-gray-700"
         >
           <FiX className="h-6 w-6" />
         </button>
 
-        <h2 className="text-2xl font-semibold mb-4">{pet.name}'s Details</h2>
+        <h2 className="text-3xl font-bold text-[#333333] mb-6">{pet.name}'s Details</h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <img 
               src={pet.pet_image?.[0] || 'https://via.placeholder.com/150'} 
               alt={pet.name}
-              className="w-full h-64 object-cover rounded-lg"
+              className="w-full h-72 object-cover rounded-xl"
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = 'https://via.placeholder.com/150';
@@ -33,31 +34,31 @@ const PetDetailsModal = ({ pet, onClose }) => {
             />
           </div>
           
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-medium">Pet Information</h3>
-              <div className="mt-2 space-y-2">
-                <p><span className="font-medium">Species:</span> {pet.species}</p>
-                <p><span className="font-medium">Breed:</span> {pet.breed}</p>
-                <p><span className="font-medium">Age:</span> {pet.age}</p>
-                <p><span className="font-medium">Gender:</span> {pet.gender}</p>
+              <h3 className="text-xl font-bold text-[#333333] mb-4">Pet Information</h3>
+              <div className="space-y-3">
+                <p className="text-base text-gray-600"><span className="font-medium text-[#333333]">Species:</span> {pet.species}</p>
+                <p className="text-base text-gray-600"><span className="font-medium text-[#333333]">Breed:</span> {pet.breed}</p>
+                <p className="text-base text-gray-600"><span className="font-medium text-[#333333]">Age:</span> {pet.age}</p>
+                <p className="text-base text-gray-600"><span className="font-medium text-[#333333]">Gender:</span> {pet.gender}</p>
               </div>
             </div>
 
             <div>
-              <h3 className="text-lg font-medium">Owner Information</h3>
-              <div className="mt-2 space-y-2">
-                <p><span className="font-medium">Name:</span> {pet.owner_id?.full_name}</p>
-                <p><span className="font-medium">Email:</span> {pet.owner_id?.email}</p>
-                <p><span className="font-medium">Phone:</span> {pet.owner_id?.phone_number}</p>
+              <h3 className="text-xl font-bold text-[#333333] mb-4">Owner Information</h3>
+              <div className="space-y-3">
+                <p className="text-base text-gray-600"><span className="font-medium text-[#333333]">Name:</span> {pet.owner_id?.full_name}</p>
+                <p className="text-base text-gray-600"><span className="font-medium text-[#333333]">Email:</span> {pet.owner_id?.email}</p>
+                <p className="text-base text-gray-600"><span className="font-medium text-[#333333]">Phone:</span> {pet.owner_id?.phone_number}</p>
               </div>
             </div>
 
             <div>
-              <h3 className="text-lg font-medium">Registration Details</h3>
-              <div className="mt-2 space-y-2">
-                <p><span className="font-medium">Registered:</span> {new Date(pet.createdAt).toLocaleDateString()}</p>
-                <p><span className="font-medium">Last Updated:</span> {new Date(pet.updatedAt).toLocaleDateString()}</p>
+              <h3 className="text-xl font-bold text-[#333333] mb-4">Registration Details</h3>
+              <div className="space-y-3">
+                <p className="text-base text-gray-600"><span className="font-medium text-[#333333]">Registered:</span> {new Date(pet.createdAt).toLocaleDateString()}</p>
+                <p className="text-base text-gray-600"><span className="font-medium text-[#333333]">Last Updated:</span> {new Date(pet.updatedAt).toLocaleDateString()}</p>
               </div>
             </div>
           </div>
@@ -147,25 +148,25 @@ const PetsManagement = () => {
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold">Pets Management</h2>
+      <div className="flex justify-between items-center mb-8">
+        <h2 className="text-4xl font-bold text-[#333333]">Pets Management</h2>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+            <thead className="bg-[#347486]">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-base font-semibold text-white uppercase tracking-wider">
                   Pet Info
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-base font-semibold text-white uppercase tracking-wider">
                   Owner
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-base font-semibold text-white uppercase tracking-wider">
                   Created At
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-base font-semibold text-white uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
@@ -174,12 +175,12 @@ const PetsManagement = () => {
               {pets.map((pet) => (
                 <tr 
                   key={pet._id} 
-                  className="hover:bg-gray-50 cursor-pointer"
+                  className="hover:bg-gray-50 cursor-pointer transition-colors duration-200"
                   onClick={() => setSelectedPet(pet)}
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <div className="h-10 w-10 rounded-full overflow-hidden">
+                      <div className="h-12 w-12 rounded-xl overflow-hidden">
                         <img 
                           src={pet.pet_image?.[0] || 'https://via.placeholder.com/150'} 
                           alt={pet.name}
@@ -191,39 +192,42 @@ const PetsManagement = () => {
                         />
                       </div>
                       <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
+                        <div className="text-base font-medium text-gray-900">
                           {pet.name}
+                        </div>
+                        <div className="text-base text-gray-500">
+                          {pet.species} • {pet.breed}
                         </div>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
+                    <div className="text-base text-gray-900">
                       {pet.owner_id?.full_name || 'Unknown Owner'}
                     </div>
-                    <div className="text-sm text-gray-500">
+                    <div className="text-base text-gray-500">
                       {pet.owner_id?.email || 'No email'}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
                     {new Date(pet.createdAt).toLocaleDateString()}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex space-x-3">
+                  <td className="px-6 py-4 whitespace-nowrap text-base font-medium">
+                    <div className="flex space-x-4">
                       <button 
                         onClick={(e) => handleEditPet(e, pet._id)}
-                        className="text-blue-600 hover:text-blue-900"
+                        className="text-[#347486] hover:text-[#2a5d6b] transition-colors duration-300"
                       >
-                        <FiEdit2 className="h-5 w-5" />
+                        <FiEdit2 className="h-6 w-6" />
                       </button>
                       <button 
                         onClick={(e) => {
                           e.stopPropagation();
                           handleDeletePet(pet._id);
                         }} 
-                        className="text-red-600 hover:text-red-900"
+                        className="text-[#BC4626] hover:text-[#a33d21] transition-colors duration-300"
                       >
-                        <FiTrash2 className="h-5 w-5" />
+                        <FiTrash2 className="h-6 w-6" />
                       </button>
                     </div>
                   </td>
@@ -234,7 +238,6 @@ const PetsManagement = () => {
         </div>
       </div>
 
-      {/* Modal */}
       {selectedPet && (
         <PetDetailsModal 
           pet={selectedPet} 

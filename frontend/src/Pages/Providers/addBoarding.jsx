@@ -272,229 +272,364 @@ const AddBoarding = () => {
   };
   
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Add New Boarding Service</h1>
-        <Link
-          to="/add-service"
-          className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
-        >
-          Cancel
-        </Link>
+    <div className="min-h-screen bg-gradient-to-b from-[var(--color-secondary-light)] to-[var(--color-white)]">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] opacity-5"></div>
+        <div className="max-w-7xl mx-auto px-6 py-12 relative">
+          <div className="flex flex-col items-center text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-[var(--text-on-secondary)] mb-4">
+              Add Boarding Service
+            </h1>
+            <p className="text-lg text-[var(--text-on-secondary)] opacity-80 max-w-2xl">
+              Create a comfortable and safe boarding experience for pets while their owners are away
+            </p>
+          </div>
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Service Information Section */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold mb-4">Service Information</h2>
-          <div className="space-y-4">
-            <input
-              type="text"
-              placeholder="Service Name"
-              value={serviceName}
-              onChange={handleServiceNameChange}
-              className="w-full p-2 border rounded-md"
-              required
-            />
-            <textarea
-              placeholder="Description"
-              value={description}
-              onChange={handleDescriptionChange}
-              className="w-full p-2 border rounded-md"
-              rows="3"
-              required
-            ></textarea>
-            <input
-              type="text"
-              placeholder="Location (e.g., 123 Pet Street, City)"
-              value={location}
-              onChange={handleLocationChange}
-              className="w-full p-2 border rounded-md"
-              required
-            />
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Upload Images (Maximum 5)
-              </label>
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handleImagesChange}
-                className="w-full p-2 border rounded-md"
-              />
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Service Information Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Service Details Card */}
+            <div className="bg-[var(--color-white)] rounded-2xl shadow-lg p-8">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="bg-[var(--color-primary-light)] p-3 rounded-xl">
+                  <svg className="w-6 h-6 text-[var(--color-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-semibold text-[var(--text-on-secondary)]">Boarding Details</h2>
+              </div>
+
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-[var(--text-on-secondary)] mb-2">
+                    Service Name
+                  </label>
+                  <input
+                    type="text"
+                    value={serviceName}
+                    onChange={handleServiceNameChange}
+                    className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all"
+                    placeholder="e.g., Luxury Pet Boarding"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[var(--text-on-secondary)] mb-2">
+                    Description
+                  </label>
+                  <textarea
+                    value={description}
+                    onChange={handleDescriptionChange}
+                    className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all"
+                    rows="4"
+                    placeholder="Describe your boarding facility, amenities, and services..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[var(--text-on-secondary)] mb-2">
+                    Facility Location
+                  </label>
+                  <input
+                    type="text"
+                    value={location}
+                    onChange={handleLocationChange}
+                    className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all"
+                    placeholder="e.g., 123 Pet Street, City"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Image Upload Card */}
+            <div className="bg-[var(--color-white)] rounded-2xl shadow-lg p-8">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="bg-[var(--color-accent-light)] p-3 rounded-xl">
+                  <svg className="w-6 h-6 text-[var(--color-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-semibold text-[var(--text-on-secondary)]">Facility Images</h2>
+              </div>
+
+              <div className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center">
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImagesChange}
+                  className="hidden"
+                  id="image-upload"
+                />
+                <label
+                  htmlFor="image-upload"
+                  className="cursor-pointer flex flex-col items-center"
+                >
+                  <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span className="text-lg text-gray-500 mb-2">
+                    Upload Facility Images
+                  </span>
+                  <span className="text-sm text-gray-400">
+                    Maximum 5 images allowed
+                  </span>
+                </label>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Packages Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Basic Package */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-4">Basic Package</h3>
-            <input
-              type="number"
-              placeholder="Price (Rs.)"
-              value={basicPackage.price}
-              onChange={handleBasicPriceChange}
-              className="w-full p-2 border rounded-md mb-4"
-              required
-            />
-            <input
-              type="number"
-              placeholder="Duration (minutes)"
-              value={basicPackage.duration}
-              onChange={handleBasicDurationChange}
-              className="w-full p-2 border rounded-md mb-4"
-              required
-            />
-            
-            {/* Basic Package Services */}
-            {basicPackage.includes.map((service, index) => (
-              <div key={index} className="flex gap-2 mb-2">
-                <input
-                  type="text"
-                  placeholder="Service included"
-                  value={service}
-                  onChange={(e) => handleBasicServiceChange(index, e.target.value)}
-                  className="flex-1 p-2 border rounded-md"
-                  required
-                />
-                {basicPackage.includes.length > 1 && (
+          {/* Boarding Packages Section */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Basic Boarding Package */}
+            <div className="bg-[var(--color-white)] rounded-2xl shadow-lg overflow-hidden transform hover:scale-[1.02] transition-transform duration-300">
+              <div className="bg-[var(--color-secondary-light)] p-6">
+                <div className="flex items-center gap-3">
+                  <div className="bg-[var(--color-white)] p-3 rounded-lg">
+                    <span className="text-2xl">🏠</span>
+                  </div>
+                  <h3 className="text-xl font-semibold text-[var(--text-on-secondary)]">Basic Boarding</h3>
+                </div>
+              </div>
+              <div className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm text-[var(--text-on-secondary)] mb-1">Price (Rs.)</label>
+                  <input
+                    type="number"
+                    value={basicPackage.price}
+                    onChange={handleBasicPriceChange}
+                    className="w-full p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
+                    placeholder="Enter price"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-[var(--text-on-secondary)] mb-1">Duration (days)</label>
+                  <input
+                    type="number"
+                    value={basicPackage.duration}
+                    onChange={handleBasicDurationChange}
+                    className="w-full p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
+                    placeholder="Duration in days"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-[var(--text-on-secondary)] mb-1">Amenities</label>
+                  {basicPackage.includes.map((service, index) => (
+                    <div key={index} className="flex gap-2 mb-2">
+                      <input
+                        type="text"
+                        value={service}
+                        onChange={(e) => handleBasicServiceChange(index, e.target.value)}
+                        className="flex-1 p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
+                        placeholder="e.g., Comfortable Kennel"
+                      />
+                      {basicPackage.includes.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeBasicServiceField(index)}
+                          className="text-red-500 hover:text-red-600"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+                  ))}
                   <button
                     type="button"
-                    onClick={() => removeBasicServiceField(index)}
-                    className="text-red-500"
+                    onClick={addBasicServiceField}
+                    className="text-[var(--color-accent)] hover:text-[var(--color-primary)] text-sm mt-2 flex items-center"
                   >
-                    Remove
+                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    Add Amenity
                   </button>
-                )}
+                </div>
               </div>
-            ))}
-            <button
-              type="button"
-              onClick={addBasicServiceField}
-              className="text-blue-500"
-            >
-              + Add Service
-            </button>
-          </div>
-          
-          {/* Premium Package */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-4">Premium Package</h3>
-            <input
-              type="number"
-              placeholder="Price (Rs.)"
-              value={premiumPackage.price}
-              onChange={handlePremiumPriceChange}
-              className="w-full p-2 border rounded-md mb-4"
-              required
-            />
-            <input
-              type="number"
-              placeholder="Duration (minutes)"
-              value={premiumPackage.duration}
-              onChange={handlePremiumDurationChange}
-              className="w-full p-2 border rounded-md mb-4"
-              required
-            />
-            
-            {/* Premium Package Services */}
-            {premiumPackage.includes.map((service, index) => (
-              <div key={index} className="flex gap-2 mb-2">
-                <input
-                  type="text"
-                  placeholder="Service included"
-                  value={service}
-                  onChange={(e) => handlePremiumServiceChange(index, e.target.value)}
-                  className="flex-1 p-2 border rounded-md"
-                  required
-                />
-                {premiumPackage.includes.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removePremiumServiceField(index)}
-                    className="text-red-500"
-                  >
-                    Remove
-                  </button>
-                )}
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={addPremiumServiceField}
-              className="text-blue-500"
-            >
-              + Add Service
-            </button>
-          </div>
-          
-          {/* Luxury Package */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-4">Luxury Package</h3>
-            <input
-              type="number"
-              placeholder="Price (Rs.)"
-              value={luxuryPackage.price}
-              onChange={handleLuxuryPriceChange}
-              className="w-full p-2 border rounded-md mb-4"
-              required
-            />
-            <input
-              type="number"
-              placeholder="Duration (minutes)"
-              value={luxuryPackage.duration}
-              onChange={handleLuxuryDurationChange}
-              className="w-full p-2 border rounded-md mb-4"
-              required
-            />
-            
-            {/* Luxury Package Services */}
-            {luxuryPackage.includes.map((service, index) => (
-              <div key={index} className="flex gap-2 mb-2">
-                <input
-                  type="text"
-                  placeholder="Service included"
-                  value={service}
-                  onChange={(e) => handleLuxuryServiceChange(index, e.target.value)}
-                  className="flex-1 p-2 border rounded-md"
-                  required
-                />
-                {luxuryPackage.includes.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeLuxuryServiceField(index)}
-                    className="text-red-500"
-                  >
-                    Remove
-                  </button>
-                )}
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={addLuxuryServiceField}
-              className="text-blue-500"
-            >
-              + Add Service
-            </button>
-          </div>
-        </div>
+            </div>
 
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={`bg-blue-500 text-white px-6 py-2 rounded-md ${
-              isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
-            }`}
-          >
-            {isLoading ? 'Creating Service...' : 'Create Service'}
-          </button>
-        </div>
-      </form>
+            {/* Premium Boarding Package */}
+            <div className="bg-[var(--color-white)] rounded-2xl shadow-lg overflow-hidden transform hover:scale-[1.02] transition-transform duration-300">
+              <div className="bg-[var(--color-accent-light)] p-6">
+                <div className="flex items-center gap-3">
+                  <div className="bg-[var(--color-white)] p-3 rounded-lg">
+                    <span className="text-2xl">🏡</span>
+                  </div>
+                  <h3 className="text-xl font-semibold text-[var(--text-on-secondary)]">Premium Boarding</h3>
+                </div>
+              </div>
+              <div className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm text-[var(--text-on-secondary)] mb-1">Price (Rs.)</label>
+                  <input
+                    type="number"
+                    value={premiumPackage.price}
+                    onChange={handlePremiumPriceChange}
+                    className="w-full p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
+                    placeholder="Enter price"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-[var(--text-on-secondary)] mb-1">Duration (days)</label>
+                  <input
+                    type="number"
+                    value={premiumPackage.duration}
+                    onChange={handlePremiumDurationChange}
+                    className="w-full p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
+                    placeholder="Duration in days"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-[var(--text-on-secondary)] mb-1">Amenities</label>
+                  {premiumPackage.includes.map((service, index) => (
+                    <div key={index} className="flex gap-2 mb-2">
+                      <input
+                        type="text"
+                        value={service}
+                        onChange={(e) => handlePremiumServiceChange(index, e.target.value)}
+                        className="flex-1 p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
+                        placeholder="e.g., Comfortable Kennel"
+                      />
+                      {premiumPackage.includes.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removePremiumServiceField(index)}
+                          className="text-red-500 hover:text-red-600"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={addPremiumServiceField}
+                    className="text-[var(--color-accent)] hover:text-[var(--color-primary)] text-sm mt-2 flex items-center"
+                  >
+                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    Add Amenity
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Luxury Boarding Package */}
+            <div className="bg-[var(--color-white)] rounded-2xl shadow-lg overflow-hidden transform hover:scale-[1.02] transition-transform duration-300">
+              <div className="bg-[var(--color-primary-light)] p-6">
+                <div className="flex items-center gap-3">
+                  <div className="bg-[var(--color-white)] p-3 rounded-lg">
+                    <span className="text-2xl">🏰</span>
+                  </div>
+                  <h3 className="text-xl font-semibold text-[var(--text-on-secondary)]">Luxury Boarding</h3>
+                </div>
+              </div>
+              <div className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm text-[var(--text-on-secondary)] mb-1">Price (Rs.)</label>
+                  <input
+                    type="number"
+                    value={luxuryPackage.price}
+                    onChange={handleLuxuryPriceChange}
+                    className="w-full p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
+                    placeholder="Enter price"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-[var(--text-on-secondary)] mb-1">Duration (days)</label>
+                  <input
+                    type="number"
+                    value={luxuryPackage.duration}
+                    onChange={handleLuxuryDurationChange}
+                    className="w-full p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
+                    placeholder="Duration in days"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-[var(--text-on-secondary)] mb-1">Amenities</label>
+                  {luxuryPackage.includes.map((service, index) => (
+                    <div key={index} className="flex gap-2 mb-2">
+                      <input
+                        type="text"
+                        value={service}
+                        onChange={(e) => handleLuxuryServiceChange(index, e.target.value)}
+                        className="flex-1 p-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
+                        placeholder="e.g., Comfortable Kennel"
+                      />
+                      {luxuryPackage.includes.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeLuxuryServiceField(index)}
+                          className="text-red-500 hover:text-red-600"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={addLuxuryServiceField}
+                    className="text-[var(--color-accent)] hover:text-[var(--color-primary)] text-sm mt-2 flex items-center"
+                  >
+                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    Add Amenity
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex justify-between items-center">
+            <Link
+              to="/add-service"
+              className="flex items-center text-[var(--color-accent)] hover:text-[var(--color-primary)] transition-colors"
+            >
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Back to Services
+            </Link>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="bg-[var(--color-primary)] hover:bg-[var(--color-accent)] text-[var(--text-on-primary)] px-8 py-3 rounded-lg transition-colors duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            >
+              {isLoading ? (
+                <>
+                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  Creating Service...
+                </>
+              ) : (
+                <>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Create Boarding Service
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

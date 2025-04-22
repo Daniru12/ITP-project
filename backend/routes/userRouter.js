@@ -1,5 +1,5 @@
 import express from "express";
-import { loginUser, Profile, registerUser, registerPet, getPets, getLoyaltyPoints, getAllUsers, getAllServices, getAllPets, deletePet, getServicesForDisplay, getServiceById, deleteService, adminDeleteService, adminDeletePet, getPetById, updatePet, updateUser, adminUpdatePet, adminUpdateService } from "../controller/userController.js";
+import { loginUser, Profile, registerUser, registerPet, getPets, getLoyaltyPoints, getAllUsers, getAllServices, getAllPets, deletePet, getServicesForDisplay, getServiceById, deleteService, adminDeleteService, adminDeletePet, getPetById, updatePet, updateUser, adminUpdatePet, adminUpdateService, deactivateAccount } from "../controller/userController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const userRouter = express.Router();
@@ -24,5 +24,6 @@ userRouter.put("/pet/:id", protect, updatePet);
 userRouter.put("/update-user/:id", protect, updateUser);
 userRouter.put("/admin-update-pet/:id", protect, adminUpdatePet);
 userRouter.put("/admin-update-service/:id", protect, adminUpdateService);
+userRouter.put("/deactivate-account/:userId", protect, deactivateAccount);
 
 export default userRouter;

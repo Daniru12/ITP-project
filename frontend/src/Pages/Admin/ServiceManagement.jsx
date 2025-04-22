@@ -7,17 +7,14 @@ import HamsterLoader from '../../components/HamsterLoader';
 // Component for displaying package information (Basic, Premium, Luxury)
 const PackageCard = ({ tier, details }) => {
   return (
-    <div className="p-4 border rounded-lg">
-      <h4 className="font-semibold text-lg capitalize mb-2">{tier}</h4>
-      <div className="space-y-2">
-        {/* Price */}
-        <p className="text-2xl font-bold text-blue-600">${details.price}</p>
-        {/* Duration */}
-        <p className="text-gray-600">{details.duration} minutes</p>
-        {/* Services included */}
+    <div className="p-6 border border-gray-100 rounded-xl bg-white">
+      <h4 className="text-xl font-bold text-[#333333] capitalize mb-4">{tier}</h4>
+      <div className="space-y-3">
+        <p className="text-3xl font-bold text-[#347486]">${details.price}</p>
+        <p className="text-base text-gray-600">{details.duration} minutes</p>
         <div className="mt-4">
-          <p className="font-medium mb-2">Includes:</p>
-          <ul className="list-disc list-inside text-gray-600">
+          <p className="text-base font-medium text-[#333333] mb-3">Includes:</p>
+          <ul className="list-disc list-inside text-base text-gray-600 space-y-2">
             {details.includes.map((item, index) => (
               <li key={index}>{item}</li>
             ))}
@@ -31,23 +28,20 @@ const PackageCard = ({ tier, details }) => {
 // Component for displaying provider information
 const ProviderInfo = ({ provider }) => {
   return (
-    <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-      <h3 className="text-lg font-semibold mb-4">Provider Information</h3>
-      <div className="space-y-3">
-        {/* Provider Name */}
+    <div className="mb-6 p-6 bg-[#347486]/10 rounded-xl">
+      <h3 className="text-xl font-bold text-[#333333] mb-4">Provider Information</h3>
+      <div className="space-y-4">
         <div className="flex items-center gap-3">
-          <FiUser className="text-gray-400" />
-          <span className="text-gray-700">{provider?.full_name || 'N/A'}</span>
+          <FiUser className="text-[#347486] text-xl" />
+          <span className="text-base text-gray-700">{provider?.full_name || 'N/A'}</span>
         </div>
-        {/* Provider Email */}
         <div className="flex items-center gap-3">
-          <FiMail className="text-gray-400" />
-          <span className="text-gray-700">{provider?.email || 'N/A'}</span>
+          <FiMail className="text-[#347486] text-xl" />
+          <span className="text-base text-gray-700">{provider?.email || 'N/A'}</span>
         </div>
-        {/* Provider Phone */}
         <div className="flex items-center gap-3">
-          <FiPhone className="text-gray-400" />
-          <span className="text-gray-700">{provider?.phone_number || 'N/A'}</span>
+          <FiPhone className="text-[#347486] text-xl" />
+          <span className="text-base text-gray-700">{provider?.phone_number || 'N/A'}</span>
         </div>
       </div>
     </div>
@@ -59,27 +53,21 @@ const ServiceDetailsModal = ({ service, onClose }) => {
   if (!service) return null;
 
   return (
-    // Modal overlay with backdrop blur
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      {/* Modal content */}
-      <div className="bg-white rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
-          {/* Header with close button */}
+      <div className="bg-white rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+        <div className="p-8">
           <div className="flex justify-between items-start mb-6">
-            <h2 className="text-2xl font-semibold">{service.service_name}</h2>
+            <h2 className="text-3xl font-bold text-[#333333]">{service.service_name}</h2>
             <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
               <FiClose className="h-6 w-6" />
             </button>
           </div>
 
-          {/* Service status badges */}
           <div className="flex items-center gap-4 mb-6">
-            {/* Category badge */}
-            <span className="px-3 py-1 rounded-full text-sm font-semibold bg-blue-100 text-blue-800">
+            <span className="px-4 py-2 rounded-full text-base font-medium bg-[#347486]/10 text-[#347486]">
               {service.service_category.replace('_', ' ')}
             </span>
-            {/* Status badge */}
-            <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+            <span className={`px-4 py-2 rounded-full text-base font-medium ${
               service.is_available 
                 ? 'bg-green-100 text-green-800' 
                 : 'bg-red-100 text-red-800'
@@ -88,20 +76,16 @@ const ServiceDetailsModal = ({ service, onClose }) => {
             </span>
           </div>
 
-          {/* Service description */}
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-2">Description</h3>
-            <p className="text-gray-600">{service.description}</p>
+          <div className="mb-8">
+            <h3 className="text-xl font-bold text-[#333333] mb-3">Description</h3>
+            <p className="text-base text-gray-600">{service.description}</p>
           </div>
 
-          {/* Provider information section */}
           <ProviderInfo provider={service.provider_id} />
 
-          {/* Package details section */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Package Details</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Map through each package type (basic, premium, luxury) */}
+            <h3 className="text-xl font-bold text-[#333333] mb-6">Package Details</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {service.packages && Object.entries(service.packages).map(([tier, details]) => (
                 <PackageCard key={tier} tier={tier} details={details} />
               ))}
@@ -252,108 +236,98 @@ const ServiceManagement = () => {
   // Main render
   return (
     <div className="p-6">
-      {/* Page header */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold">Services Management</h2>
+      <div className="flex justify-between items-center mb-8">
+        <h2 className="text-4xl font-bold text-[#333333]">Services Management</h2>
       </div>
 
-      {/* Services table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            {/* Table header */}
-            <thead className="bg-gray-50">
+            <thead className="bg-[#347486]">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-base font-semibold text-white uppercase tracking-wider">
                   Service Name
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-base font-semibold text-white uppercase tracking-wider">
                   Category
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-base font-semibold text-white uppercase tracking-wider">
                   Provider
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-base font-semibold text-white uppercase tracking-wider">
                   Basic Price
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-base font-semibold text-white uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-base font-semibold text-white uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            {/* Table body */}
             <tbody className="bg-white divide-y divide-gray-200">
               {services.map((service) => (
                 <tr 
                   key={service._id} 
-                  className="hover:bg-gray-50 cursor-pointer"
+                  className="hover:bg-gray-50 cursor-pointer transition-colors duration-200"
                   onClick={() => setSelectedService(service)}
                 >
-                  {/* Service name and description */}
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">
+                    <div className="text-base font-medium text-gray-900">
                       {service.service_name || 'Unnamed Service'}
                     </div>
-                    <div className="text-sm text-gray-500">
+                    <div className="text-base text-gray-500">
                       {service.description 
                         ? `${service.description.substring(0, 50)}...`
                         : 'No description available'}
                     </div>
                   </td>
-                  {/* Service category */}
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                    <span className="px-3 py-1 inline-flex text-base font-medium rounded-full bg-[#347486]/10 text-[#347486]">
                       {(service.service_category || 'uncategorized').replace('_', ' ')}
                     </span>
                   </td>
-                  {/* Provider name */}
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
                     {getProviderName(service)}
                   </td>
-                  {/* Basic price */}
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
                     {getBasicPrice(service)}
                   </td>
-                  {/* Status toggle button */}
                   <td className="px-6 py-4 whitespace-nowrap">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleServiceStatus(service._id, service.is_available);
                       }}
-                      className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium ${
+                      className={`inline-flex items-center px-4 py-2 rounded-full text-base font-medium transition-all duration-300 ${
                         service.is_available
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-red-100 text-red-800'
+                          ? 'bg-green-100 text-green-800 hover:bg-green-200'
+                          : 'bg-red-100 text-red-800 hover:bg-red-200'
                       }`}
                     >
                       {service.is_available ? (
-                        <><FiCheck className="mr-1" /> Active</>
+                        <><FiCheck className="mr-2 text-xl" /> Active</>
                       ) : (
-                        <><FiX className="mr-1" /> Inactive</>
+                        <><FiX className="mr-2 text-xl" /> Inactive</>
                       )}
                     </button>
                   </td>
-                  {/* Action buttons */}
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <div className="flex space-x-3">
+                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
+                    <div className="flex space-x-4">
                       <button 
-                        className="text-blue-600 hover:text-blue-900"
+                        className="text-[#347486] hover:text-[#2a5d6b] transition-colors duration-300"
                         onClick={(e) => handleEditService(e, service._id)}
                       >
-                        <FiEdit2 className="h-5 w-5" />
+                        <FiEdit2 className="h-6 w-6" />
                       </button>
                       <button 
-                        className="text-red-600 hover:text-red-900"
+                        className="text-[#BC4626] hover:text-[#a33d21] transition-colors duration-300"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleDeleteService(service._id);
                         }}
                       >
-                        <FiTrash2 className="h-5 w-5" />
+                        <FiTrash2 className="h-6 w-6" />
                       </button>
                     </div>
                   </td>
@@ -364,7 +338,6 @@ const ServiceManagement = () => {
         </div>
       </div>
 
-      {/* Service details modal */}
       {selectedService && (
         <ServiceDetailsModal 
           service={selectedService} 

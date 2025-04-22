@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { FaStar, FaEdit, FaTrash, FaCalendarAlt, FaUser, FaCut, FaBox } from 'react-icons/fa';
+import { FaStar, FaEdit, FaTrash, FaCalendarAlt, FaUser, FaCut, FaBox, FaDownload } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import jsPDF from 'jspdf';
+import HamsterLoader from '../../Components/HamsterLoader';
 
 const ProviderProfile = () => {
   const [services, setServices] = useState([]);
@@ -50,11 +52,164 @@ const ProviderProfile = () => {
     return `$${price.toFixed(2)}`;
   };
 
+  const generateServiceReport = () => {
+    const doc = new jsPDF();
+    
+    // Theme colors from index.css
+    const themeColors = {
+      primary: [188, 70, 38],     // Terracotta Red (#BC4626)
+      secondary: [223, 165, 93],  // Sandy Gold (#DFA55D)
+      accent: [52, 116, 134],     // Teal Blue (#347486)
+      background: [255, 255, 255], // White (#FFFFFF)
+      text: [51, 51, 51],         // Dark Gray (#333333)
+      lightText: [149, 165, 166]  // Gray
+    };
+
+    // Helper function for adding page header
+    const addPageHeader = (pageNumber) => {
+      // Header background with gradient
+      doc.setFillColor(...themeColors.primary);
+      doc.rect(0, 0, 210, 45, 'F');
+      
+      // Add decorative elements
+      doc.setFillColor(...themeColors.secondary);
+      doc.circle(15, 15, 5, 'F');
+      doc.circle(195, 15, 5, 'F');
+      
+      // Add logo/text
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(12);
+      doc.setFont(undefined, 'bold');
+      doc.text('PET CARE SERVICES', 20, 20);
+      
+      // Main title
+      doc.setFontSize(26);
+      doc.text('Service Analysis Report', 20, 35);
+      
+      // Add date
+      doc.setFontSize(10);
+      const today = new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      doc.text(`Generated: ${today}`, 160, 20);
+    };
+
+    // Helper function for creating analysis boxes
+    const createAnalysisBox = (title, content, x, y, width, height) => {
+      // Box background
+      doc.setFillColor(...themeColors.background);
+      doc.roundedRect(x, y, width, height, 3, 3, 'F');
+      
+      // Box border
+      doc.setDrawColor(...themeColors.accent);
+      doc.setLineWidth(0.3);
+      doc.roundedRect(x, y, width, height, 3, 3);
+      
+      // Title
+      doc.setTextColor(...themeColors.accent);
+      doc.setFontSize(12);
+      doc.setFont(undefined, 'bold');
+      doc.text(title, x + 10, y + 15);
+      
+      // Content
+      doc.setTextColor(...themeColors.text);
+      doc.setFontSize(10);
+      doc.setFont(undefined, 'normal');
+      doc.text(content, x + 10, y + 25);
+    };
+
+    // Initialize first page
+    addPageHeader(1);
+    
+    // Calculate statistics
+    const totalServices = services.length;
+    const availableServices = services.filter(s => s.is_available).length;
+    const unavailableServices = totalServices - availableServices;
+    const totalPackages = services.reduce((acc, service) => 
+      acc + (service.packages ? Object.keys(service.packages).length : 0), 0);
+    
+    // Calculate average price
+    const allPrices = services.flatMap(service => 
+      service.packages ? Object.values(service.packages).map(p => p.price) : []
+    );
+    const averagePrice = allPrices.length > 0 
+      ? allPrices.reduce((a, b) => a + b, 0) / allPrices.length 
+      : 0;
+    
+    // Calculate service distribution
+    const serviceCategories = services.reduce((acc, service) => {
+      acc[service.service_category] = (acc[service.service_category] || 0) + 1;
+      return acc;
+    }, {});
+    
+    // Provider Summary Section
+    let yPosition = 50;
+    createAnalysisBox(
+      'Provider Summary',
+      `Name: ${providerInfo?.full_name || 'N/A'}\nEmail: ${providerInfo?.email || 'N/A'}\nPhone: ${providerInfo?.phone_number || 'N/A'}`,
+      20, yPosition, 170, 40
+    );
+    
+    // Service Statistics Section
+    yPosition += 50;
+    createAnalysisBox(
+      'Service Statistics',
+      `Total Services: ${totalServices}\nAvailable Services: ${availableServices}\nUnavailable Services: ${unavailableServices}\nTotal Packages: ${totalPackages}`,
+      20, yPosition, 170, 50
+    );
+    
+    // Financial Analysis Section
+    yPosition += 60;
+    createAnalysisBox(
+      'Financial Analysis',
+      `Average Package Price: ${formatPrice(averagePrice)}\nTotal Revenue Potential: ${formatPrice(averagePrice * totalPackages)}`,
+      20, yPosition, 170, 40
+    );
+    
+    // Service Distribution Section
+    yPosition += 50;
+    let distributionText = 'Service Categories:\n';
+    Object.entries(serviceCategories).forEach(([category, count]) => {
+      const percentage = ((count / totalServices) * 100).toFixed(1);
+      distributionText += `${category.replace('_', ' ')}: ${count} (${percentage}%)\n`;
+    });
+    
+    createAnalysisBox(
+      'Service Distribution',
+      distributionText,
+      20, yPosition, 170, 60
+    );
+    
+    // Availability Analysis Section
+    yPosition += 70;
+    const availabilityPercentage = ((availableServices / totalServices) * 100).toFixed(1);
+    createAnalysisBox(
+      'Availability Analysis',
+      `Service Availability: ${availabilityPercentage}%\n${availableServices} out of ${totalServices} services are currently available`,
+      20, yPosition, 170, 40
+    );
+    
+    // Add footer
+    doc.setFillColor(...themeColors.background);
+    doc.rect(0, 280, 210, 20, 'F');
+    doc.setFontSize(8);
+    doc.setTextColor(...themeColors.lightText);
+    doc.text('© 2024 Pet Care Services - Service Analysis Report', 20, 290);
+    
+    // Save the PDF
+    const dateStr = new Date().toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).replace(/\//g, '-');
+    doc.save(`pet-care-analysis-${dateStr}.pdf`);
+  };
+
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-xl">Loading...</p>
-      </div>
+      <HamsterLoader />
     );
   }
 
@@ -133,6 +288,15 @@ function handleDeleteService(serviceId) {
               >
                 Edit Profile
               </Link>
+
+              <button
+                onClick={generateServiceReport}
+                className="w-full flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-white transition-all duration-300 hover:shadow-md"
+                style={{ backgroundColor: 'var(--color-primary)' }}
+              >
+                <FaDownload className="w-4 h-4" />
+                Download Service Report
+              </button>
             </div>
           </div>
         </div>
