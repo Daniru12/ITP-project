@@ -66,6 +66,9 @@ import FaqManager from './Pages/FAQ/faqall'
 import VeiwOwnerOerders from './Pages/Orders/viewOwnerOrders'
 
 import PaymentReviewPage from './Pages/Payment/payemntreview'
+import EditProfile from './Pages/Providers/EditProfile'
+import EditProfilePetOwner from './Pages/PetOwner/EditProfile'
+
 // Wrapper component to handle NavBar conditional rendering
 const AppContent = () => {
   const location = useLocation();
@@ -110,6 +113,8 @@ const AppContent = () => {
           <Route path="/scheduling/boarding/:id" element={<UpdateBoedingScheduleForm />} />
           <Route path='/profile' element={<Profile />} />
           <Route path='/provider-profile' element={<ProviderProfile />} />
+          <Route path='/edit-profile' element={<EditProfile />} />
+          <Route path='/edit-profile-petowner' element={<EditProfilePetOwner />} />
           <Route path='/add-grooming' element={<AddGrooming />} />
           <Route path='/add-boarding' element={<AddBoarding />} />
           <Route path='/add-training' element={<AddTraining />} />

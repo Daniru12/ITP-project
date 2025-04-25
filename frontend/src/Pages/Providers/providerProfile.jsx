@@ -222,23 +222,25 @@ const ProviderProfile = () => {
   }
 
 function handleDeleteService(serviceId) {
-  console.log(serviceId);
-  try {
-    const token = localStorage.getItem('token');
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  // Show confirmation dialog before deleting
+  if (window.confirm('Are you sure you want to delete this service? This action cannot be undone.')) {
+    try {
+      const token = localStorage.getItem('token');
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-    axios.delete(`${backendUrl}/api/users/service/${serviceId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+      axios.delete(`${backendUrl}/api/users/service/${serviceId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
 
-    toast.success('Service deleted successfully');
-    setServices(services.filter(service => service._id !== serviceId));
-    window.location.reload();
-  } catch (error) {
-    console.error('Error deleting service:', error);
-    toast.error('Failed to delete service');
+      toast.success('Service deleted successfully');
+      setServices(services.filter(service => service._id !== serviceId));
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting service:', error);
+      toast.error('Failed to delete service');
+    }
   }
 }
 

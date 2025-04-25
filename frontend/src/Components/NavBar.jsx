@@ -66,6 +66,14 @@ const NavBar = () => {
             >
               Marketplace
             </Link>
+
+            <Link 
+              to="/display-services" 
+              className="text-white hover:text-opacity-80 transition-colors duration-200 text-sm font-medium"
+            >
+              Pet Care Services
+            </Link>
+
             
             {isLoggedIn ? (
               <>

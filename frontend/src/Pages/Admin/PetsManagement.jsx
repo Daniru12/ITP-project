@@ -6,6 +6,9 @@ import { FiX } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import HamsterLoader from '../../components/HamsterLoader';
 
+// Default placeholder image URL
+const defaultPetImage = "https://img.freepik.com/free-vector/cute-dog-cat-friend-cartoon_138676-2432.jpg";
+
 const PetDetailsModal = ({ pet, onClose }) => {
   if (!pet) return null;
 
@@ -24,12 +27,12 @@ const PetDetailsModal = ({ pet, onClose }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <img 
-              src={pet.pet_image?.[0] || 'https://via.placeholder.com/150'} 
+              src={pet.pet_image?.[0] || defaultPetImage} 
               alt={pet.name}
               className="w-full h-72 object-cover rounded-xl"
               onError={(e) => {
                 e.target.onerror = null;
-                e.target.src = 'https://via.placeholder.com/150';
+                e.target.src = defaultPetImage;
               }}
             />
           </div>
@@ -84,7 +87,7 @@ const PetsManagement = () => {
       const token = localStorage.getItem('token');
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
       
-      const response = await axios.get(`${backendUrl}/api/users/allpets`, {
+      const response = await axios.get(`${backendUrl}/api/users/all-pets`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -182,12 +185,12 @@ const PetsManagement = () => {
                     <div className="flex items-center">
                       <div className="h-12 w-12 rounded-xl overflow-hidden">
                         <img 
-                          src={pet.pet_image?.[0] || 'https://via.placeholder.com/150'} 
+                          src={pet.pet_image?.[0] || defaultPetImage} 
                           alt={pet.name}
                           className="h-full w-full object-cover"
                           onError={(e) => {
                             e.target.onerror = null;
-                            e.target.src = 'https://via.placeholder.com/150';
+                            e.target.src = defaultPetImage;
                           }}
                         />
                       </div>

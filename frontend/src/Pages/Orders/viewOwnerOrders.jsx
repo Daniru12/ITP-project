@@ -110,7 +110,7 @@ const ViewOwnerOrders = () => {
                   {order.product.map((prod) => prod.name).join(', ')}
                 </TableCell>
                 <TableCell>{order.quantity}</TableCell>
-                <TableCell>Rs.{order.total_price.toFixed(2)}</TableCell>
+                <TableCell>${order.total_price.toFixed(2)}</TableCell>
                 <TableCell>{order.order_status}</TableCell>
                 <TableCell>
                   {`${order.shipping_details.address}, ${order.shipping_details.city}, ${order.shipping_details.country} ${order.shipping_details.postalCode}`}
