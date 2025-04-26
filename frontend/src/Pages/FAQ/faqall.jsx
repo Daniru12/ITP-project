@@ -8,7 +8,6 @@ const FaqManager = () => {
   const [faqs, setFaqs] = useState([]);
   const [formData, setFormData] = useState({ question: "" });
   const [answerInputs, setAnswerInputs] = useState({});
-  const [popupAnswer, setPopupAnswer] = useState(null);
   const [loading, setLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
 
@@ -54,7 +53,7 @@ const FaqManager = () => {
       });
       toast.success("FAQ added successfully!");
       setFormData({ question: "" });
-      fetchFaqs();
+      await fetchFaqs();
     } catch (err) {
       console.error("FAQ create error:", err.response?.data || err.message);
       toast.error(err.response?.data?.message || "Failed to create FAQ");
@@ -66,16 +65,25 @@ const FaqManager = () => {
   const handleAddAnswer = async (faqId) => {
     const answer = answerInputs[faqId];
     if (!answer) return toast.warning("Please type an answer.");
+
     try {
       await axios.put(
         `${backendUrl}/api/faqAll/answer/${faqId}`,
         { answer },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setPopupAnswer(answer);
-      setAnswerInputs({ ...answerInputs, [faqId]: "" });
+
       toast.success("Answer added successfully!");
-      fetchFaqs();
+      setAnswerInputs((prev) => ({ ...prev, [faqId]: "" }));
+
+      // Inject answer into local state
+      setFaqs((prevFaqs) =>
+        prevFaqs.map((faq) =>
+          faq._id === faqId
+            ? { ...faq, answers: [...(faq.answers || []), answer] }
+            : faq
+        )
+      );
     } catch (err) {
       console.error("Error adding answer:", err.response?.data || err.message);
       toast.error("Failed to add answer");
@@ -89,7 +97,7 @@ const FaqManager = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success("FAQ deleted successfully!");
-      fetchFaqs();
+      await fetchFaqs();
     } catch (err) {
       console.error("Error deleting FAQ:", err.response?.data || err.message);
       toast.error("Failed to delete FAQ");
@@ -107,7 +115,7 @@ const FaqManager = () => {
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-xl mt-10">
       <ToastContainer />
-      <h2 className="text-3xl font-bold mb-8 text-center text-blue-700">FAQ Manager</h2>
+      <h2 className="text-3xl font-bold mb-8 text-center text-blue-700">Q & A</h2>
 
       <form onSubmit={handleSubmit} className="mb-10">
         <label className="block mb-2 font-semibold text-gray-700">Question</label>
@@ -127,7 +135,7 @@ const FaqManager = () => {
           }`}
           disabled={submitLoading}
         >
-          {submitLoading ? "Submitting..." : "Create FAQ"}
+          {submitLoading ? "Submitting..." : "Ask Question"}
         </button>
       </form>
 
@@ -136,25 +144,31 @@ const FaqManager = () => {
           <div key={faq._id} className="border p-5 rounded-md shadow-sm">
             <h3 className="font-bold text-lg text-gray-800">{faq.question}</h3>
 
-            {faq.answer ? (
-              <p className="text-green-700 mt-3">Answer: {faq.answer}</p>
-            ) : (
-              <div className="mt-3">
-                <input
-                  type="text"
-                  placeholder="Type your answer..."
-                  className="border px-3 py-2 rounded w-full mb-2 focus:ring-2 focus:ring-green-400"
-                  value={answerInputs[faq._id] || ""}
-                  onChange={(e) => handleAnswerChange(e, faq._id)}
-                />
-                <button
-                  className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600"
-                  onClick={() => handleAddAnswer(faq._id)}
-                >
-                  Add Answer
-                </button>
-              </div>
-            )}
+            <div className="mt-3">
+              {faq.answers && faq.answers.length > 0 ? (
+                faq.answers.map((answer, index) => (
+                  <p key={index} className="text-green-700 mt-1">
+                    Answer {index + 1}: {answer}
+                  </p>
+                ))
+              ) : (
+                <p className="text-gray-500 mt-1">No answers yet.</p>
+              )}
+
+              <input
+                type="text"
+                placeholder="Type your answer..."
+                className="border px-3 py-2 rounded w-full mb-2 focus:ring-2 focus:ring-green-400"
+                value={answerInputs[faq._id] || ""}
+                onChange={(e) => handleAnswerChange(e, faq._id)}
+              />
+              <button
+                className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600"
+                onClick={() => handleAddAnswer(faq._id)}
+              >
+                Add Answer
+              </button>
+            </div>
 
             <button
               className="bg-red-500 text-white px-4 py-1 mt-4 rounded hover:bg-red-600"

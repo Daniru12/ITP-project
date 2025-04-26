@@ -25,7 +25,7 @@ const FaqAdmin = () => {
 
         if (token) {
           const decoded = jwtDecode(token);
-          setUserRole(decoded.user_type); // Extract user type (admin or pet_owner)
+          setUserRole(decoded.user_type);
         }
       } catch (err) {
         console.error("Error fetching data:", err.response?.data || err.message);
@@ -84,17 +84,31 @@ const FaqAdmin = () => {
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       setFaqs((prevFaqs) =>
         prevFaqs.map((faq) =>
           faq._id === faqId ? { ...faq, approved: true } : faq
         )
       );
-      
+
       toast.success("FAQ answer approved successfully");
     } catch (err) {
       console.error("Error confirming answer:", err.response?.data || err.message);
       toast.error("Failed to confirm answer");
+    }
+  };
+
+  const handleDeleteFaq = async (faqId) => {
+    try {
+      await axios.delete(`${backendUrl}/api/faqs/delete/${faqId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setFaqs((prevFaqs) => prevFaqs.filter((faq) => faq._id !== faqId));
+      toast.success("FAQ deleted successfully");
+    } catch (err) {
+      console.error("Error deleting FAQ:", err.response?.data || err.message);
+      toast.error("Failed to delete FAQ");
     }
   };
 
@@ -107,7 +121,7 @@ const FaqAdmin = () => {
       <ToastContainer />
       <div className="bg-white max-w-5xl w-full rounded-3xl shadow-xl p-10 flex flex-col gap-10">
         <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">Manage FAQs</h1>
-
+        
         {/* Search Bar */}
         <input
           type="text"
@@ -131,21 +145,32 @@ const FaqAdmin = () => {
                 )}
               </summary>
               <p className="text-gray-600 mt-2">{faq.answer || "No answer provided."}</p>
-              {userRole === "admin" && !faq.approved && faq.answer && (
-                <button
-                  className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-2"
-                  onClick={() => handleConfirmAnswer(faq._id)}
-                >
-                  Confirm
-                </button>
+              {userRole === "admin" && faq.answer && (
+                <>
+                  {!faq.approved ? (
+                    <button
+                      className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-2"
+                      onClick={() => handleConfirmAnswer(faq._id)}
+                    >
+                      Confirm
+                    </button>
+                  ) : (
+                    <button
+                      className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 mt-2"
+                      onClick={() => handleDeleteFaq(faq._id)}
+                    >
+                      Delete
+                    </button>
+                  )}
+                </>
               )}
             </details>
           ))}
       </div>
 
-      {/* Answer Editor (Admin + Pet Owner) */}
+      {/* Answer Editor */}
       {editingFaq && (
-        <div className="bg-gray-50 p-6 rounded-lg shadow-lg w-1/3">
+        <div className="bg-gray-50 p-6 rounded-lg shadow-lg w-1/3 ml-6">
           <h2 className="text-lg font-semibold mb-4 text-gray-700">Answer the Question</h2>
           <p className="text-sm text-gray-600 mb-2">{editingFaq.question}</p>
           <textarea
