@@ -228,7 +228,7 @@ const UserAppointments = () => {
             </div>
 
             <Link
-              to="/appointments/create"
+              to="/display-services"
               className="text-white py-2 px-6 rounded-md transition duration-150 w-full md:w-auto text-center"
               style={{ backgroundColor: "#BC4626" }}
             >
