@@ -70,22 +70,25 @@ export default function Profile() {
   }, []); // Empty dependency array means this runs once when component mounts
 
   function handleDeletePet(id) {
-    const token = localStorage.getItem('token');
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    // Show confirmation dialog before deleting
+    if (window.confirm('Are you sure you want to delete this pet? This action cannot be undone.')) {
+      const token = localStorage.getItem('token');
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-    axios.delete(`${backendUrl}/api/users/deletePet/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    .then(() => {
-      toast.success('Pet deleted successfully');
-      setUserPets(userPets.filter(pet => pet._id !== id));
-    })
-    .catch((err) => {
-      console.error('Error deleting pet:', err);
-      toast.error('Failed to delete pet');
-    })
+      axios.delete(`${backendUrl}/api/users/deletePet/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then(() => {
+        toast.success('Pet deleted successfully');
+        setUserPets(userPets.filter(pet => pet._id !== id));
+      })
+      .catch((err) => {
+        console.error('Error deleting pet:', err);
+        toast.error('Failed to delete pet');
+      })
+    }
   }
 
   if (isLoading) {
@@ -112,6 +115,15 @@ export default function Profile() {
                     <FaUser className="w-16 h-16 text-gray-400" />
                   </div>
                 )}
+                <Link
+                  to="/edit-profile-petowner"
+                  className="absolute bottom-0 right-0 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
+                  style={{ borderColor: 'var(--color-accent)', borderWidth: '2px' }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                </Link>
               </div>
               <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-accent)' }}>{userData.full_name}</h1>
               <p className="text-gray-500">@{userData.username}</p>

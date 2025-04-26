@@ -26,7 +26,7 @@ const AdminUpdatePet = () => {
         }
 
         const apiUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-        const response = await axios.get(`${apiUrl}/api/users/allpets`, {
+        const response = await axios.get(`${apiUrl}/api/users/all-pets`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 

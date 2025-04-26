@@ -20,7 +20,7 @@ const DisplayServices = () => {
     ))]
 
     useEffect(() => {
-        axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users/services-for-display`, {
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users/services`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

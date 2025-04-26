@@ -443,6 +443,43 @@ export const updateUser = async (req, res) => {
   }
 };
 
+// New function to allow users to update their own profile
+export const updateProfile = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const updateData = req.body;
+    
+    // Remove sensitive fields that shouldn't be updated directly
+    delete updateData.password;
+    delete updateData.user_type; // Prevent changing user type for security
+    delete updateData.loyalty_points; // Prevent changing loyalty points
+    
+    // Find and update the user
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $set: updateData },
+      { new: true, runValidators: true }
+    ).select('-password'); // Exclude password from response
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      user: updatedUser
+    });
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    res.status(500).json({
+      message: "Error updating profile",
+      error: error.message
+    });
+  }
+};
+
 export const adminUpdatePet = async (req, res) => {
   try {
     // Check if user is admin

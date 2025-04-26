@@ -198,6 +198,7 @@ const ServiceManagement = () => {
     const isConfirmed = window.confirm("Are you sure you want to delete this service? This action cannot be undone.");
     
     if (!isConfirmed) {
+      toast.error('Service deletion cancelled');
       return; // If user cancels, don't proceed with deletion
     }
 
