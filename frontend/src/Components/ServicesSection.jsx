@@ -13,7 +13,7 @@ export const ServicesSection = () => {
       title: 'Pet Boarding',
       description:
         "Safe and comfortable accommodations for your pets when you're away. Our verified hosts provide loving care in their homes or yours.",
-      icon: <HomeIcon size={32} className="text-blue-500" />,
+      icon: <HomeIcon size={32} style={{ color: 'var(--color-primary)' }} />,
       image:
         'https://images.unsplash.com/photo-1581888227599-779811939961?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
     },
@@ -21,7 +21,7 @@ export const ServicesSection = () => {
       title: 'Pet Grooming',
       description:
         'Professional grooming services to keep your pet clean, healthy, and looking their best. From baths to haircuts and nail trims.',
-      icon: <ScissorsIcon size={32} className="text-purple-500" />,
+      icon: <ScissorsIcon size={32} style={{ color: 'var(--color-accent)' }} />,
       image:
         'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
     },
@@ -29,7 +29,7 @@ export const ServicesSection = () => {
       title: 'Pet Training',
       description:
         'Expert trainers to help with obedience training, behavior modification, and specialized skills for pets of all ages.',
-      icon: <GraduationCapIcon size={32} className="text-green-500" />,
+      icon: <GraduationCapIcon size={32} style={{ color: 'var(--color-secondary)' }} />,
       image:
         'https://images.unsplash.com/photo-1587300003388-59208cc962cb?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
     },
@@ -37,7 +37,7 @@ export const ServicesSection = () => {
       title: 'Pet Products',
       description:
         'Quality food, toys, accessories, and more for all your pet needs. Curated selection of trusted brands and innovative products.',
-      icon: <ShoppingBagIcon size={32} className="text-orange-500" />,
+      icon: <ShoppingBagIcon size={32} style={{ color: 'var(--color-primary)' }} />,
       image:
         'https://images.unsplash.com/photo-1601758125946-6ec2ef64daf8?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
     },
@@ -46,7 +46,7 @@ export const ServicesSection = () => {
     <section id="services" className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+          <h2 className="text-3xl font-extrabold sm:text-4xl" style={{ color: 'var(--color-accent)' }}>
             Our Premium Pet Services
           </h2>
           <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
@@ -57,7 +57,7 @@ export const ServicesSection = () => {
           {services.map((service, index) => (
             <div
               key={index}
-              className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:transform hover:scale-105"
+              className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:transform hover:scale-105 border border-gray-100"
             >
               <div className="h-48 overflow-hidden">
                 <img
@@ -68,13 +68,14 @@ export const ServicesSection = () => {
               </div>
               <div className="p-6">
                 <div className="mb-4">{service.icon}</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--color-primary)' }}>
                   {service.title}
                 </h3>
                 <p className="text-gray-600">{service.description}</p>
                 <Link
                   to="/display-services"
-                  className="mt-4 inline-flex items-center text-blue-600 font-medium hover:text-blue-800"
+                  className="mt-4 inline-flex items-center font-medium hover:opacity-80 transition-colors duration-300"
+                  style={{ color: 'var(--color-accent)' }}
                 >
                   Learn more
                   <svg

@@ -69,14 +69,18 @@ const FeaturedSection = () => {
         <div className="mb-16">
           <div className="flex justify-between items-end mb-8">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900">
+              <h2 className="text-3xl font-bold" style={{ color: 'var(--color-accent)' }}>
                 Featured Service Providers
               </h2>
               <p className="mt-2 text-gray-600">
                 Top-rated professionals in your area
               </p>
             </div>
-            <a href="#" className="text-blue-600 hover:text-blue-800 font-medium">
+            <a 
+              href="#" 
+              style={{ color: 'var(--color-primary)' }}
+              className="font-medium hover:opacity-80 transition-colors duration-300"
+            >
               View all
             </a>
           </div>
@@ -94,22 +98,26 @@ const FeaturedSection = () => {
                       className="h-16 w-16 rounded-full object-cover"
                     />
                     <div className="ml-4">
-                      <h3 className="text-lg font-semibold text-gray-900">
+                      <h3 className="text-lg font-semibold" style={{ color: 'var(--color-primary)' }}>
                         {provider.name}
                       </h3>
-                      <p className="text-blue-600">{provider.service}</p>
+                      <p style={{ color: 'var(--color-accent)' }}>{provider.service}</p>
                     </div>
                   </div>
                   <div className="mt-4 flex items-center">
-                    <Star size={18} className="text-yellow-400 fill-current" />
+                    <Star size={18} style={{ color: 'var(--color-secondary)', fill: 'var(--color-secondary)' }} />
                     <span className="ml-1 text-gray-700 font-medium">{provider.rating}</span>
                     <span className="mx-2 text-gray-500">•</span>
                     <span className="text-gray-500">{provider.reviews} reviews</span>
                   </div>
                   <div className="mt-4 flex justify-between items-center">
-                    <span className="text-lg font-bold text-gray-900">{provider.price}</span>
+                    <span className="text-lg font-bold" style={{ color: 'var(--color-primary)' }}>{provider.price}</span>
                     <span className="text-gray-600">/{provider.unit}</span>
-                    <a href="#" className="bg-blue-100 text-blue-700 hover:bg-blue-200 px-4 py-2 rounded-md text-sm font-medium">
+                    <a 
+                      href="#" 
+                      style={{ backgroundColor: 'var(--color-accent-light)', color: 'var(--color-accent)' }}
+                      className="px-4 py-2 rounded-md text-sm font-medium hover:opacity-90 transition-all duration-300"
+                    >
                       Book Now
                     </a>
                   </div>

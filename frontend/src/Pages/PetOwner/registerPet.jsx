@@ -1,11 +1,10 @@
-import React from 'react'
-import { useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import mediaUpload from '../../../utils/mediaUpload';
 
-const registerPet = () => {
+const RegisterPet = () => {
     const [name, setName] = useState('');
     const [species, setSpecies] = useState('');
     const [breed, setBreed] = useState('');
@@ -13,8 +12,22 @@ const registerPet = () => {
     const [age, setAge] = useState('');
     const [weight, setWeight] = useState('');
     const [petImage, setPetImage] = useState([]);
+    const [previewImages, setPreviewImages] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+
+    const handleImageChange = (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length > 5) {
+            toast.error("Maximum 5 images allowed");
+            return;
+        }
+        setPetImage(files);
+        
+        // Create preview URLs
+        const previews = files.map(file => URL.createObjectURL(file));
+        setPreviewImages(previews);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -44,7 +57,6 @@ const registerPet = () => {
 
             const backendUrl = import.meta.env.VITE_BACKEND_URL;
             
-            // Send pet data with image URLs to backend
             const response = await axios.post(`${backendUrl}/api/users/pet`, {
                 name,
                 species,
@@ -52,8 +64,8 @@ const registerPet = () => {
                 gender,
                 age: Number(age),
                 weight: Number(weight),
-                pet_image: imageUrls, // Send array of image URLs
-                owner_id: JSON.parse(atob(token.split('.')[1]))._id // Get user ID from token
+                pet_image: imageUrls,
+                owner_id: JSON.parse(atob(token.split('.')[1]))._id
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -69,105 +81,220 @@ const registerPet = () => {
     }
 
     return (
-        <div style={{ maxWidth: '400px', margin: 'auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)' }}>
-            <h1 style={{ textAlign: 'center' }}>Register Pet</h1>
-            <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: '15px' }}>
-                    <label htmlFor="name">Name:</label>
-                    <input
-                        type="text"
-                        id="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Enter pet's name"
-                        style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-                    />
+        <div className="min-h-screen bg-gradient-to-b from-[var(--color-secondary-light)] to-[var(--color-white)] py-12">
+            <div className="max-w-4xl mx-auto px-4">
+                {/* Header Section */}
+                <div className="text-center mb-12">
+                    <h1 className="text-4xl font-bold text-[var(--text-on-secondary)] mb-4">
+                        Register Your Pet
+                    </h1>
+                    <p className="text-lg text-[var(--text-on-secondary)] opacity-80">
+                        Add your furry friend to your profile
+                    </p>
                 </div>
-                <div style={{ marginBottom: '15px' }}>
-                    <label htmlFor="species">Species:</label>
-                    <input
-                        type="text"
-                        id="species"
-                        value={species}
-                        onChange={(e) => setSpecies(e.target.value)}
-                        placeholder="Enter pet's species"
-                        style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-                    />
-                </div>
-                <div style={{ marginBottom: '15px' }}>
-                    <label htmlFor="breed">Breed:</label>
-                    <input
-                        type="text"
-                        id="breed"
-                        value={breed}
-                        onChange={(e) => setBreed(e.target.value)}
-                        placeholder="Enter pet's breed"
-                        style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-                    />
-                </div>
-                <div style={{ marginBottom: '15px' }}>
-                    <label htmlFor="gender">Gender:</label>
-                    <input
-                        type="text"
-                        id="gender"
-                        value={gender}
-                        onChange={(e) => setGender(e.target.value)}
-                        placeholder="Enter pet's gender"
-                        style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-                    />
-                </div>
-                <div style={{ marginBottom: '15px' }}>
-                    <label htmlFor="age">Age:</label>
-                    <input
-                        type="number"
-                        id="age"
-                        value={age}
-                        onChange={(e) => setAge(e.target.value)}
-                        placeholder="Enter pet's age"
-                        style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-                    />
-                </div>
-                <div style={{ marginBottom: '15px' }}>
-                    <label htmlFor="weight">Weight (kg):</label>
-                    <input
-                        type="number"
-                        id="weight"
-                        value={weight}
-                        onChange={(e) => setWeight(e.target.value)}
-                        placeholder="Enter pet's weight"
-                        style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-                    />
-                </div>
-                <div style={{ marginBottom: '15px' }}>
-                    <label htmlFor="petImage">Pet Images:</label>
-                    <input
-                        type="file"
-                        id="petImage"
-                        multiple
-                        accept="image/*"
-                        onChange={(e) => setPetImage(e.target.files)}
-                        style={{ width: '100%' }}
-                    />
-                </div>
-                <button
-                    type="submit"
-                    disabled={isLoading}
-                    style={{ 
-                        width: '100%', 
-                        padding: '10px', 
-                        borderRadius: '4px', 
-                        border: 'none', 
-                        backgroundColor: isLoading ? '#ccc' : '#28a745', 
-                        color: '#fff', 
-                        fontSize: '16px',
-                        cursor: isLoading ? 'not-allowed' : 'pointer'
-                    }}
-                >
-                    {isLoading ? 'Registering...' : 'Register'}
-                </button>
-            </form>
-        </div>
-    )
-}
 
-export default registerPet
+                <form onSubmit={handleSubmit} className="space-y-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {/* Pet Information Card */}
+                        <div className="bg-[var(--color-white)] rounded-2xl shadow-lg p-8">
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="bg-[var(--color-primary-light)] p-3 rounded-xl">
+                                    <svg className="w-6 h-6 text-[var(--color-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                                    </svg>
+                                </div>
+                                <h2 className="text-2xl font-semibold text-[var(--text-on-secondary)]">Pet Information</h2>
+                            </div>
+
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="block text-sm font-medium text-[var(--text-on-secondary)] mb-2">
+                                        Pet Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all"
+                                        placeholder="Enter your pet's name"
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-[var(--text-on-secondary)] mb-2">
+                                        Species
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={species}
+                                        onChange={(e) => setSpecies(e.target.value)}
+                                        className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all"
+                                        placeholder="e.g., Dog, Cat, Bird"
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-[var(--text-on-secondary)] mb-2">
+                                        Breed
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={breed}
+                                        onChange={(e) => setBreed(e.target.value)}
+                                        className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all"
+                                        placeholder="e.g., Golden Retriever, Persian"
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-[var(--text-on-secondary)] mb-2">
+                                        Gender
+                                    </label>
+                                    <select
+                                        value={gender}
+                                        onChange={(e) => setGender(e.target.value)}
+                                        className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all"
+                                        required
+                                    >
+                                        <option value="">Select Gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-[var(--text-on-secondary)] mb-2">
+                                            Age
+                                        </label>
+                                        <input
+                                            type="number"
+                                            value={age}
+                                            onChange={(e) => setAge(e.target.value)}
+                                            className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all"
+                                            placeholder="Age"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-[var(--text-on-secondary)] mb-2">
+                                            Weight (kg)
+                                        </label>
+                                        <input
+                                            type="number"
+                                            value={weight}
+                                            onChange={(e) => setWeight(e.target.value)}
+                                            className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all"
+                                            placeholder="Weight"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Image Upload Card */}
+                        <div className="bg-[var(--color-white)] rounded-2xl shadow-lg p-8">
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="bg-[var(--color-accent-light)] p-3 rounded-xl">
+                                    <svg className="w-6 h-6 text-[var(--color-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <h2 className="text-2xl font-semibold text-[var(--text-on-secondary)]">Pet Photos</h2>
+                            </div>
+
+                            {/* Image Preview Grid */}
+                            {previewImages.length > 0 && (
+                                <div className="grid grid-cols-2 gap-4 mb-6">
+                                    {previewImages.map((preview, index) => (
+                                        <div key={index} className="relative group">
+                                            <img
+                                                src={preview}
+                                                alt={`Preview ${index + 1}`}
+                                                className="w-full h-40 object-cover rounded-lg"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const newImages = [...petImage];
+                                                    const newPreviews = [...previewImages];
+                                                    newImages.splice(index, 1);
+                                                    newPreviews.splice(index, 1);
+                                                    setPetImage(newImages);
+                                                    setPreviewImages(newPreviews);
+                                                }}
+                                                className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            {/* Upload Area */}
+                            <div className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center">
+                                <input
+                                    type="file"
+                                    multiple
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                    className="hidden"
+                                    id="pet-image-upload"
+                                />
+                                <label
+                                    htmlFor="pet-image-upload"
+                                    className="cursor-pointer flex flex-col items-center"
+                                >
+                                    <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    <span className="text-lg text-gray-500 mb-2">
+                                        Upload Pet Photos
+                                    </span>
+                                    <span className="text-sm text-gray-400">
+                                        Maximum 5 images allowed
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Submit Button */}
+                    <div className="flex justify-center">
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            className="bg-[var(--color-primary)] hover:bg-[var(--color-accent)] text-[var(--text-on-primary)] px-8 py-3 rounded-lg transition-colors duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                        >
+                            {isLoading ? (
+                                <>
+                                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                    </svg>
+                                    Registering Pet...
+                                </>
+                            ) : (
+                                <>
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    Register Pet
+                                </>
+                            )}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+export default RegisterPet;

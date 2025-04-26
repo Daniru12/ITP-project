@@ -151,195 +151,208 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
-                {/* Header */}
-                <div className="text-center">
-                    <h2 className="text-3xl font-extrabold text-gray-900 mb-2">
-                        Create Account
-                    </h2>
-                    <p className="text-sm text-gray-600">
-                        Join our pet care community
-                    </p>
-                </div>
-
-                {/* Form */}
-                <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-                    <div className="space-y-4">
-                        {/* Username */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Username</label>
-                            <div className="mt-1 relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <FiUser className="h-5 w-5 text-gray-400" />
-                                </div>
-                                <input
-                                    type="text"
-                                    name="username"
-                                    required
-                                    value={formData.username}
-                                    onChange={handleChange}
-                                    className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                    placeholder="Choose a username"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Full Name */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Full Name</label>
-                            <div className="mt-1 relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <FiUser className="h-5 w-5 text-gray-400" />
-                                </div>
-                                <input
-                                    type="text"
-                                    name="full_name"
-                                    required
-                                    value={formData.full_name}
-                                    onChange={handleChange}
-                                    className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                    placeholder="Enter your full name"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Email */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Email</label>
-                            <div className="mt-1 relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <FiMail className="h-5 w-5 text-gray-400" />
-                                </div>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    required
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                    placeholder="Enter your email"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Password */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Password</label>
-                            <div className="mt-1 relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <FiLock className="h-5 w-5 text-gray-400" />
-                                </div>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    required
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                    placeholder="Create a password (min. 6 characters)"
-                                />
-                            </div>
-                            <p className="mt-1 text-xs text-gray-500">
-                                Must be at least 6 characters and contain a number
+        <div className="min-h-screen flex bg-gray-50">
+            {/* Left Section - Registration Form */}
+            <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+                <div className="w-full max-w-md">
+                    <div className="bg-white p-8 rounded-lg shadow-lg">
+                        <div className="text-center mb-8">
+                            <h2 className="text-3xl font-bold text-gray-900">
+                                Create Account
+                            </h2>
+                            <p className="text-gray-600 mt-2">
+                                Join our pet care community
                             </p>
                         </div>
 
-                        {/* Phone Number */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Phone Number</label>
-                            <div className="mt-1 relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <FiPhone className="h-5 w-5 text-gray-400" />
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            {/* Username */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Username</label>
+                                <div className="mt-1 relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <FiUser className="h-5 w-5 text-gray-400" />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        name="username"
+                                        required
+                                        value={formData.username}
+                                        onChange={handleChange}
+                                        className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] sm:text-sm"
+                                        placeholder="Choose a username"
+                                    />
                                 </div>
-                                <input
-                                    type="tel"
-                                    name="phone_number"
-                                    required
-                                    value={formData.phone_number}
+                            </div>
+
+                            {/* Full Name */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Full Name</label>
+                                <div className="mt-1 relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <FiUser className="h-5 w-5 text-gray-400" />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        name="full_name"
+                                        required
+                                        value={formData.full_name}
+                                        onChange={handleChange}
+                                        className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] sm:text-sm"
+                                        placeholder="Enter your full name"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Email */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Email</label>
+                                <div className="mt-1 relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <FiMail className="h-5 w-5 text-gray-400" />
+                                    </div>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        required
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] sm:text-sm"
+                                        placeholder="Enter your email"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Password */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Password</label>
+                                <div className="mt-1 relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <FiLock className="h-5 w-5 text-gray-400" />
+                                    </div>
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        required
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] sm:text-sm"
+                                        placeholder="Create a password"
+                                    />
+                                </div>
+                                <p className="mt-1 text-xs text-gray-500">
+                                    Must be at least 6 characters and contain a number
+                                </p>
+                            </div>
+
+                            {/* Phone Number */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+                                <div className="mt-1 relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <FiPhone className="h-5 w-5 text-gray-400" />
+                                    </div>
+                                    <input
+                                        type="tel"
+                                        name="phone_number"
+                                        required
+                                        value={formData.phone_number}
+                                        onChange={handleChange}
+                                        className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] sm:text-sm"
+                                        placeholder="Enter your phone number"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* User Type */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Account Type</label>
+                                <select
+                                    name="user_type"
+                                    value={formData.user_type}
                                     onChange={handleChange}
-                                    className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                    placeholder="Enter your phone number"
-                                />
+                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] sm:text-sm"
+                                >
+                                    <option value="pet_owner">Pet Owner</option>
+                                    <option value="service_provider">Service Provider</option>
+                                </select>
                             </div>
-                        </div>
 
-                        {/* User Type */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Account Type</label>
-                            <select
-                                name="user_type"
-                                value={formData.user_type}
-                                onChange={handleChange}
-                                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
-                            >
-                                <option value="pet_owner">Pet Owner</option>
-                                <option value="service_provider">Service Provider</option>
-                            </select>
-                        </div>
-
-                        {/* Profile Picture */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                                Profile Picture (Optional)
-                            </label>
-                            <div className="mt-1 flex items-center space-x-4">
-                                {imagePreview && (
-                                    <div className="flex-shrink-0 h-12 w-12">
-                                        <img
-                                            src={imagePreview}
-                                            alt="Preview"
-                                            className="h-12 w-12 rounded-full object-cover"
-                                        />
+                            {/* Profile Picture */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Profile Picture (Optional)
+                                </label>
+                                <div className="mt-1 flex items-center space-x-4">
+                                    {imagePreview && (
+                                        <div className="flex-shrink-0 h-12 w-12">
+                                            <img
+                                                src={imagePreview}
+                                                alt="Preview"
+                                                className="h-12 w-12 rounded-full object-cover"
+                                            />
+                                        </div>
+                                    )}
+                                    <div className="flex-1">
+                                        <div className="relative">
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={handleImageSelect}
+                                                className="sr-only"
+                                                id="profile-image"
+                                            />
+                                            <label
+                                                htmlFor="profile-image"
+                                                className="cursor-pointer inline-flex items-center px-4 py-2 border border-[var(--color-accent)] rounded-md shadow-sm text-sm font-medium text-[var(--color-accent)] bg-white hover:bg-[var(--color-accent-light)] focus:outline-none"
+                                            >
+                                                <FiUpload className="h-5 w-5 mr-2" />
+                                                Upload Photo
+                                            </label>
+                                        </div>
+                                        <p className="mt-1 text-xs text-gray-500">
+                                            JPG, PNG or GIF (max. 5MB)
+                                        </p>
                                     </div>
-                                )}
-                                <div className="flex-1">
-                                    <div className="relative">
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={handleImageSelect}
-                                            className="sr-only"
-                                            id="profile-image"
-                                        />
-                                        <label
-                                            htmlFor="profile-image"
-                                            className="cursor-pointer flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none"
-                                        >
-                                            <FiUpload className="h-5 w-5 mr-2" />
-                                            Upload Photo
-                                        </label>
-                                    </div>
-                                    <p className="mt-1 text-xs text-gray-500">
-                                        JPG, PNG or GIF (max. 5MB)
-                                    </p>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    {/* Submit Button */}
-                    <div>
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300 disabled:cursor-not-allowed"
-                        >
-                            <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                                <FiUserPlus className="h-5 w-5 text-blue-500 group-hover:text-blue-400" />
-                            </span>
-                            {isLoading ? 'Creating Account...' : 'Create Account'}
-                        </button>
-                    </div>
+                            {/* Submit Button */}
+                            <button
+                                type="submit"
+                                disabled={isLoading}
+                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-[var(--text-on-primary)] bg-[var(--color-primary)] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-accent)] disabled:opacity-50 disabled:cursor-not-allowed mt-6"
+                            >
+                                {isLoading ? 'Creating Account...' : 'Create Account'}
+                            </button>
 
-                    {/* Login Link */}
-                    <div className="text-center text-sm">
-                        <span className="text-gray-600">Already have an account? </span>
-                        <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
-                            Sign in here
-                        </Link>
+                            {/* Login Link */}
+                            <div className="text-center mt-4">
+                                <span className="text-gray-600">Already have an account? </span>
+                                <Link to="/login" className="font-medium text-[var(--color-accent)] hover:text-[var(--color-primary)]">
+                                    Sign in here
+                                </Link>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
+            </div>
+
+            {/* Right Section - Image and Text */}
+            <div className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center bg-white p-12">
+                <div className="w-full max-w-md">
+                    <img 
+                        src="https://img.freepik.com/free-photo/cute-pets-collage_23-2150007429.jpg" 
+                        alt="Pet Care Services" 
+                        className="w-full h-auto rounded-lg shadow-md mb-8"
+                    />
+                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                        Join Our Pet Care Community
+                    </h2>
+                    <p className="text-gray-600">
+                        Connect with professional pet care providers, schedule services, and give your pets the care they deserve. Start your journey with us today!
+                    </p>
+                </div>
             </div>
         </div>
     );

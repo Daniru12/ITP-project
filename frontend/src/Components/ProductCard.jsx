@@ -73,15 +73,15 @@ export const ProductCard = ({ product }) => {
         </p>
         <div className="flex items-center justify-between gap-2">
           <span className="text-lg font-bold text-gray-900">
-            ${price.toFixed(2)}
+            Rs.{price.toFixed(2)}
           </span>
           <div className="flex gap-2">
-            <button
+            {/* <button
               onClick={handleView}
               className="flex items-center justify-center p-2 rounded-full bg-green-500 hover:bg-green-600 transition-all duration-300 transform hover:scale-110 active:scale-95"
             >
               <EyeIcon className="w-5 h-5 text-white" />
-            </button>
+            </button> */}
             <button
               onClick={handleAddToCart}
               className={`flex items-center justify-center p-2 rounded-full transition-all duration-300 transform

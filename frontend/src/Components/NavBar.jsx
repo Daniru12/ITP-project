@@ -33,8 +33,17 @@ const NavBar = () => {
     navigate('/login');
   };
 
+  const navStyle = {
+    background: `linear-gradient(to right, var(--color-primary), var(--color-accent))`,
+  };
+
+  const buttonStyle = {
+    backgroundColor: 'var(--color-secondary)',
+    color: '#333333',
+  };
+
   return (
-    <nav className="bg-gradient-to-r from-blue-600 to-blue-800 fixed w-full top-0 z-50">
+    <nav className="fixed w-full top-0 z-50 shadow-lg" style={navStyle}>
       <div className="container mx-auto px-4 py-3">
         <div className="flex justify-between items-center">
           <Link to="/" className="flex items-center space-x-2">
@@ -44,45 +53,66 @@ const NavBar = () => {
           </Link>
           
           <div className="flex items-center space-x-8">
-            <Link to="/" className="text-white hover:text-blue-200 transition-colors duration-200 text-sm font-medium">
+            <Link 
+              to="/" 
+              className="text-white hover:text-opacity-80 transition-colors duration-200 text-sm font-medium"
+            >
               Home
             </Link>
 
-            <div className="flex items-center space-x-8">
-            <Link to="/petmarketplace" className="text-white hover:text-blue-200 transition-colors duration-200 text-sm font-medium">
+            <Link 
+              to="/petmarketplace" 
+              className="text-white hover:text-opacity-80 transition-colors duration-200 text-sm font-medium"
+            >
               Marketplace
             </Link>
-            </div>
 
-            
+            <Link 
+              to="/display-services" 
+              className="text-white hover:text-opacity-80 transition-colors duration-200 text-sm font-medium"
+            >
+              Pet Care Services
+            </Link>
+
             
             {isLoggedIn ? (
               <>
                 {isPetOwner() && (
-                  <Link to="/profile" className="text-white hover:text-blue-200 transition-colors duration-200 text-sm font-medium">
+                  <Link 
+                    to="/profile" 
+                    className="text-white hover:text-opacity-80 transition-colors duration-200 text-sm font-medium"
+                  >
                     Profile
                   </Link>
                 )}
                 {isServiceProvider() && (
-                  <Link to="/provider-profile" className="text-white hover:text-blue-200 transition-colors duration-200 text-sm font-medium">
+                  <Link 
+                    to="/provider-profile" 
+                    className="text-white hover:text-opacity-80 transition-colors duration-200 text-sm font-medium"
+                  >
                     Dashboard
                   </Link>
                 )}
                 <button
                   onClick={handleLogout}
-                  className="bg-white/10 hover:bg-white/20 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 text-sm border border-white/20"
+                  className="hover:bg-opacity-90 font-medium py-2 px-4 rounded-lg transition-all duration-200 text-sm"
+                  style={buttonStyle}
                 >
                   Logout
                 </button>
               </>
             ) : (
               <>
-                <Link to="/login" className="text-white hover:text-blue-200 transition-colors duration-200 text-sm font-medium">
+                <Link 
+                  to="/login" 
+                  className="text-white hover:text-opacity-80 transition-colors duration-200 text-sm font-medium"
+                >
                   Login
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-white text-blue-600 px-6 py-2 rounded-lg hover:bg-opacity-90 transition-all duration-200 text-sm font-semibold shadow-lg hover:shadow-xl"
+                  className="px-6 py-2 rounded-lg hover:bg-opacity-90 transition-all duration-200 text-sm font-semibold shadow-md hover:shadow-lg"
+                  style={buttonStyle}
                 >
                   Register
                 </Link>

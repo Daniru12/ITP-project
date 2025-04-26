@@ -24,7 +24,7 @@ import AppointmentSummary from './Pages/Payment/OrderSummary'
 import AddAdvertisementForm from './Pages/Advertisement/AddAdvertisementForm'
 import AdReviewComponent from './Pages/Advertisement/AdReviewComponent'
 import UpdateAdvertisementForm from './Pages/Advertisement/UpdateAdvertisementForm'
-import DeleteAdvertisement from './Pages/Advertisement/DeleteAdvertisement'
+
 
 import UpdateUser from './Pages/Admin/UpdateUser'
 import AdminUpdatePet from './Pages/Admin/UpdatePet'
@@ -64,6 +64,11 @@ import TrainingScheduleView from './Pages/Schedule/TrainingSchedule/showSchedule
 import CreateTrainingSchedule from './Pages/Schedule/TrainingSchedule/createSchedule'
 import FaqManager from './Pages/FAQ/faqall'
 import VeiwOwnerOerders from './Pages/Orders/viewOwnerOrders'
+
+import PaymentReviewPage from './Pages/Payment/payemntreview'
+import EditProfile from './Pages/Providers/EditProfile'
+import EditProfilePetOwner from './Pages/PetOwner/EditProfile'
+
 // Wrapper component to handle NavBar conditional rendering
 const AppContent = () => {
   const location = useLocation();
@@ -88,6 +93,7 @@ const AppContent = () => {
             <Route path="Services" element={<ServiceManagement />} />
             <Route path="AllPets" element={<PetsManagement />} />
             <Route path="settings" element={<div className="p-6"><h2 className="text-2xl font-semibold mb-6">Admin Settings</h2></div>} />
+            
           </Route>
 
           <Route path='/register' element={<RegisterPage />} />
@@ -107,6 +113,8 @@ const AppContent = () => {
           <Route path="/scheduling/boarding/:id" element={<UpdateBoedingScheduleForm />} />
           <Route path='/profile' element={<Profile />} />
           <Route path='/provider-profile' element={<ProviderProfile />} />
+          <Route path='/edit-profile' element={<EditProfile />} />
+          <Route path='/edit-profile-petowner' element={<EditProfilePetOwner />} />
           <Route path='/add-grooming' element={<AddGrooming />} />
           <Route path='/add-boarding' element={<AddBoarding />} />
           <Route path='/add-training' element={<AddTraining />} />
@@ -116,13 +124,16 @@ const AppContent = () => {
           <Route path='/FaqAll' element={<FaqManager />} /> 
           <Route path='/PaymentPage' element={<PaymentPage />} />
           <Route path='/ServiceSummary' element={<ServiceSummary/>}/>
+
           <Route path='/payment/:id' element={<PaymentForm/>}/>
+          <Route path='/payments' element={< PaymentReviewPage/>}/>
+         
           <Route path='/AppointmentSummary' element={<AppointmentSummary/>}/>
 
           <Route path='/AddAdvertisementForm' element={<AddAdvertisementForm/>}/>
           <Route path='/AdReviewComponent' element={<AdReviewComponent/>}/>
-          <Route path='/UpdateAdvertisementForm' element={<UpdateAdvertisementForm/>}/>
-          <Route path='/DeleteAdvertisement' element={<DeleteAdvertisement/>}/>
+          <Route path='/update-ad/:id' element={<UpdateAdvertisementForm/>}/>
+        
 
           <Route path='/petmarketplace' element={<PetMarketplace />} /> 
           <Route path='/create-product' element={<CreateProduct />} />

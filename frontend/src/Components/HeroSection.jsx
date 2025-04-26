@@ -1,13 +1,36 @@
 import React from 'react'
 import { SearchIcon } from 'lucide-react'
+import RotatingText from '../UI/RotateText'
+
 export const HeroSection = () => {
+  const gradientStyle = {
+    background: `linear-gradient(135deg, var(--color-accent-light) 0%, rgba(255,255,255,0.9) 100%)`,
+  };
+
   return (
-    <section className="bg-gradient-to-r from-blue-50 to-blue-100 py-16 md:py-24">
+    <section className="py-16 md:py-24" style={gradientStyle}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-center">
           <div className="lg:w-1/2 lg:pr-10">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-800 leading-tight">
-              The Smart Way to <span className="text-blue-600">Care</span> for
+              The Smart Way to
+            </h1>
+            <div>
+              <RotatingText
+                texts={['Care for Pets', 'Groom Your Pet', 'Train Your Pet', 'Board Your Pet']}
+                mainClassName="text-4xl md:text-5xl font-bold leading-tight mb-2"
+                staggerFrom="last"
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "-120%" }}
+                staggerDuration={0.025}
+                splitLevelClassName="overflow-hidden"
+                transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                rotationInterval={3000}
+                elementLevelClassName="text-[#BC4626]"
+              />
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-800 leading-tight">
               Your Furry Friends
             </h1>
             <p className="mt-4 text-lg text-gray-600 max-w-lg">
@@ -25,11 +48,18 @@ export const HeroSection = () => {
                     <input
                       type="text"
                       placeholder="Search for pet services near you..."
-                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                      style={{ 
+                        focusRing: 'var(--color-accent)',
+                        borderColor: 'var(--color-accent)'
+                      }}
                     />
                   </div>
                 </div>
-                <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-md font-medium sm:ml-2">
+                <button 
+                  className="px-6 py-2 rounded-md font-medium sm:ml-2 text-white transition-all duration-300 hover:opacity-90"
+                  style={{ backgroundColor: 'var(--color-primary)' }}
+                >
                   Search
                 </button>
               </div>
@@ -38,9 +68,10 @@ export const HeroSection = () => {
               <span className="flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-green-500 mr-1"
+                  className="h-5 w-5 mr-1"
                   viewBox="0 0 20 20"
                   fill="currentColor"
+                  style={{ color: 'var(--color-secondary)' }}
                 >
                   <path
                     fillRule="evenodd"
@@ -54,9 +85,10 @@ export const HeroSection = () => {
               <span className="flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-green-500 mr-1"
+                  className="h-5 w-5 mr-1"
                   viewBox="0 0 20 20"
                   fill="currentColor"
+                  style={{ color: 'var(--color-secondary)' }}
                 >
                   <path
                     fillRule="evenodd"
@@ -70,9 +102,10 @@ export const HeroSection = () => {
               <span className="flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-green-500 mr-1"
+                  className="h-5 w-5 mr-1"
                   viewBox="0 0 20 20"
                   fill="currentColor"
+                  style={{ color: 'var(--color-secondary)' }}
                 >
                   <path
                     fillRule="evenodd"
@@ -86,13 +119,13 @@ export const HeroSection = () => {
           </div>
           <div className="lg:w-1/2 mt-10 lg:mt-0">
             <div className="relative">
-              <div className="absolute -top-6 -left-6 w-32 h-32 bg-yellow-200 rounded-full opacity-50"></div>
+              <div style={{ backgroundColor: 'var(--color-secondary)' }} className="absolute -top-6 -left-6 w-32 h-32 rounded-full opacity-50"></div>
               <img
                 src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
                 alt="Happy dogs with their owner"
                 className="relative z-10 rounded-lg shadow-xl w-full object-cover h-80 md:h-96"
               />
-              <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-blue-200 rounded-full opacity-50"></div>
+              <div style={{ backgroundColor: 'var(--color-primary)' }} className="absolute -bottom-6 -right-6 w-32 h-32 rounded-full opacity-50"></div>
             </div>
           </div>
         </div>

@@ -68,7 +68,7 @@ const DeleteProducts = () => {
         },
       });
       toast.success('Product deleted successfully');
-      fetchProducts(); // Refresh products list
+      window.location.reload(); // Refresh page
     } catch (error) {
       console.error('Error deleting product:', error);
       if (error.response?.status === 401) {
@@ -120,7 +120,7 @@ const DeleteProducts = () => {
               products.map((product) => (
                 <tr key={product._id} className="hover:bg-gray-50">
                   <td className="border p-2">{product.name}</td>
-                  <td className="border p-2">${product.price.toFixed(2)}</td>
+                  <td className="border p-2">Rs.{product.price.toFixed(2)}</td>
                   <td className="border p-2">{product.quantity}</td>
                   <td className="border p-2">{product.category}</td>
                   <td className="border p-2">

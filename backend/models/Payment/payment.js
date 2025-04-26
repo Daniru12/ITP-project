@@ -7,6 +7,11 @@ const paymentSchema = new mongoose.Schema(
       ref: "Appointment",
       required: [true, "Appointment reference is required"],
     },
+    owner_id: {
+      type: mongoose.Schema.Types.ObjectId, // Reference to the User model
+      ref: "User", // Links to the User model
+      required: [true, "Owner ID is required"],
+    },
     amount: {
       type: Number,
       required: [true, "Payment amount is required"],
@@ -51,6 +56,7 @@ const paymentSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
 
 const Payment = mongoose.model("Payment", paymentSchema);
 

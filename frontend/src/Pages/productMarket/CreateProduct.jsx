@@ -178,7 +178,7 @@ const CreateProduct = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Price (USD)
+              Price (LKR)
             </label>
             <input
               type="number"
@@ -233,8 +233,11 @@ const CreateProduct = () => {
             >
               <option value="all">All</option>
               <option value="toys">Toys</option>
-              <option value="food">Food</option>
-              <option value="accessories">Accessories</option>
+              <option value="food">Food & Treats</option>
+              <option value="beds">Beds & Furniture</option>
+              <option value="grooming">Grooming</option>
+              <option value="health">Health & Wellness</option>
+
             </select>
             {errors.category && (
               <p className="mt-1 text-sm text-red-500">{errors.category}</p>

@@ -1,6 +1,11 @@
 import React from 'react'
 import { Star } from 'lucide-react'
+
 export const TestimonialsSection = () => {
+  const sectionStyle = {
+    backgroundColor: 'var(--color-accent-light)',
+  };
+
   const testimonials = [
     {
       content:
@@ -36,14 +41,15 @@ export const TestimonialsSection = () => {
       rating: 4,
     },
   ]
+
   return (
-    <section className="py-16 bg-blue-50">
+    <section className="py-16" style={sectionStyle}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+          <h2 className="text-3xl font-extrabold sm:text-4xl" style={{ color: 'var(--color-primary)' }}>
             What Pet Parents Are Saying
           </h2>
-          <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
+          <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-600">
             Join thousands of happy customers who trust Pawgo with their furry
             family members
           </p>
@@ -52,10 +58,10 @@ export const TestimonialsSection = () => {
           {testimonials.map((testimonial, index) => (
             <div
               key={index}
-              className="bg-white rounded-xl shadow-md p-6 relative"
+              className="bg-white rounded-xl shadow-md p-6 relative border border-gray-100"
             >
               {/* Quote mark */}
-              <div className="absolute top-6 right-6 text-blue-200">
+              <div className="absolute top-6 right-6" style={{ color: 'var(--color-accent-light)' }}>
                 <svg
                   width="45"
                   height="36"
@@ -75,11 +81,10 @@ export const TestimonialsSection = () => {
                   <Star
                     key={i}
                     size={18}
-                    className={
-                      i < testimonial.rating
-                        ? 'text-yellow-400 fill-current'
-                        : 'text-gray-300'
-                    }
+                    style={{ 
+                      color: i < testimonial.rating ? 'var(--color-secondary)' : '#E5E7EB',
+                      fill: i < testimonial.rating ? 'var(--color-secondary)' : '#E5E7EB'
+                    }}
                   />
                 ))}
               </div>
@@ -93,13 +98,13 @@ export const TestimonialsSection = () => {
                   className="h-12 w-12 rounded-full object-cover"
                 />
                 <div className="ml-4">
-                  <h4 className="font-semibold text-gray-900">
+                  <h4 className="font-semibold" style={{ color: 'var(--color-primary)' }}>
                     {testimonial.author}
                   </h4>
                   <div className="text-sm text-gray-600">
                     {testimonial.location}
                   </div>
-                  <div className="text-sm text-blue-600">
+                  <div className="text-sm" style={{ color: 'var(--color-accent)' }}>
                     {testimonial.service} for {testimonial.pet}
                   </div>
                 </div>
@@ -110,7 +115,8 @@ export const TestimonialsSection = () => {
         <div className="mt-12 text-center">
           <a
             href="#"
-            className="inline-flex items-center text-blue-600 font-medium hover:text-blue-800"
+            className="inline-flex items-center font-medium hover:opacity-80 transition-colors duration-300"
+            style={{ color: 'var(--color-primary)' }}
           >
             Read more testimonials
             <svg

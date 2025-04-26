@@ -15,7 +15,7 @@ const UpdateProduct = () => {
     description: '',
     price: '',
     quantity: '',
-    category: 'all',
+    //category: 'all',
     image: []
   });
   const [newImages, setNewImages] = useState([]);
@@ -179,7 +179,7 @@ const UpdateProduct = () => {
       });
 
       toast.success('Product updated successfully');
-      navigate('/provider-profile');
+      navigate('/delete-product');
     } catch (error) {
       console.error('Error updating product:', error);
       if (error.response?.status === 401) {
@@ -286,7 +286,7 @@ const UpdateProduct = () => {
             )}
           </div>
 
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Category
             </label>
@@ -306,7 +306,7 @@ const UpdateProduct = () => {
             {errors.category && (
               <p className="mt-1 text-sm text-red-500">{errors.category}</p>
             )}
-          </div>
+          </div>  */}
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">

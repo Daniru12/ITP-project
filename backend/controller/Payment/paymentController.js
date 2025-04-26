@@ -2,7 +2,7 @@ import Payment from "../../models/Payment/payment.js";
 import Appointment from "../../models/BookingScheduling/Appointment.js";
 import bcrypt from "bcryptjs";
 
-// Create a new payment
+
 export const createPayment = async (req, res) => {
   try {
     const { appointment_id, amount, currency, payment_method, card_details } = req.body;
@@ -12,6 +12,14 @@ export const createPayment = async (req, res) => {
     if (!appointment) {
       return res.status(404).json({ message: "Appointment not found" });
     }
+
+    // Use the authenticated user's ID directly
+    const owner_id = req.user._id;
+
+    // // Validate that the authenticated user is the owner of the appointment
+    // if (!appointment.user_id.equals(owner_id)) {
+    //   return res.status(403).json({ message: "You are not authorized to pay for this appointment" });
+    // }
 
     // Validate card details if payment method is "Card"
     if (
@@ -36,6 +44,7 @@ export const createPayment = async (req, res) => {
     // Create new payment
     const newPayment = new Payment({
       appointment_id,
+      owner_id, // Set owner_id from the authenticated user
       amount,
       currency: currency || "USD",
       payment_method,
@@ -50,6 +59,7 @@ export const createPayment = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 
 // Get payment by ID
 export const getPaymentById = async (req, res) => {

@@ -83,21 +83,21 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
         throw new Error("Please enter a valid amount");
       }
 
-      // Validate card details if paying by card
-      if (paymentMethod === "Card") {
-        if (!cardNumber || !expiryDate || !cvv || !cardHolderName) {
-          throw new Error("Please fill all card details");
-        }
-        if (!/^\d{16}$/.test(cardNumber.replace(/\s/g, ""))) {
-          throw new Error("Invalid card number. Must be 16 digits");
-        }
-        if (!/^\d{3,4}$/.test(cvv)) {
-          throw new Error("Invalid CVV. Must be 3 or 4 digits");
-        }
-        if (!/^\d{2}\/\d{2}$/.test(expiryDate)) {
-          throw new Error("Invalid expiry date format. Use MM/YY");
-        }
-      }
+      // // Validate card details if paying by card
+      // if (paymentMethod === "Card") {
+      //   if (!cardNumber || !expiryDate || !cvv || !cardHolderName) {
+      //     throw new Error("Please fill all card details");
+      //   }
+      //   if (!/^\d{16}$/.test(cardNumber.replace(/\s/g, ""))) {
+      //     throw new Error("Invalid card number. Must be 16 digits");
+      //   }
+      //   if (!/^\d{3,4}$/.test(cvv)) {
+      //     throw new Error("Invalid CVV. Must be 3 or 4 digits");
+      //   }
+      //   if (!/^\d{2}\/\d{2}$/.test(expiryDate)) {
+      //     throw new Error("Invalid expiry date format. Use MM/YY");
+      //   }
+      // }
 
       const token = localStorage.getItem("token");
       if (!token) {
@@ -137,7 +137,7 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
       if (onPaymentSuccess) {
         onPaymentSuccess();
       }
-      navigate("/Appointment");
+      navigate("/payments");
     } catch (err) {
       console.error("Payment error:", err.response?.data || err); // Debug log
       const errorMessage = err.response?.data?.message || err.message || "An error occurred during payment";

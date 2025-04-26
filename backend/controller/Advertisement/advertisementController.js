@@ -26,6 +26,7 @@ export const createAdvertisement = async (req, res) => {
 // @desc Get all advertisements
 export const getAdvertisements = async (req, res) => {
   try {
+    
     const ads = await Advertisement.find();
     res.status(200).json(ads);
   } catch (error) {
@@ -58,23 +59,39 @@ export const getAdvertisementById = async (req, res) => {
 // @desc Update an advertisement
 export const updateAdvertisement = async (req, res) => {
   try {
+    // Find the advertisement by its ID
     const ad = await Advertisement.findById(req.params.id);
+    
+    // If the advertisement doesn't exist, return a 404 error
     if (!ad) {
       return res.status(404).json({ message: "Advertisement not found" });
     }
 
-    // Check if the logged-in user is the owner of the ad
-    if (ad.advertiser_id.toString() !== req.user._id.toString()) {
+    console.log("Logged-in user ID:", req.user._id);
+    console.log("Advertisement owner ID:", ad.advertiser_id);
+
+    // Check if the logged-in user is the advertiser or an admin
+    if (ad.advertiser_id.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+      // If not, return a 403 (Forbidden) error
       return res.status(403).json({ message: "Not authorized to update this advertisement" });
     }
 
+    // If authorized, update the advertisement with the new data
     Object.assign(ad, req.body);
+
+    // Save the updated advertisement to the database
     const updatedAd = await ad.save();
+
+    // Return the updated advertisement as a response
     res.status(200).json(updatedAd);
   } catch (error) {
+    // Handle any unexpected errors
+    console.error("Error updating advertisement:", error);
     res.status(500).json({ message: error.message });
   }
 };
+
+
 
 // @desc Delete an advertisement
 export const deleteAdvertisement = async (req, res) => {
@@ -82,11 +99,6 @@ export const deleteAdvertisement = async (req, res) => {
     const ad = await Advertisement.findById(req.params.id);
     if (!ad) {
       return res.status(404).json({ message: "Advertisement not found" });
-    }
-
-    // Check if the logged-in user is the owner of the ad
-    if (ad.advertiser_id.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: "Not authorized to delete this advertisement" });
     }
 
     await ad.deleteOne();

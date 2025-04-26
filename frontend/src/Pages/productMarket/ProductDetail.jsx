@@ -131,7 +131,7 @@ export const ProductDetail = () => {
               </div>
             </div>
             <div className="text-3xl font-bold text-gray-900">
-              ${product.price}
+              Rs.{product.price}
             </div>
             <div className="space-y-4">
               <button className="w-full py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center justify-center space-x-2">

@@ -118,113 +118,103 @@ const UpdateUser = () => {
     }
   };
 
-  // Render the form
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Update User Details</h2>
-      
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Username Field */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Username
-          </label>
-          <input
-            type="text"
-            name="username"
-            value={user.username}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm 
-                     focus:border-blue-500 focus:ring-blue-500 p-2"
-            required
-          />
-        </div>
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-2xl mx-auto px-4">
+        <div className="bg-white rounded-xl shadow-sm p-8">
+          <h2 className="text-3xl font-bold text-[#333333] mb-8">Update User Details</h2>
+          
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-base font-medium text-[#333333] mb-2">
+                  Username
+                </label>
+                <input
+                  type="text"
+                  name="username"
+                  value={user.username}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#347486] focus:ring-2 focus:ring-[#347486]/20 transition-all duration-300"
+                  required
+                />
+              </div>
 
-        {/* Full Name Field */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Full Name
-          </label>
-          <input
-            type="text"
-            name="full_name"
-            value={user.full_name}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm 
-                     focus:border-blue-500 focus:ring-blue-500 p-2"
-            required
-          />
-        </div>
+              <div>
+                <label className="block text-base font-medium text-[#333333] mb-2">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  name="full_name"
+                  value={user.full_name}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#347486] focus:ring-2 focus:ring-[#347486]/20 transition-all duration-300"
+                  required
+                />
+              </div>
 
-        {/* Email Field */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Email Address
-          </label>
-          <input
-            type="email"
-            name="email"
-            value={user.email}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm 
-                     focus:border-blue-500 focus:ring-blue-500 p-2"
-            required
-          />
-        </div>
+              <div>
+                <label className="block text-base font-medium text-[#333333] mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={user.email}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#347486] focus:ring-2 focus:ring-[#347486]/20 transition-all duration-300"
+                  required
+                />
+              </div>
 
-        {/* Phone Number Field */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Phone Number
-          </label>
-          <input
-            type="tel"
-            name="phone_number"
-            value={user.phone_number}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm 
-                     focus:border-blue-500 focus:ring-blue-500 p-2"
-            required
-          />
-        </div>
+              <div>
+                <label className="block text-base font-medium text-[#333333] mb-2">
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  name="phone_number"
+                  value={user.phone_number}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#347486] focus:ring-2 focus:ring-[#347486]/20 transition-all duration-300"
+                  required
+                />
+              </div>
 
-        {/* Profile Picture URL Field */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Profile Picture URL
-          </label>
-          <input
-            type="url"
-            name="profile_picture"
-            value={user.profile_picture}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm 
-                     focus:border-blue-500 focus:ring-blue-500 p-2"
-          />
-        </div>
+              <div>
+                <label className="block text-base font-medium text-[#333333] mb-2">
+                  Profile Picture URL
+                </label>
+                <input
+                  type="url"
+                  name="profile_picture"
+                  value={user.profile_picture}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#347486] focus:ring-2 focus:ring-[#347486]/20 transition-all duration-300"
+                />
+              </div>
+            </div>
 
-        {/* Form Buttons */}
-        <div className="flex gap-4 pt-4">
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 
-                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          >
-            Save Changes
-          </button>
+            <div className="flex gap-4 pt-6">
+              <button
+                type="submit"
+                className="flex-1 bg-[#347486] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#2a5d6b] transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#347486] focus:ring-offset-2"
+              >
+                Save Changes
+              </button>
 
-          {/* Cancel Button */}
-          <button
-            type="button"
-            onClick={() => navigate('/admin/users')}
-            className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 
-                     focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-          >
-            Cancel
-          </button>
+              <button
+                type="button"
+                onClick={() => navigate('/admin/users')}
+                className="flex-1 bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
   );
 };
