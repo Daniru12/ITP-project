@@ -68,12 +68,13 @@ import VeiwOwnerOerders from './Pages/Orders/viewOwnerOrders'
 import PaymentReviewPage from './Pages/Payment/payemntreview'
 import EditProfile from './Pages/Providers/EditProfile'
 import EditProfilePetOwner from './Pages/PetOwner/EditProfile'
+import GeminiChatApp from './Components/GeminiAPI'
 
 // Wrapper component to handle NavBar conditional rendering
 const AppContent = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
-
+  const isHomePage = location.pathname === '/'; 
   return (
     <>
       <Toaster position="bottom-right" />
@@ -81,6 +82,7 @@ const AppContent = () => {
       <div className={`${!isAdminRoute ? 'pt-15' : ''}`}>
         <Routes>
           <Route path='/' element={<Home />} />
+          
           <Route path='/login' element={<LoginPage />} />
 
           {/* Admin Dashboard with nested routes */}
@@ -155,6 +157,7 @@ const AppContent = () => {
           <Route path='/ownerOrders' element={<VeiwOwnerOerders/>}/>
 
         </Routes>
+        {isHomePage && <GeminiChatApp />}
       </div>
     </>
   );
