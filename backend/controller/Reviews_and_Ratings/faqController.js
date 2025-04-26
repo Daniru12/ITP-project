@@ -4,14 +4,20 @@ import User from "../../models/User.js";
 // ✅ Add a new FAQ
 export const addFaq = async (req, res) => {
   try {
-    const { question } = req.body;
-    const userId = req.user?._id; // Assuming authentication middleware
+    const { question, category } = req.body; // Make sure to get the category from the body
+    const userId = req.user?._id;
+
+    // Ensure category is not empty
+    if (!category) {
+      return res.status(400).json({ message: "Category is required" });
+    }
 
     // Create a new FAQ
     const newFaq = new Faq({
       question,
-      user: userId || null, // If the FAQ is added by an admin, userId may be null
-      approved: false, // Newly added FAQs are not approved by default
+      category, // Now category is properly used
+      user: userId || null,
+      approved: false,
     });
 
     // Save to database
@@ -22,6 +28,7 @@ export const addFaq = async (req, res) => {
     res.status(500).json({ message: "Error adding FAQ", error: error.message });
   }
 };
+
 
 // ✅ Get all FAQs (Only approved FAQs for users, all for admins)
 export const getAllFaqs = async (req, res) => {
