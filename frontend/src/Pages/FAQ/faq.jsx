@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 const CreateFaq = () => {
   const [formData, setFormData] = useState({
     question: "",
-    category: "",
+    category: "", // Ensure this starts empty
   });
 
   const [loading, setLoading] = useState(true);
@@ -17,6 +17,7 @@ const CreateFaq = () => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
+  // Validate token on initial load
   useEffect(() => {
     if (!token) {
       toast.error("You're not logged in.");
@@ -38,8 +39,11 @@ const CreateFaq = () => {
     e.preventDefault();
     setSubmitLoading(true);
 
+    // Debugging: Log form data before submitting
+    console.log("Form Data Before Submit:", formData);
+
     try {
-      await axios.post(
+      const response = await axios.post(
         `${backendUrl}/api/faqs/create`,
         formData,
         {
@@ -48,8 +52,8 @@ const CreateFaq = () => {
       );
 
       toast.success("FAQ created successfully!");
-      setFormData({ question: "", category: "General" });
-      navigate("/faqs");
+      setFormData({ question: "", category: "" });
+      navigate("/faqList");
     } catch (err) {
       console.error("FAQ create error:", err.response?.data || err.message);
       toast.error(err.response?.data?.message || "Failed to create FAQ");
@@ -92,6 +96,7 @@ const CreateFaq = () => {
             className="w-full border border-gray-300 rounded px-3 py-2"
             required
           >
+            <option value="">Select a category</option>
             <option value="General">General</option>
             <option value="Financial">Financial</option>
             <option value="Technical">Technical</option>
