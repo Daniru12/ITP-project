@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import toast from "react-hot-toast";
 import axios from 'axios';
 import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
+import { useGoogleLogin } from '@react-oauth/google';
 
 export default function LoginPage() {
     const [formData, setFormData] = useState({
@@ -11,6 +12,29 @@ export default function LoginPage() {
     });
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+
+    const googleLogin = useGoogleLogin({
+        onSuccess: async (codeResponse) => {
+            const backendUrl = import.meta.env.VITE_BACKEND_URL;
+            axios.post(`${backendUrl}/api/users/login-with-google`, {   
+                accessToken: codeResponse.access_token
+            }).then((res) => {
+                toast.success("Login successful");
+                const user = res.data.user;
+                localStorage.setItem("token", res.data.token);
+                if(user.user_type === "admin"){
+                    navigate("/admin");
+                }else if(user.user_type === "service_provider"){
+                    navigate("/provider-profile");
+                }else{
+                    navigate("/");
+                }
+            }).catch((err) => {
+                console.error("Google login error:", err);
+                toast.error("Google login failed");
+            });
+        },
+    });
 
     // Handle input changes
     const handleChange = (e) => {
@@ -162,6 +186,29 @@ export default function LoginPage() {
                                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-[var(--text-on-primary)] bg-[var(--color-primary)] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-accent)] disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {isLoading ? 'Signing in...' : 'Sign in'}
+                            </button>
+
+                            {/* Google Login Button */}
+                            <div className="relative mt-4">
+                                <div className="absolute inset-0 flex items-center">
+                                    <div className="w-full border-t border-gray-300"></div>
+                                </div>
+                                <div className="relative flex justify-center text-sm">
+                                    <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                                </div>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={() => googleLogin()}
+                                className="w-full flex items-center justify-center gap-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-accent)]"
+                            >
+                                <img 
+                                    src="https://www.google.com/favicon.ico" 
+                                    alt="Google logo" 
+                                    className="w-5 h-5"
+                                />
+                                Sign in with Google
                             </button>
 
                             {/* Register Link */}

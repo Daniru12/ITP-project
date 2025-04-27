@@ -1,5 +1,6 @@
 import './App.css'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import Home from './Pages/Home/home'
 import LoginPage from './Pages/Login/login'
 import { Toaster } from 'react-hot-toast'
@@ -75,7 +76,7 @@ const AppContent = () => {
   const isAdminRoute = location.pathname.startsWith('/admin');
 
   return (
-    <>
+    <GoogleOAuthProvider clientId="758186960483-nfdtc5n6je1spmkfvu3764emq9qmo41q.apps.googleusercontent.com">
       <Toaster position="bottom-right" />
       {!isAdminRoute && <NavBar />}
       <div className={`${!isAdminRoute ? 'pt-15' : ''}`}>
@@ -156,7 +157,7 @@ const AppContent = () => {
 
         </Routes>
       </div>
-    </>
+    </GoogleOAuthProvider>
   );
 };
 

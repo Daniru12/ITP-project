@@ -12,13 +12,13 @@ const AddTraining = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [images, setImages] = useState([]);
   
-  // Simplified initial state with clear naming
+
   const [serviceName, setServiceName] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   
-  // Create separate state for each package to make it easier to understand
+  // Create separate state for each package 
   const [basicPackage, setBasicPackage] = useState({
     price: "",
     duration: "",
