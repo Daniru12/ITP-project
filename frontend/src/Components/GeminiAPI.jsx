@@ -92,13 +92,14 @@ const Chatbot = () => {
             </button>
           </div>
 
-          {/* Chat Body with Background Image */}
+          {/* Chat Body with Background Image and Scrollable View */}
           <div
-             className="chat-body p-4 flex-1 overflow-auto flex flex-col gap-3 relative"
+            className="chat-body p-4 flex-1 overflow-auto flex flex-col gap-3 relative"
             style={{
               backgroundImage: `url('https://your-image-url.com')`, // Replace with the background image URL you want to use
               backgroundSize: 'cover', // Cover the entire container
               backgroundPosition: 'center',
+              maxHeight: '400px',  // Set a fixed max height for the chat body
               minHeight: '250px'
             }}
           >
