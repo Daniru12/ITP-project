@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import Pet from "../models/Pets.js";
 import express from "express";
+import axios from "axios";
 
 dotenv.config();
 
@@ -605,5 +606,105 @@ export const deactivateAccount = async (req, res) => {
     });
   }
 };
+
+export async function loginWithGoogle(req,res){
+  const { accessToken } = req.body;
+  
+  if (!accessToken) {
+    return res.status(400).json({ message: "Access token is required" });
+  }
+
+  try {
+    const response = await axios.get(
+      "https://www.googleapis.com/oauth2/v3/userinfo",
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    const { email, name, picture } = response.data;
+
+    let user = await User.findOne({ email });
+    
+    if (user) {
+      // Check if account is active
+      if (!user.isActive) {
+        return res.status(403).json({ message: "Your account has been deactivated. Please contact support." });
+      }
+
+      const token = jwt.sign(
+        {
+          _id: user._id,
+          username: user.username,
+          full_name: user.full_name,
+          email: user.email,
+          phone_number: user.phone_number,
+          user_type: user.user_type,
+          profile_picture: user.profile_picture,
+          isActive: user.isActive
+        },
+        process.env.JWT_SECRET
+      );
+      
+      return res.status(200).json({
+        message: "Login successful",
+        token,
+        user
+      });
+    } else {
+      // Create new user with a default phone number
+      const newUser = new User({
+        username: name,
+        full_name: name,
+        email,
+        phone_number: "Update Required", // Default phone number that user should update later
+        user_type: "pet_owner",
+        profile_picture: picture,
+        password: bcrypt.hashSync(Math.random().toString(36), 8), // Generate random secure password
+        isActive: true
+      });
+
+      const savedUser = await newUser.save();
+      
+      const token = jwt.sign(
+        {
+          _id: savedUser._id,
+          username: savedUser.username,
+          full_name: savedUser.full_name,
+          email: savedUser.email,
+          phone_number: savedUser.phone_number,
+          user_type: savedUser.user_type,
+          profile_picture: savedUser.profile_picture,
+          isActive: savedUser.isActive
+        },
+        process.env.JWT_SECRET
+      );
+
+      return res.status(200).json({
+        message: "Account created successfully. Please update your phone number in your profile.",
+        token,
+        user: savedUser,
+        requiresPhoneNumber: true
+      });
+    }
+  } catch (error) {
+    console.error("Error in loginWithGoogle:", error);
+    
+    // Check if it's a Google API error
+    if (error.response?.status === 401) {
+      return res.status(401).json({
+        message: "Invalid Google access token",
+        error: "Invalid token"
+      });
+    }
+    
+    res.status(500).json({
+      message: "Error logging in with Google",
+      error: error.message
+    });
+  }
+}
 
 export default router;
