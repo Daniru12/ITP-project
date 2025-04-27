@@ -72,7 +72,7 @@ const Chatbot = () => {
 
       {/* Chatbot Popup */}
       {isOpen && (
-        <div className="fixed bottom-5 right-5 w-96 bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="fixed bottom-5 right-5 w-96 bg-white rounded-lg shadow-lg overflow-hidden z-50">
           {/* Chat Header */}
           <div className="bg-[#BC4626] text-white p-4 flex justify-between items-center">
             <div className="flex items-center gap-3">
@@ -92,8 +92,16 @@ const Chatbot = () => {
             </button>
           </div>
 
-          {/* Chat Body */}
-          <div className="chat-body p-4 h-64 overflow-auto flex flex-col gap-3">
+          {/* Chat Body with Background Image */}
+          <div
+             className="chat-body p-4 flex-1 overflow-auto flex flex-col gap-3 relative"
+            style={{
+              backgroundImage: `url('https://your-image-url.com')`, // Replace with the background image URL you want to use
+              backgroundSize: 'cover', // Cover the entire container
+              backgroundPosition: 'center',
+              minHeight: '250px'
+            }}
+          >
             {messages.map((msg, index) => (
               <div
                 key={index}
