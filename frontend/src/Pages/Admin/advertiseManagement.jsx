@@ -90,7 +90,7 @@ const AdvertisingManagement = () => {
   };
 
   const handleEditAd = (adId) => {
-    navigate(`/admin/ads/update/${adId}`);
+    navigate(`/api/advertisement/update/${adId}`);
   };
 
   const handleToggleAdStatus = async (adId, currentStatus) => {
@@ -101,7 +101,7 @@ const AdvertisingManagement = () => {
         return;
       }
       const apiUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      await axios.put(`${apiUrl}/api/advertisement/${adId}/toggle-status`, { isActive: !currentStatus }, {
+      await axios.put(`${apiUrl}/api/advertisement/update${adId}/toggle-status`, { isActive: !currentStatus }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setAds(ads.map(ad => 
