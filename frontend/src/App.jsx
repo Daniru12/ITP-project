@@ -70,6 +70,8 @@ import PaymentReviewPage from './Pages/Payment/payemntreview'
 import EditProfile from './Pages/Providers/EditProfile'
 import EditProfilePetOwner from './Pages/PetOwner/EditProfile'
 import GeminiChatApp from './Components/GeminiAPI'
+import { ShoppingCart } from './Components/ShoppingCart';
+import CartPage from './Pages/productMarket/CartPage'
 
 // Wrapper component to handle NavBar conditional rendering
 const AppContent = () => {
@@ -156,6 +158,7 @@ const AppContent = () => {
           <Route path='/reviewdisplay' element={<ServiceReviews/>}/>
 
           <Route path='/ownerOrders' element={<VeiwOwnerOerders/>}/>
+          <Route path="/cart" element={<CartPage />} />
 
         </Routes>
         {isHomePage && <GeminiChatApp />}
