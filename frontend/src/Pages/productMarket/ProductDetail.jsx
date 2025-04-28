@@ -7,6 +7,8 @@ import {
   ArrowLeftIcon,
   ShoppingCartIcon,
   HeartIcon,
+  MinusIcon,
+  PlusIcon
 } from 'lucide-react'
 
 export const ProductDetail = () => {
@@ -15,6 +17,8 @@ export const ProductDetail = () => {
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [quantity, setQuantity] = useState(1)
+  const [isAddingToCart, setIsAddingToCart] = useState(false)
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -44,6 +48,39 @@ export const ProductDetail = () => {
 
     fetchProduct();
   }, [id]);
+
+  const handleQuantityChange = (newQuantity) => {
+    // Ensure quantity is within valid range
+    if (newQuantity >= 1 && newQuantity <= product.quantity) {
+      setQuantity(newQuantity)
+    }
+  }
+
+  const handleAddToCart = async () => {
+    try {
+      setIsAddingToCart(true)
+      const token = localStorage.getItem('token')
+      const backendUrl = import.meta.env.VITE_BACKEND_URL
+
+      await axios.post(
+        `${backendUrl}/api/cart/add`,
+        {
+          productId: product._id,
+          quantity: quantity
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      )
+
+      toast.success('Added to cart successfully')
+    } catch (error) {
+      console.error('Error adding to cart:', error)
+      toast.error(error.response?.data?.message || 'Failed to add to cart')
+    } finally {
+      setIsAddingToCart(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -133,16 +170,69 @@ export const ProductDetail = () => {
             <div className="text-3xl font-bold text-gray-900">
               Rs.{product.price}
             </div>
+
+            {/* Quantity Selector */}
+            <div className="flex items-center space-x-4">
+              <span className="text-gray-700">Quantity:</span>
+              <div className="flex items-center border rounded-md">
+                <button
+                  onClick={() => handleQuantityChange(quantity - 1)}
+                  disabled={quantity <= 1}
+                  className="p-2 hover:bg-gray-100 disabled:opacity-50"
+                >
+                  <MinusIcon className="w-4 h-4" />
+                </button>
+                <input
+                  type="number"
+                  min="1"
+                  max={product.quantity}
+                  value={quantity}
+                  onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
+                  className="w-16 text-center border-x py-1"
+                />
+                <button
+                  onClick={() => handleQuantityChange(quantity + 1)}
+                  disabled={quantity >= product.quantity}
+                  className="p-2 hover:bg-gray-100 disabled:opacity-50"
+                >
+                  <PlusIcon className="w-4 h-4" />
+                </button>
+              </div>
+              <span className="text-sm text-gray-500">
+                {product.quantity} available
+              </span>
+            </div>
+
+            {/* Total Price */}
+            <div className="text-lg text-gray-700">
+              Total: Rs.{(product.price * quantity).toFixed(2)}
+            </div>
+
             <div className="space-y-4">
-              <button className="w-full py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center justify-center space-x-2">
+              <button 
+                onClick={handleAddToCart}
+                disabled={isAddingToCart || quantity < 1}
+                className="w-full py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 
+                  flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 <ShoppingCartIcon className="w-5 h-5" />
-                <span>Add to Cart</span>
+                <span>{isAddingToCart ? 'Adding...' : 'Add to Cart'}</span>
               </button>
-              <button className="w-full py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center justify-center space-x-2">
+              
+              <button className="w-full py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 
+                flex items-center justify-center space-x-2"
+              >
                 <HeartIcon className="w-5 h-5" />
                 <span>Add to Wishlist</span>
               </button>
             </div>
+
+            {/* Stock Warning */}
+            {product.quantity < 5 && (
+              <p className="text-orange-500 text-sm">
+                Only {product.quantity} items left in stock!
+              </p>
+            )}
           </div>
         </div>
         {/* Tabs */}
