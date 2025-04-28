@@ -629,34 +629,35 @@ const AppointmentsList = () => {
       </div>
 
       {/* View Mode Tabs */}
-      <div className="flex gap-4 mb-6">
-        <button
-          onClick={() => {
-            setViewMode('active');
-            setStatusFilter('all');
-          }}
-          className={`px-6 py-3 rounded-xl text-lg font-semibold transition-colors ${
-            viewMode === 'active'
-              ? 'bg-blue-600 text-white shadow-lg'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-          }`}
-        >
-          Active Appointments
-        </button>
-        <button
-          onClick={() => {
-            setViewMode('archived');
-            setStatusFilter('all');
-          }}
-          className={`px-6 py-3 rounded-xl text-lg font-semibold transition-colors ${
-            viewMode === 'archived'
-              ? 'bg-blue-600 text-white shadow-lg'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-          }`}
-        >
-          Appointments History
-        </button>
-      </div>
+<div className="flex gap-4 mb-6">
+  <button
+    onClick={() => {
+      setViewMode('active');
+      setStatusFilter('all');
+    }}
+    className={`px-6 py-3 rounded-xl text-lg font-semibold transition-colors ${
+      viewMode === 'active'
+        ? 'bg-[var(--color-primary)] text-[var(--color-white)] shadow-lg'
+        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+    }`}
+  >
+    Active Appointments
+  </button>
+  <button
+    onClick={() => {
+      setViewMode('archived');
+      setStatusFilter('all');
+    }}
+    className={`px-6 py-3 rounded-xl text-lg font-semibold transition-colors ${
+      viewMode === 'archived'
+        ? 'bg-[var(--color-primary)] text-[var(--color-white)] shadow-lg'
+        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+    }`}
+  >
+    Appointments History
+  </button>
+</div>
+
 
       {/* Results Counter */}
       <div className="mb-4 text-gray-700">
