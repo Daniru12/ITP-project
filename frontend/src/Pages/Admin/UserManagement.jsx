@@ -149,12 +149,43 @@ const UserManagement = () => {
   });
 
   const handleDeleteUser = async (userId) => {
-    try {
-      setUsers(users.filter(user => user.id !== userId));
-      toast.success('User deleted successfully');
-    } catch (err) {
-      console.error('Error deleting user:', err);
-      toast.error(err.response?.data?.message || err.message || 'Failed to delete user');
+    // Get the user's name for the confirmation message
+    const userToDelete = users.find(user => user.id === userId);
+    const userName = userToDelete ? userToDelete.name : 'this user';
+
+    // Show confirmation dialog
+    if (window.confirm(`Are you sure you want to delete ${userName}? This action cannot be undone.`)) {
+      try {
+        const token = getToken();
+        if (!token) {
+          redirectToLogin();
+          return;
+        }
+
+        const apiUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+        
+        // Make API call to delete user
+        await axios.delete(`${apiUrl}/api/users/delete/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        // Update local state after successful deletion
+        setUsers(users.filter(user => user.id !== userId));
+        toast.success('User deleted successfully');
+      } catch (err) {
+        console.error('Error deleting user:', err);
+        let errorMessage = 'Failed to delete user';
+        
+        if (err.response?.status === 403) {
+          errorMessage = 'You are not authorized to delete users';
+        } else if (err.response?.data?.message) {
+          errorMessage = err.response.data.message;
+        }
+        
+        toast.error(errorMessage);
+      }
     }
   };
 
