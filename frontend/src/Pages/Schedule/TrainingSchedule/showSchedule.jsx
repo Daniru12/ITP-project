@@ -12,7 +12,6 @@ const MyTrainingSchedules = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editingSession, setEditingSession] = useState(null);
   const [activeDay, setActiveDay] = useState('Monday');
-
   const [formData, setFormData] = useState({
     time: '',
     training_type: '',
@@ -27,20 +26,16 @@ const MyTrainingSchedules = () => {
         const token = localStorage.getItem('token');
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
         if (!token) return;
-
         const decodedToken = JSON.parse(atob(token.split('.')[1]));
         const currentUserId = decodedToken.userId || decodedToken.id;
         setUserId(currentUserId);
-
         const res = await axios.get(`${backendUrl}/api/scheduling/trainingschedule`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         const all = res.data.data;
         const mySchedules = all.filter(schedule =>
           schedule.appointment_id?.provider_id === currentUserId
         );
-
         setSchedules(mySchedules);
         setLoading(false);
       } catch (error) {
@@ -49,7 +44,6 @@ const MyTrainingSchedules = () => {
         setLoading(false);
       }
     };
-
     fetchSchedules();
   }, []);
 
@@ -59,12 +53,10 @@ const MyTrainingSchedules = () => {
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
       const confirm = window.confirm("Are you sure you want to delete this session?");
       if (!confirm) return;
-
       await axios.delete(`${backendUrl}/api/scheduling/trainingschedule/delete/${scheduleId}`, {
         headers: { Authorization: `Bearer ${token}` },
         data: { day, sessionIndex },
       });
-
       setSchedules(prev =>
         prev.map(s => {
           if (s._id === scheduleId) {
@@ -81,7 +73,6 @@ const MyTrainingSchedules = () => {
           return s;
         })
       );
-
       toast.success('Session deleted successfully');
     } catch (err) {
       console.error(err);
@@ -100,7 +91,6 @@ const MyTrainingSchedules = () => {
       const token = localStorage.getItem('token');
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
       const { scheduleId, day, sessionIndex } = editingSession;
-
       await axios.put(`${backendUrl}/api/scheduling/trainingschedule/update/${scheduleId}`, {
         day,
         sessionIndex,
@@ -108,7 +98,6 @@ const MyTrainingSchedules = () => {
       }, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
       setSchedules(prev =>
         prev.map(s => {
           if (s._id === scheduleId) {
@@ -125,13 +114,48 @@ const MyTrainingSchedules = () => {
           return s;
         })
       );
-
       toast.success('Session updated successfully');
       setIsEditOpen(false);
       setEditingSession(null);
     } catch (err) {
       console.error(err);
       toast.error('Failed to update session');
+    }
+  };
+
+  // New function to handle marking a session as complete
+  const handleComplete = async (scheduleId, day, sessionIndex) => {
+    try {
+      const token = localStorage.getItem('token');
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
+      await axios.put(`${backendUrl}/api/scheduling/trainingschedule/update/${scheduleId}`, {
+        day,
+        sessionIndex,
+        sessionData: { status: 'Completed' },
+      }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setSchedules(prev =>
+        prev.map(s => {
+          if (s._id === scheduleId) {
+            const updated = s.schedule.map(d => {
+              if (d.day === day) {
+                const newSessions = [...d.sessions];
+                newSessions[sessionIndex] = { ...newSessions[sessionIndex], status: 'Completed' };
+                return { ...d, sessions: newSessions };
+              }
+              return d;
+            });
+            return { ...s, schedule: updated };
+          }
+          return s;
+        })
+      );
+      
+      toast.success('Session marked as completed');
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to mark session as completed');
     }
   };
 
@@ -170,7 +194,6 @@ const MyTrainingSchedules = () => {
   // Get icon for training type
   const getTrainingIcon = (type) => {
     if (!type) return '🐾';
-    
     const normalizedType = type.toLowerCase();
     if (normalizedType.includes('obedience')) return '🦮';
     if (normalizedType.includes('agility')) return '🏃‍♂️';
@@ -187,7 +210,6 @@ const MyTrainingSchedules = () => {
         <h2 className="text-3xl font-bold text-[#347486] mb-2">Training Calendar</h2>
         <p className="text-gray-600">Manage your pet training sessions</p>
       </div>
-
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20">
           <div className="w-16 h-16 border-4 border-[#DFA55D] border-t-[#347486] rounded-full animate-spin mb-4"></div>
@@ -213,7 +235,6 @@ const MyTrainingSchedules = () => {
               ))}
             </div>
           </div>
-
           {/* Active day content */}
           <div className="bg-gray-50 rounded-xl p-6 shadow-inner">
             <div className="flex items-center justify-between mb-6">
@@ -222,7 +243,6 @@ const MyTrainingSchedules = () => {
                 {sessionsByDay[activeDay].length} sessions
               </span>
             </div>
-
             {sessionsByDay[activeDay].length > 0 ? (
               <div className="grid grid-cols-1 gap-4">
                 {sessionsByDay[activeDay].map((session, idx) => (
@@ -250,7 +270,6 @@ const MyTrainingSchedules = () => {
                           </p>
                         </div>
                       </div>
-
                       <div className="flex space-x-2">
                         <button
                           onClick={() => handleEditClick(session.scheduleId, session.day, session, session.sessionIndex)}
@@ -268,9 +287,17 @@ const MyTrainingSchedules = () => {
                             <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
                           </svg>
                         </button>
+                        {/* Complete Button */}
+                        <button
+                          onClick={() => handleComplete(session.scheduleId, session.day, session.sessionIndex)}
+                          className="p-2 text-green-500 hover:bg-green-50 rounded-full transition-colors"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L7 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </button>
                       </div>
                     </div>
-
                     {session.notes && (
                       <div className="mt-3 p-3 bg-gray-50 rounded-md">
                         <p className="text-sm text-gray-700">
@@ -290,15 +317,12 @@ const MyTrainingSchedules = () => {
           </div>
         </div>
       )}
-
       {/* Edit Modal */}
       <Dialog open={isEditOpen} onClose={() => setIsEditOpen(false)} className="fixed z-50 inset-0">
         <div className="fixed inset-0 backdrop-blur-sm bg-black/40 flex items-center justify-center z-50 overflow-y-auto p-4" aria-hidden="true" />
-
         <div className="flex items-center justify-center min-h-screen px-4">
           <Dialog.Panel className="bg-white rounded-xl shadow-lg p-6 w-full max-w-md z-50 relative border-t-4 border-[#DFA55D]">
             <Dialog.Title className="text-2xl font-bold text-[#347486] mb-4">Edit Training Session</Dialog.Title>
-
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Time</label>
@@ -354,7 +378,6 @@ const MyTrainingSchedules = () => {
                 ></textarea>
               </div>
             </div>
-
             <div className="flex justify-end gap-3 pt-6">
               <button
                 className="px-5 py-2.5 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors font-medium text-gray-700"

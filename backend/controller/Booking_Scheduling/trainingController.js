@@ -123,30 +123,40 @@ export const getScheduleByAppointmentId = async (req, res) => {
   }
 };
 
-
-
 // PUT /api/scheduling/trainingschedule/:id/session
+// Update a specific session in the training schedule
 export const updateTrainingSession = async (req, res) => {
   try {
-    const { id } = req.params; // schedule ID
-    const { day, sessionIndex, sessionData } = req.body;
+    const { id } = req.params; // Training Schedule ID
+    const { day, sessionIndex, sessionData } = req.body; // Day, Session Index, and the session data
 
+    // Find the schedule by ID
     const schedule = await TrainingSchedule.findById(id);
-    if (!schedule) return res.status(404).json({ message: 'Schedule not found' });
-
-    const dayObj = schedule.schedule.find(d => d.day === day);
-    if (!dayObj || sessionIndex < 0 || sessionIndex >= dayObj.sessions.length) {
-      return res.status(400).json({ message: 'Session not found in the given day' });
+    if (!schedule) {
+      return res.status(404).json({ message: 'Training schedule not found' });
     }
 
-    // Update the session
+    // Find the day object that matches the requested day
+    const dayObj = schedule.schedule.find(d => d.day === day);
+    if (!dayObj) {
+      return res.status(400).json({ message: 'Invalid day provided' });
+    }
+
+    // Check if the sessionIndex is valid
+    if (sessionIndex < 0 || sessionIndex >= dayObj.sessions.length) {
+      return res.status(400).json({ message: 'Invalid session index' });
+    }
+
+    // Update the session with the provided data
     dayObj.sessions[sessionIndex] = { ...dayObj.sessions[sessionIndex], ...sessionData };
 
+    // Save the updated schedule
     await schedule.save();
-    res.status(200).json({ success: true, message: 'Session updated', schedule });
+
+    res.status(200).json({ message: 'Session updated successfully', updatedSession: dayObj.sessions[sessionIndex] });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({ message: 'Internal Server Error', error: err.message });
   }
 };
 
