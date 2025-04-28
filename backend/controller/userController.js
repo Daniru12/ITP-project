@@ -198,16 +198,22 @@ export const getPets = async (req, res) => {
 export const getLoyaltyPoints = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
-    const possibleDiscount = calculateDiscount(user.loyalty_points);
-
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    // Calculate possible discount (20 points = $2 discount)
+    const possibleDiscount = Math.floor(user.loyalty_points / 20) * 2;
+    
     res.status(200).json({
       points: user.loyalty_points,
       possibleDiscount: possibleDiscount
     });
   } catch (error) {
-    res.status(500).json({
+    console.error("Error fetching loyalty points:", error);
+    res.status(500).json({ 
       message: "Error fetching loyalty points",
-      error: error.message
+      error: error.message 
     });
   }
 };

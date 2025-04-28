@@ -321,15 +321,31 @@ const UserAppointments = () => {
                         <span className="text-gray-700">{appt.package_type || "Standard Package"}</span>
                       </p>
 
-                      {appt.discount_applied > 0 && (
-                        <p className="flex items-center gap-2">
-                          <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs"
-                                style={{ backgroundColor: "rgba(52, 116, 134, 0.1)", color: "#347486" }}>
-                            %
+                      {/* Price and Discount Information */}
+                      <div className="mt-2 p-3 rounded-md" style={{ backgroundColor: "rgba(52, 116, 134, 0.1)" }}>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-sm text-gray-600">Original Price:</span>
+                          <span className="text-sm font-medium" style={{ color: "#347486" }}>
+                            ${appt.service_id?.packages?.[appt.package_type]?.price || 0}
                           </span>
-                          <span style={{ color: "#347486" }} className="font-medium">{appt.discount_applied}% Discount Applied</span>
-                        </p>
-                      )}
+                        </div>
+                        
+                        {appt.discount_applied > 0 && (
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-sm text-gray-600">Discount:</span>
+                            <span className="text-sm font-medium text-green-600">
+                              -${appt.discount_applied}
+                            </span>
+                          </div>
+                        )}
+                        
+                        <div className="flex items-center justify-between pt-1 border-t border-gray-200">
+                          <span className="text-sm font-medium" style={{ color: "#BC4626" }}>Final Price:</span>
+                          <span className="text-sm font-bold" style={{ color: "#BC4626" }}>
+                            ${(appt.service_id?.packages?.[appt.package_type]?.price || 0) - (appt.discount_applied || 0)}
+                          </span>
+                        </div>
+                      </div>
 
                       {appt.special_notes && (
                         <div className="mt-3 p-3 rounded-md" style={{ backgroundColor: "rgba(223, 165, 93, 0.1)" }}>
