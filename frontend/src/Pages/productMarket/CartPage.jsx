@@ -155,7 +155,7 @@ const CartPage = () => {
                 </span>
               </div>
               <Link
-                to="/checkout"
+                to="/order-confirm"
                 className="mt-4 w-full block text-center bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700"
               >
                 Proceed to Checkout
