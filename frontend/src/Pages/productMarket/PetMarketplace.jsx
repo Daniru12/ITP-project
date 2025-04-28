@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { SearchAndCart } from '../../Components/SearchAndCart'
 import { ProductGrid } from '../../Components/ProductGrid'
 import { FilterBar } from '../../Components/FilterBar'
-import { PawPrintIcon } from 'lucide-react'
+import { PawPrintIcon, ShoppingCartIcon, PackageIcon } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 const PetMarketplace = () => {
   const [searchQuery, setSearchQuery] = useState('')
@@ -20,13 +21,38 @@ const PetMarketplace = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <header className="bg-white shadow-sm">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          {/* Left spacer */}
+          <div className="w-6"></div>
+          
+          {/* Centered title */}
+          <div className="flex items-center gap-2">
+            <PawPrintIcon className="w-8 h-8 text-blue-600" />
+            <h1 className="text-2xl font-bold text-gray-900">Pet Products</h1>
+          </div>
+          
+          {/* Cart and Orders icons */}
+          <div className="flex items-center gap-4">
+            <Link 
+              to="/cart" 
+              className="p-2 text-gray-600 hover:text-blue-600 relative"
+            >
+              <ShoppingCartIcon className="w-6 h-6" />
+            </Link>
+            <Link 
+              to="/orders" 
+              className="p-2 text-gray-600 hover:text-blue-600 relative"
+            >
+              <PackageIcon className="w-6 h-6" />
+            </Link>
+          </div>
+        </div>
+      </header>
+
       <main className="container mx-auto px-4 py-6">
         {/* Hero Section */}
         <section className="mb-8 text-center relative">
-          <div className="inline-flex items-center justify-center gap-2 mb-3">
-            <PawPrintIcon className="w-8 h-8 text-blue-600" />
-            <h1 className="text-4xl font-bold text-gray-900">Pet Products</h1>
-          </div>
           <div className="max-w-2xl mx-auto">
             <p className="text-gray-600 text-lg">
               Find the best products for your furry friends

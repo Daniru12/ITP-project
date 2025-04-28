@@ -15,6 +15,8 @@ import faqAllRouter from "./routes/Reviews/faqAllRoutes.js";
 import productRouter from "./routes/Products/productRouter.js";
 import orderRouter from "./routes/Products/orderRouter.js";
 import petBookRouter from "./routes/petBookRoutes.js";
+import cartRouter from "./routes/Products/cartRouter.js";
+
 
 
 dotenv.config();
@@ -57,6 +59,7 @@ app.use("/api/Products", productRouter);
 app.use("/api/faqAll", faqAllRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/petbook", petBookRouter);
+app.use("/api/cart", cartRouter);
 
 
 const PORT = process.env.PORT || 3000;
