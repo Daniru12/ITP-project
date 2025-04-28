@@ -158,75 +158,83 @@ export default function Profile() {
           <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
             <div className="flex justify-between items-center mb-8">
               <div className="flex items-center">
-                <FaPaw className="w-6 h-6 mr-3" style={{ color: 'var(--color-accent)' }} />
-                <h2 className="text-2xl font-bold" style={{ color: 'var(--color-accent)' }}>My Pets</h2>
+                <FaPaw className="w-7 h-7 mr-3" style={{ color: 'var(--color-accent)' }} />
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] bg-clip-text text-transparent">
+                  My Pets
+                </h2>
               </div>
               <Link 
                 to="/register-pet" 
-                className="px-6 py-2.5 rounded-full text-white transition-all duration-300 hover:shadow-md"
-                style={{ backgroundColor: 'var(--color-primary)' }}
+                className="px-6 py-2.5 rounded-full text-white transition-all duration-300 hover:shadow-lg transform hover:-translate-y-0.5 bg-[var(--color-primary)] flex items-center"
               >
+                <FaPaw className="w-4 h-4 mr-2" />
                 Add New Pet
               </Link>
             </div>
 
             {userPets.length === 0 ? (
-              <div className="text-center py-12">
-                <FaPaw className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                <p className="text-gray-500 text-lg">No pets added yet</p>
-                <p className="text-sm text-gray-400 mt-2">Add your first pet to get started</p>
+              <div className="text-center py-16 bg-gradient-to-b from-[var(--color-accent-light)] to-white rounded-xl">
+                <FaPaw className="w-16 h-16 mx-auto mb-4" style={{ color: 'var(--color-accent)' }} />
+                <p className="text-gray-600 text-xl font-semibold mb-2">No pets added yet</p>
+                <p className="text-gray-400">Add your first pet to start their journey with PawGo</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {userPets.map((pet) => (
-                  <div key={pet._id} className="bg-gray-50 rounded-xl p-6 transition-all duration-300 hover:shadow-md">
-                    <div className="flex items-start space-x-4">
-                      <div className="w-28 h-28 flex-shrink-0">
+                  <div 
+                    key={pet._id} 
+                    className="bg-white p-5 transition-all duration-300 hover:bg-gray-50 border border-gray-100 rounded-lg"
+                  >
+                    <div className="flex items-center gap-4">
+                      {/* Image */}
+                      <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                         <img
                           src={pet.pet_image || "https://images.pexels.com/photos/1404819/pexels-photo-1404819.jpeg"}
                           alt={pet.name}
-                          className="w-full h-full object-cover rounded-lg"
+                          className="w-full h-full object-cover"
                         />
                       </div>
-                      <div className="flex-1">
-                        <h3 className="text-xl font-semibold mb-3" style={{ color: 'var(--color-primary)' }}>{pet.name}</h3>
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <p className="text-sm text-gray-500">Species</p>
-                            <p className="font-medium">{pet.species}</p>
-                          </div>
-                          <div>
-                            <p className="text-sm text-gray-500">Breed</p>
-                            <p className="font-medium">{pet.breed}</p>
-                          </div>
-                          <div>
-                            <p className="text-sm text-gray-500">Age</p>
-                            <p className="font-medium">{pet.age}</p>
-                          </div>
-                          <div>
-                            <p className="text-sm text-gray-500">Gender</p>
-                            <p className="font-medium">{pet.gender}</p>
-                          </div>
+
+                      {/* Basic Info */}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg font-semibold text-gray-800 truncate mb-1">
+                          {pet.name}
+                        </h3>
+                        <div className="flex flex-wrap gap-x-2 text-sm">
+                          <span className="text-[var(--color-primary)]">{pet.species}</span>
+                          <span className="text-gray-400">•</span>
+                          <span className="text-[var(--color-secondary)]">{pet.breed}</span>
+                          <span className="text-gray-400">•</span>
+                          <span className="text-[var(--color-accent)]">{pet.age} years</span>
+                          <span className="text-gray-400">•</span>
+                          <span className="text-gray-600">{pet.gender}</span>
                         </div>
                       </div>
-                    </div>
-                    <div className="mt-6 flex justify-end space-x-4">
-                      <Link 
-                        to={`/edit-pet/${pet._id}`} 
-                        className="text-gray-400 hover:text-blue-500 transition-colors"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                      </Link>
-                      <button 
-                        onClick={() => handleDeletePet(pet._id)} 
-                        className="text-gray-400 hover:text-red-500 transition-colors"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </button>
+
+                      {/* Quick Actions */}
+                      <div className="flex items-center gap-3 text-base">
+                        <Link
+                          to={`/petbook/${pet._id}`}
+                          className="text-[var(--color-accent)] hover:text-[var(--color-primary)] transition-colors duration-200"
+                          title="PetBook"
+                        >
+                          📖
+                        </Link>
+                        <Link
+                          to={`/edit-pet/${pet._id}`}
+                          className="text-gray-500 hover:text-[var(--color-primary)] transition-colors duration-200"
+                          title="Edit"
+                        >
+                          ✏️
+                        </Link>
+                        <button
+                          onClick={() => handleDeletePet(pet._id)}
+                          className="text-gray-500 hover:text-[var(--color-primary)] transition-colors duration-200"
+                          title="Delete"
+                        >
+                          🗑️
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
