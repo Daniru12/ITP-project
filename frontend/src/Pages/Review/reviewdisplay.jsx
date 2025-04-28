@@ -49,10 +49,7 @@ const AllReviews = () => {
       ) : (
         <ul>
           {reviews.map((review) => (
-            <li
-              key={review._id}
-              className="border-b py-4 flex justify-between items-center"
-            >
+            <li key={review._id} className="border-b py-4 flex justify-between items-center">
               <div>
                 <p className="font-semibold">{review.review}</p>
                 <p className="text-gray-600">
@@ -66,10 +63,7 @@ const AllReviews = () => {
                   {new Date(review.createdAt).toLocaleString()}
                 </p>
               </div>
-              <Link
-                to={`/review/${review._id}`}
-                className="text-blue-600 hover:underline"
-              >
+              <Link to={`/review/${review._id}`} className="text-blue-600 hover:underline">
                 View Details
               </Link>
             </li>
@@ -79,10 +73,18 @@ const AllReviews = () => {
 
       <div className="mt-6 text-center">
         <button
-          onClick={() => navigate("/review")}
+          onClick={() => navigate(`/reviews/${reviews[0]?.service?._id}`)}
           className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
         >
           Submit Another Review
+        </button>
+
+        {/* View Average Rating Button */}
+        <button
+          onClick={() => navigate(`/average-rating/${reviews[0]?.service?._id}`)} // Navigate to the Average Rating page
+          className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition mt-4"
+        >
+          View Average Rating
         </button>
       </div>
     </div>
