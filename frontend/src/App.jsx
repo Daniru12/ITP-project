@@ -16,6 +16,7 @@ import AddGrooming from './Pages/Providers/addGrooming'
 import AddService from './Pages/Providers/addService'
 import RegisterPet from './Pages/PetOwner/registerPet'
 import CreateFaq from './Pages/FAQ/faq'
+import AdvertisingManagement from './Pages/Admin/advertiseManagement';
 
 import PaymentPage from './Pages/Payment/PaymentPage'
 import ServiceSummary from './Pages/Payment/AppointmentSummary'
@@ -96,6 +97,7 @@ const AppContent = () => {
             <Route path="Services" element={<ServiceManagement />} />
             <Route path="AllPets" element={<PetsManagement />} />
             <Route path="settings" element={<div className="p-6"><h2 className="text-2xl font-semibold mb-6">Admin Settings</h2></div>} />
+            <Route path="AdvertisingManagement" element={<AdvertisingManagement/>}/>
             
           </Route>
 
