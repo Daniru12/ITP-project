@@ -122,7 +122,6 @@ export const getScheduleByAppointmentId = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-
 // PUT /api/scheduling/trainingschedule/:id/session
 // Update a specific session in the training schedule
 export const updateTrainingSession = async (req, res) => {
@@ -130,11 +129,17 @@ export const updateTrainingSession = async (req, res) => {
     const { id } = req.params; // Training Schedule ID
     const { day, sessionIndex, sessionData } = req.body; // Day, Session Index, and the session data
 
+    // Validate sessionIndex type and range
+    if (typeof sessionIndex !== 'number' || sessionIndex < 0) {
+      return res.status(400).json({ message: 'Invalid session index' });
+    }
+
     // Find the schedule by ID
     const schedule = await TrainingSchedule.findById(id);
     if (!schedule) {
       return res.status(404).json({ message: 'Training schedule not found' });
     }
+    console.log('Schedule before update:', schedule);  // Log schedule before update
 
     // Find the day object that matches the requested day
     const dayObj = schedule.schedule.find(d => d.day === day);
@@ -142,23 +147,38 @@ export const updateTrainingSession = async (req, res) => {
       return res.status(400).json({ message: 'Invalid day provided' });
     }
 
-    // Check if the sessionIndex is valid
-    if (sessionIndex < 0 || sessionIndex >= dayObj.sessions.length) {
+    // Check if the sessionIndex is valid within the day sessions
+    if (sessionIndex >= dayObj.sessions.length) {
       return res.status(400).json({ message: 'Invalid session index' });
+    }
+
+    // Ensure sessionData is an object and valid
+    if (typeof sessionData !== 'object' || sessionData === null) {
+      return res.status(400).json({ message: 'Invalid session data provided' });
     }
 
     // Update the session with the provided data
     dayObj.sessions[sessionIndex] = { ...dayObj.sessions[sessionIndex], ...sessionData };
 
+    // Log the updated session
+    console.log('Updated session:', dayObj.sessions[sessionIndex]);
+
     // Save the updated schedule
-    await schedule.save();
+    try {
+      await schedule.save();
+    } catch (saveError) {
+      console.error('Error saving schedule:', saveError);
+      return res.status(500).json({ message: 'Error saving schedule', error: saveError.message });
+    }
 
     res.status(200).json({ message: 'Session updated successfully', updatedSession: dayObj.sessions[sessionIndex] });
   } catch (err) {
-    console.error(err);
+    console.error('Error during the session update:', err);
     res.status(500).json({ message: 'Internal Server Error', error: err.message });
   }
 };
+
+
 
 
 // DELETE /api/scheduling/trainingschedule/:id/session
