@@ -1,5 +1,6 @@
 import Scheduling from "../../models/BookingScheduling/BoardingSheduling.js";
 import Appointment from "../../models/BookingScheduling/Appointment.js";
+import { parseISO, isValid, format } from 'date-fns';
 
 
 // CREATE - Automatically called after confirming an appointment
@@ -91,14 +92,10 @@ export const getSchedulingById = async (req, res) => {
 
 
 
-
 // UPDATE SCHEDULING
 export const updateScheduling = async (req, res) => {
   try {
     const { id } = req.params;
-
-    // Optional: Log body for debugging
- 
 
     // Validate required fields (optional but recommended)
     const requiredFields = ['appointment_id', 'pet_id', 'service_id', 'duration', 'start_time'];
@@ -111,6 +108,12 @@ export const updateScheduling = async (req, res) => {
     // For 'custom' duration, ensure end_time is provided
     if (req.body.duration === 'custom' && !req.body.end_time) {
       return res.status(400).json({ error: 'Custom duration requires an end_time' });
+    }
+
+    // Check if the appointment exists before updating
+    const appointment = await Appointment.findById(req.body.appointment_id);
+    if (!appointment) {
+      return res.status(404).json({ error: 'Appointment not found' });
     }
 
     // Update the document
@@ -153,44 +156,66 @@ export const deleteScheduling = async (req, res) => {
   }
 };
 
+
 // TOGGLE CONFIRMATION FOR A SPECIFIC DAY
 export const toggleConfirmedDay = async (req, res) => {
-    try {
-      const { scheduleId } = req.params;
-      const { date } = req.body;
-  
-      if (!date) {
-        return res.status(400).json({ error: "Date is required" });
-      }
-  
-      const schedule = await Scheduling.findById(scheduleId);
-      if (!schedule) {
-        return res.status(404).json({ error: "Schedule not found" });
-      }
-  
-      // Initialize if empty
-      if (!Array.isArray(schedule.confirmed_days)) {
-        schedule.confirmed_days = [];
-      }
-  
-      // Toggle the date
-      if (schedule.confirmed_days.includes(date)) {
-        schedule.confirmed_days = schedule.confirmed_days.filter(d => d !== date);
-      } else {
-        schedule.confirmed_days.push(date);
-      }
-  
-      await schedule.save();
-  
-      res.status(200).json({
-        message: "Confirmed days updated",
-        confirmed_days: schedule.confirmed_days,
-      });
-    } catch (error) {
-      res.status(500).json({
-        error: "Failed to toggle confirmed day",
-        details: error.message,
-      });
+  try {
+    const { scheduleId } = req.params;
+    const { date } = req.body;
+
+    // Check if date is provided
+    if (!date) {
+      return res.status(400).json({ error: "Date is required" });
     }
-  };
-  
+
+    // Ensure the date is in the correct format (yyyy-MM-dd)
+    const parsedDate = parseISO(date); // parse the date to standard format
+    if (!isValid(parsedDate)) {
+      return res.status(400).json({ error: "Invalid date format, should be yyyy-MM-dd" });
+    }
+
+    const formattedDate = format(parsedDate, 'yyyy-MM-dd'); // Format date as yyyy-MM-dd
+
+    // Find the schedule by ID
+    const schedule = await Scheduling.findById(scheduleId);
+    if (!schedule) {
+      return res.status(404).json({ error: "Schedule not found" });
+    }
+
+    // Initialize confirmed_days as an array if it's undefined
+    if (!Array.isArray(schedule.confirmed_days)) {
+      schedule.confirmed_days = [];
+    }
+
+    // Log schedule before update for debugging
+    console.log("Schedule before update:", schedule);
+
+    // Toggle the date (add or remove it from confirmed_days)
+    if (schedule.confirmed_days.includes(formattedDate)) {
+      schedule.confirmed_days = schedule.confirmed_days.filter(d => d !== formattedDate);
+    } else {
+      schedule.confirmed_days.push(formattedDate);
+    }
+
+    // Save the updated schedule
+    await schedule.save();
+
+    // Log schedule after update for debugging
+    console.log("Schedule after update:", schedule);
+
+    // Respond with success
+    res.status(200).json({
+      message: "Confirmed days updated",
+      confirmed_days: schedule.confirmed_days,
+    });
+  } catch (error) {
+    // Log error details for debugging
+    console.error("Error in toggling confirmed day:", error);
+
+    // Return error response
+    res.status(500).json({
+      error: "Failed to toggle confirmed day",
+      details: error.message,
+    });
+  }
+};

@@ -16,6 +16,7 @@ import AddGrooming from './Pages/Providers/addGrooming'
 import AddService from './Pages/Providers/addService'
 import RegisterPet from './Pages/PetOwner/registerPet'
 import CreateFaq from './Pages/FAQ/faq'
+import PetBookPage from './Pages/PetOwner/PetBookPage'
 
 import PaymentPage from './Pages/Payment/PaymentPage'
 import ServiceSummary from './Pages/Payment/AppointmentSummary'
@@ -159,6 +160,8 @@ const AppContent = () => {
 
           <Route path='/ownerOrders' element={<VeiwOwnerOerders/>}/>
           <Route path="/cart" element={<CartPage />} />
+
+          <Route path='/petbook/:petId' element={<PetBookPage />} />
 
         </Routes>
         {isHomePage && <GeminiChatApp />}

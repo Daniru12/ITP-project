@@ -14,7 +14,6 @@ import AdvertisementRoutes from "./routes/Advertisement/advertisementRouter.js";
 import faqAllRouter from "./routes/Reviews/faqAllRoutes.js";
 import productRouter from "./routes/Products/productRouter.js";
 import orderRouter from "./routes/Products/orderRouter.js";
-import cartRouter from "./routes/Products/cartRouter.js";
 
 
 dotenv.config();
@@ -22,11 +21,12 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:5173",
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  origin: process.env.FRONTEND_URL || "http://localhost:5173",  // Make sure to set FRONTEND_URL in .env
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
+
 app.use(bodyParser.json());
 
 const mongoUrl = process.env.MONGO_URL;
@@ -55,7 +55,6 @@ app.use("/api/advertisement",AdvertisementRoutes);
 app.use("/api/Products", productRouter);
 app.use("/api/faqAll", faqAllRouter);
 app.use("/api/orders", orderRouter);
-app.use("/api/cart", cartRouter);
 
 
 const PORT = process.env.PORT || 3000;
