@@ -35,6 +35,8 @@ export default function Profile() {
           }
         });
 
+        console.log('Profile API Response:', response.data);
+        console.log('Profile Picture URL:', response.data.profile_picture);
         setUserData(response.data);
         setIsLoading(false);
       } catch (error) {
