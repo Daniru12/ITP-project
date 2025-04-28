@@ -97,6 +97,7 @@ export const getProviderAppointments = async (req, res) => {
 // Confirm or reject appointment by provider
 export const updateAppointmentStatus = async (req, res) => {
   try {
+    // Ensure only service providers can update appointment status
     if (req.user.user_type !== "service_provider") {
       return res.status(403).json({ message: "Only service providers can update appointment status" });
     }
@@ -104,8 +105,9 @@ export const updateAppointmentStatus = async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
-    if (!status || !["confirmed", "rejected", "cancelled"].includes(status)) {
-      return res.status(400).json({ message: "Status must be 'confirmed', 'rejected' or 'cancelled'" });
+    // Validate status to ensure it is one of the allowed values
+    if (!status || !["confirmed", "rejected", "cancelled", "completed"].includes(status)) {
+      return res.status(400).json({ message: "Status must be 'confirmed', 'rejected', 'cancelled', or 'completed'" });
     }
 
     const appointment = await Appointment.findById(id);
@@ -116,9 +118,11 @@ export const updateAppointmentStatus = async (req, res) => {
       return res.status(403).json({ message: "Unauthorized access to appointment" });
     }
 
+    // Update appointment status
     appointment.status = status;
     await appointment.save();
 
+    // If the appointment is confirmed, award loyalty points to the pet owner
     if (status === "confirmed") {
       const pet = await Pet.findById(appointment.pet_id);
       const petOwner = await User.findById(pet.owner_id);
@@ -134,6 +138,7 @@ export const updateAppointmentStatus = async (req, res) => {
       });
     }
 
+    // If status is not 'confirmed', simply return a success message
     res.status(200).json({
       message: `Appointment ${status} successfully`,
       appointment,
