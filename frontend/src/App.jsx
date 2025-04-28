@@ -16,6 +16,7 @@ import AddGrooming from './Pages/Providers/addGrooming'
 import AddService from './Pages/Providers/addService'
 import RegisterPet from './Pages/PetOwner/registerPet'
 import CreateFaq from './Pages/FAQ/faq'
+import AdvertisingManagement from './Pages/Admin/advertiseManagement';
 
 import PaymentPage from './Pages/Payment/PaymentPage'
 import ServiceSummary from './Pages/Payment/AppointmentSummary'
@@ -70,10 +71,6 @@ import PaymentReviewPage from './Pages/Payment/payemntreview'
 import EditProfile from './Pages/Providers/EditProfile'
 import EditProfilePetOwner from './Pages/PetOwner/EditProfile'
 import GeminiChatApp from './Components/GeminiAPI'
-import { ShoppingCart } from './Components/ShoppingCart';
-import CartPage from './Pages/productMarket/CartPage'
-import OrderConfirmPage from './Pages/productMarket/OrderConfirmPage'
-import OrdersPage from './Pages/productMarket/OrdersPage'
 
 // Wrapper component to handle NavBar conditional rendering
 const AppContent = () => {
@@ -161,11 +158,6 @@ const AppContent = () => {
           <Route path='/reviewdisplay' element={<ServiceReviews/>}/>
 
           <Route path='/ownerOrders' element={<VeiwOwnerOerders/>}/>
-          <Route path="/cart" element={<CartPage />} />
-
-          <Route path='/petbook/:petId' element={<PetBookPage />} />
-          <Route path="/order-confirm" element={<OrderConfirmPage />} />
-          <Route path="/orders" element={<OrdersPage />} />
 
         </Routes>
         {isHomePage && <GeminiChatApp />}
