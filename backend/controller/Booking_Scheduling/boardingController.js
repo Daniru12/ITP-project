@@ -95,47 +95,67 @@ export const getSchedulingById = async (req, res) => {
 // UPDATE SCHEDULING
 export const updateScheduling = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params;  // Get scheduling ID from request params
+    const { status, pet_id, service_id, appointment_id, duration, start_time, end_time } = req.body;
 
-    // Validate required fields (optional but recommended)
-    const requiredFields = ['appointment_id', 'pet_id', 'service_id', 'duration', 'start_time'];
-    for (const field of requiredFields) {
-      if (!req.body[field]) {
-        return res.status(400).json({ error: `Missing required field: ${field}` });
-      }
+    console.log('Request payload:', req.body);  // Log the incoming request payload for debugging
+
+    // Validate that status is provided
+    if (!status) {
+      return res.status(400).json({ error: 'Status is required to update scheduling' });
     }
 
-    // For 'custom' duration, ensure end_time is provided
-    if (req.body.duration === 'custom' && !req.body.end_time) {
-      return res.status(400).json({ error: 'Custom duration requires an end_time' });
-    }
-
-    // Check if the appointment exists before updating
-    const appointment = await Appointment.findById(req.body.appointment_id);
-    if (!appointment) {
-      return res.status(404).json({ error: 'Appointment not found' });
-    }
-
-    // Update the document
-    const updatedScheduling = await Scheduling.findByIdAndUpdate(
-      id,
-      req.body,
-      { new: true, runValidators: true } // ensure Mongoose validation runs
-    );
-
-    if (!updatedScheduling) {
+    // Check if the scheduling exists
+    const existingScheduling = await Scheduling.findById(id);
+    if (!existingScheduling) {
       return res.status(404).json({ error: 'Scheduling not found' });
     }
 
+    // Prepare the update data
+    const updateData = {};
+
+    // Add fields only if they are provided
+    if (status) updateData.status = status;
+    if (pet_id) updateData.pet_id = pet_id;
+    if (service_id) updateData.service_id = service_id;
+    if (appointment_id) updateData.appointment_id = appointment_id;
+    if (duration) updateData.duration = duration;
+    
+    // If start_time is provided, make sure it's properly formatted and update it
+    if (start_time) updateData.start_time = new Date(start_time);
+
+    // Handle the end_time separately
+    if (end_time) {
+      // If end_time is provided by the user, use it directly
+      updateData.end_time = new Date(end_time);
+    } else {
+      // If no end_time is provided (and it's not custom), calculate it in the middleware
+      // The middleware will calculate the end_time based on duration if needed
+      delete updateData.end_time;  // Don't set it here, the middleware will handle it
+    }
+
+    // Perform the update
+    const updatedScheduling = await Scheduling.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedScheduling) {
+      return res.status(404).json({ error: 'Scheduling update failed' });
+    }
+
+    // Successfully updated
     res.status(200).json({
       message: 'Scheduling updated successfully!',
       data: updatedScheduling,
     });
+
   } catch (error) {
-    console.error('Error updating schedule:', error); // log in backend
+    console.error('Error during scheduling update:', error);  // Log the error stack for debugging
     res.status(500).json({
       error: 'Update failed',
-      details: error.message,
+      details: error.message,  // Include detailed error message for debugging
     });
   }
 };

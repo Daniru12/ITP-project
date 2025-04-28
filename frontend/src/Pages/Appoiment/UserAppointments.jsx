@@ -17,6 +17,7 @@ const UserAppointments = () => {
   const [trainingSchedules, setTrainingSchedules] = useState([]);
   const [filterStatus, setFilterStatus] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const token = localStorage.getItem("token");
@@ -101,10 +102,25 @@ const UserAppointments = () => {
     const groomingMatch = groomingSchedules.find((s) => s.appointment_id?._id === appointmentId);
     const trainingMatch = trainingSchedules.find((s) => s.appointment_id?._id === appointmentId);
 
-    if (boardingMatch) setSelectedSchedule({ ...boardingMatch, type: "Boarding" });
-    else if (groomingMatch) setSelectedSchedule({ ...groomingMatch, type: "Grooming" });
-    else if (trainingMatch) setSelectedSchedule({ ...trainingMatch, type: "Training" });
-    else toast("No schedule found for this appointment");
+    if (boardingMatch) {
+      setSelectedSchedule({ ...boardingMatch, type: "Boarding" });
+      setIsScheduleModalOpen(true);
+    }
+    else if (groomingMatch) {
+      setSelectedSchedule({ ...groomingMatch, type: "Grooming" });
+      setIsScheduleModalOpen(true);
+    }
+    else if (trainingMatch) {
+      setSelectedSchedule({ ...trainingMatch, type: "Training" });
+      setIsScheduleModalOpen(true);
+    }
+    else toast.error("No schedule found for this appointment");
+  };
+
+  const closeScheduleModal = () => {
+    setIsScheduleModalOpen(false);
+    // Use a timeout to ensure modal animation completes before resetting data
+    setTimeout(() => setSelectedSchedule(null), 300);
   };
 
   const getStatusStyle = (status) => {
@@ -169,6 +185,13 @@ const UserAppointments = () => {
     acc[service] = (acc[service] || 0) + 1;
     return acc;
   }, {});
+
+  const checkHasSchedule = (appointmentId) => {
+    const hasBoardingSchedule = boardingSchedules.find((s) => s.appointment_id?._id === appointmentId);
+    const hasGroomingSchedule = groomingSchedules.find((s) => s.appointment_id?._id === appointmentId);
+    const hasTrainingSchedule = trainingSchedules.find((s) => s.appointment_id?._id === appointmentId);
+    return hasBoardingSchedule || hasGroomingSchedule || hasTrainingSchedule;
+  };
 
   if (loading) {
     return <HamsterLoader />;
@@ -262,10 +285,7 @@ const UserAppointments = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredAppointments.map((appt) => {
-              const hasBoardingSchedule = boardingSchedules.find((s) => s.appointment_id?._id === appt._id);
-              const hasGroomingSchedule = groomingSchedules.find((s) => s.appointment_id?._id === appt._id);
-              const hasTrainingSchedule = trainingSchedules.find((s) => s.appointment_id?._id === appt._id);
-              const hasSchedule = hasBoardingSchedule || hasGroomingSchedule || hasTrainingSchedule;
+              const hasSchedule = checkHasSchedule(appt._id);
 
               return (
                 <div
@@ -380,11 +400,14 @@ const UserAppointments = () => {
                         </button>
                       )}
 
-                      {appt.status === "confirmed" && hasSchedule && (
+                      {hasSchedule && (
                         <button
                           onClick={() => handleScheduleDetails(appt._id)}
-                          className="flex-1 flex items-center justify-center gap-1 text-white py-2 px-3 rounded-md text-sm transition"
+                          className={`flex-1 flex items-center justify-center gap-1 text-white py-2 px-3 rounded-md text-sm transition ${
+                            appt.status.toLowerCase() !== "confirmed" ? "opacity-80 hover:opacity-100" : ""
+                          }`}
                           style={{ backgroundColor: "#BC4626" }}
+                          aria-label="View schedule details"
                         >
                           <FaCalendarCheck /> View Schedule
                         </button>
@@ -399,9 +422,9 @@ const UserAppointments = () => {
       </div>
 
       {/* Schedule Modal */}
-      {selectedSchedule && (
+      {isScheduleModalOpen && selectedSchedule && (
         <div className="fixed inset-0 backdrop-blur-sm bg-black/50 flex items-center justify-center z-50 overflow-y-auto p-4">
-          <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full">
+          <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full animate-fadeIn">
             <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-100">
               <div className="p-2 rounded-full" style={{ backgroundColor: "rgba(223, 165, 93, 0.1)" }}>
                 <FaCalendarCheck style={{ color: "#BC4626" }} />
@@ -424,7 +447,7 @@ const UserAppointments = () => {
                 </div>
 
                 {selectedSchedule.schedule?.length > 0 ? (
-                  <div className="mt-4 space-y-4">
+                  <div className="mt-4 space-y-4 max-h-72 overflow-y-auto pr-2">
                     {selectedSchedule.schedule.map((dayObj, idx) => (
                       <div key={idx} className="bg-gray-50 rounded-lg p-3">
                         <p className="font-semibold border-b border-gray-200 pb-1 mb-2" style={{ color: "#BC4626" }}>
@@ -549,16 +572,41 @@ const UserAppointments = () => {
               </>
             )}
 
-            <button
-              onClick={() => setSelectedSchedule(null)}
-              className="mt-6 w-full text-white py-2 rounded-md transition flex items-center justify-center gap-1"
-              style={{ backgroundColor: "#BC4626" }}
-            >
-              Close
-            </button>
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={closeScheduleModal}
+                className="w-full text-white py-2 rounded-md transition flex items-center justify-center gap-1"
+                style={{ backgroundColor: "#BC4626" }}
+              >
+                Close
+              </button>
+              {selectedSchedule.type === "Boarding" && (
+                <button
+                  onClick={() => {
+                    closeScheduleModal();
+                    navigate(`/boarding-details/${selectedSchedule._id}`);
+                  }}
+                  className="w-full text-white py-2 rounded-md transition flex items-center justify-center gap-1"
+                  style={{ backgroundColor: "#347486" }}
+                >
+                  Full Details
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}
+
+      {/* CSS for animations */}
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+      `}</style>
     </div>
   );
 };
