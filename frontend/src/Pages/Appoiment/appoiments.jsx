@@ -26,7 +26,7 @@ const AppointmentsList = () => {
   const [trainingSchedules, setTrainingSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   // UI states
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -36,7 +36,7 @@ const AppointmentsList = () => {
   const [sortBy, setSortBy] = useState('date');
   const [sortOrder, setSortOrder] = useState('desc');
   const [showHistory, setShowHistory] = useState(false); // New state for history view
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,7 +45,6 @@ const AppointmentsList = () => {
         setLoading(true);
         const token = localStorage.getItem('token');
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
         const [appointmentsRes, boardingRes, groomingRes, trainingRes] = await Promise.all([
           axios.get(`${backendUrl}/api/appointments/provider`, {
             headers: { Authorization: `Bearer ${token}` },
@@ -60,7 +59,6 @@ const AppointmentsList = () => {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
-
         setAppointments(appointmentsRes.data.appointments || []);
         setBoardingSchedules(
           Array.isArray(boardingRes.data) ? boardingRes.data : boardingRes.data?.schedules || []
@@ -70,7 +68,7 @@ const AppointmentsList = () => {
         );
         setTrainingSchedules(
           Array.isArray(trainingRes.data?.data) ? trainingRes.data.data : []
-        );        
+        );
         setLoading(false);
       } catch (err) {
         console.error(err);
@@ -79,13 +77,17 @@ const AppointmentsList = () => {
         setLoading(false);
       }
     };
-
     fetchAll();
   }, []);
 
   // Filter completed appointments for history view
   const completedAppointments = useMemo(() => {
     return appointments.filter(app => app.status === 'completed');
+  }, [appointments]);
+
+  // Filter current appointments for main view
+  const currentAppointments = useMemo(() => {
+    return appointments.filter(app => app.status !== 'completed');
   }, [appointments]);
 
   const hasSchedule = (appointmentId, category) => {
@@ -97,7 +99,7 @@ const AppointmentsList = () => {
     }
     if (category === 'pet_training') {
       return trainingSchedules.some(s => s.appointment_id?._id === appointmentId);
-    }    
+    }
     return false;
   };
 
@@ -105,13 +107,11 @@ const AppointmentsList = () => {
     try {
       const token = localStorage.getItem('token');
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
       await axios.put(`${backendUrl}/api/appointments/${appointmentId}`, {
         status: 'confirmed',
       }, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
       toast.success('Appointment confirmed!');
       setAppointments((prev) =>
         prev.map((a) =>
@@ -127,13 +127,11 @@ const AppointmentsList = () => {
     try {
       const token = localStorage.getItem('token');
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
       await axios.put(`${backendUrl}/api/appointments/${appointmentId}`, {
         status: 'completed',
       }, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
       toast.success('Appointment marked as completed!');
       setAppointments((prev) =>
         prev.map((a) =>
@@ -150,13 +148,11 @@ const AppointmentsList = () => {
     try {
       const token = localStorage.getItem('token');
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
       await axios.put(`${backendUrl}/api/appointments/${appointmentId}`, {
         status: 'cancelled',
       }, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
       toast.success('Appointment cancelled!');
       setAppointments((prev) =>
         prev.map((a) =>
@@ -173,11 +169,9 @@ const AppointmentsList = () => {
     try {
       const token = localStorage.getItem('token');
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
       await axios.delete(`${backendUrl}/api/appointments/${appointmentId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
       toast.success('Appointment deleted!');
       setAppointments((prev) => prev.filter((a) => a._id !== appointmentId));
     } catch (error) {
@@ -192,13 +186,11 @@ const AppointmentsList = () => {
       pet_grooming: '/Groomingscheduleadd',
       pet_training: '/Trainingscheduleadd',
     };
-
     const path = routeMap[category];
     if (!path) {
       toast.error("Invalid service category");
       return;
     }
-
     navigate(path, {
       state: {
         appointmentId: appointment._id,
@@ -214,13 +206,11 @@ const AppointmentsList = () => {
       pet_grooming: '/schedule/grooming',
       pet_training: '/schedule/training',
     };
-
     const path = routeMap[category];
     if (!path) {
       toast.error("Invalid service category");
       return;
     }
-
     navigate(path, {
       state: {
         appointmentId: appointment._id,
@@ -272,19 +262,16 @@ const AppointmentsList = () => {
 
   // Filter and search logic with useMemo for performance
   const filteredAppointments = useMemo(() => {
-    const appsToFilter = showHistory ? completedAppointments : appointments;
-    
+    const appsToFilter = showHistory ? completedAppointments : currentAppointments;
     return appsToFilter.filter(appointment => {
-      const matchesSearch = 
+      const matchesSearch =
         (appointment.pet_id?.name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
         (appointment.pet_id?.owner_id?.full_name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
         (appointment.service_id?.service_name?.toLowerCase() || '').includes(searchTerm.toLowerCase());
-      
       const matchesStatus = statusFilter === 'all' || appointment.status === statusFilter;
-      
       const category = appointment.service_id?.service_category;
       const matchesCategory = categoryFilter === 'all' || category === categoryFilter;
-      
+
       // Date filter logic
       let matchesDate = true;
       if (dateFilter === 'today') {
@@ -300,16 +287,15 @@ const AppointmentsList = () => {
         const appointmentDate = new Date(appointment.appointment_date);
         matchesDate = appointmentDate < today;
       }
-      
+
       return matchesSearch && matchesStatus && matchesCategory && matchesDate;
     });
-  }, [appointments, completedAppointments, showHistory, searchTerm, statusFilter, categoryFilter, dateFilter]);
-  
+  }, [currentAppointments, completedAppointments, showHistory, searchTerm, statusFilter, categoryFilter, dateFilter]);
+
   // Sorting logic
   const sortedAppointments = useMemo(() => {
     return [...filteredAppointments].sort((a, b) => {
       let compareA, compareB;
-      
       switch (sortBy) {
         case 'date':
           compareA = new Date(a.appointment_date);
@@ -335,7 +321,6 @@ const AppointmentsList = () => {
           compareA = new Date(a.appointment_date);
           compareB = new Date(b.appointment_date);
       }
-      
       // Handle the sort order
       if (sortOrder === 'asc') {
         return compareA > compareB ? 1 : -1;
@@ -352,13 +337,11 @@ const AppointmentsList = () => {
     const pending = appointments.filter(a => a.status === 'pending').length;
     const cancelled = appointments.filter(a => a.status === 'cancelled').length;
     const completed = appointments.filter(a => a.status === 'completed').length;
-    
     const boarding = appointments.filter(a => a.service_id?.service_category === 'pet_boarding').length;
     const grooming = appointments.filter(a => a.service_id?.service_category === 'pet_grooming').length;
     const training = appointments.filter(a => a.service_id?.service_category === 'pet_training').length;
-    
     return {
-      total, confirmed, pending, cancelled, completed, 
+      total, confirmed, pending, cancelled, completed,
       boarding, grooming, training
     };
   }, [appointments]);
@@ -376,13 +359,13 @@ const AppointmentsList = () => {
       package: appointment.package_type || 'Standard',
       discount: appointment.discount_applied || 0
     }));
-    
+
     // Create CSV content
     let csvContent = "Pet Name,Owner Name,Service,Category,Status,Date,Package,Discount\n";
     reportData.forEach(item => {
       csvContent += `${item.petName},${item.ownerName},${item.service},${item.category},${item.status},${item.date},${item.package},$${item.discount}\n`;
     });
-    
+
     // Create and trigger download
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
@@ -393,14 +376,13 @@ const AppointmentsList = () => {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    
     toast.success('Report downloaded successfully!');
   };
 
   // Print report function
   const printReport = () => {
     const printWindow = window.open('', '_blank');
-    
+
     // Create HTML content for printing
     let printContent = `
       <html>
@@ -424,14 +406,12 @@ const AppointmentsList = () => {
             <h1>Appointments Report</h1>
             <p>Generated on ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
           </div>
-          
           <div class="summary">
             <h2>Summary</h2>
             <p>Total Appointments: ${stats.total}</p>
             <p>Confirmed: ${stats.confirmed} | Pending: ${stats.pending} | Cancelled: ${stats.cancelled} | Completed: ${stats.completed}</p>
             <p>Boarding: ${stats.boarding} | Grooming: ${stats.grooming} | Training: ${stats.training}</p>
           </div>
-          
           <h2>Detailed Report</h2>
           <table>
             <thead>
@@ -448,13 +428,11 @@ const AppointmentsList = () => {
             </thead>
             <tbody>
     `;
-    
     sortedAppointments.forEach(appointment => {
       const service = appointment.service_id || {};
       const pet = appointment.pet_id || {};
       const owner = pet.owner_id || {};
       const category = service.service_category;
-      
       printContent += `
         <tr class="status-${appointment.status}">
           <td>${pet.name || 'N/A'}</td>
@@ -468,20 +446,17 @@ const AppointmentsList = () => {
         </tr>
       `;
     });
-    
     printContent += `
             </tbody>
           </table>
         </body>
       </html>
     `;
-    
     printWindow.document.open();
     printWindow.document.write(printContent);
     printWindow.document.close();
-    
     // Wait for content to load then print
-    printWindow.onload = function() {
+    printWindow.onload = function () {
       printWindow.print();
     };
   };
@@ -495,29 +470,28 @@ const AppointmentsList = () => {
       <div className="bg-white rounded-xl shadow-md mb-6 p-6">
         <div className="flex flex-col md:flex-row justify-between items-center mb-4">
           <h2 className="text-3xl font-bold text-gray-800 flex items-center">
-            <span className="mr-2"> </span> 
+            <span className="mr-2"> </span>
             {showHistory ? 'Completed Appointments History' : 'Appointments'}
           </h2>
-          
           <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
             <button
               onClick={() => setShowHistory(!showHistory)}
               className={`px-4 py-2 rounded-lg flex items-center transition-colors ${
-                showHistory 
-                  ? 'bg-indigo-600 text-white hover:bg-indigo-700' 
+                showHistory
+                  ? 'bg-indigo-600 text-white hover:bg-indigo-700'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
               <FaHistory className="mr-2" />
               {showHistory ? 'Back to Current' : 'View History'}
             </button>
-            <button 
+            <button
               onClick={generateReport}
               className="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center hover:bg-green-700 transition-colors"
             >
               <FaDownload className="mr-2" /> Export CSV
             </button>
-            <button 
+            <button
               onClick={printReport}
               className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center hover:bg-blue-700 transition-colors"
             >
@@ -525,7 +499,7 @@ const AppointmentsList = () => {
             </button>
           </div>
         </div>
-        
+
         {/* Stats cards - only show in current view */}
         {!showHistory && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -547,7 +521,7 @@ const AppointmentsList = () => {
             </div>
           </div>
         )}
-        
+
         {/* Search and Filter Bar */}
         <div className="bg-gray-50 rounded-lg p-4 mb-6">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
@@ -562,12 +536,11 @@ const AppointmentsList = () => {
                 className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-400 focus:border-transparent"
               />
             </div>
-            
             {/* Quick Filters */}
             <div className="flex flex-wrap gap-2 justify-center md:justify-end w-full md:w-2/3">
               {!showHistory && (
                 <>
-                  <button 
+                  <button
                     onClick={() => setStatusFilter('all')}
                     className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
                       statusFilter === 'all' ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -575,7 +548,7 @@ const AppointmentsList = () => {
                   >
                     All
                   </button>
-                  <button 
+                  <button
                     onClick={() => setStatusFilter('pending')}
                     className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
                       statusFilter === 'pending' ? 'bg-yellow-500 text-white' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
@@ -583,7 +556,7 @@ const AppointmentsList = () => {
                   >
                     Pending
                   </button>
-                  <button 
+                  <button
                     onClick={() => setStatusFilter('confirmed')}
                     className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
                       statusFilter === 'confirmed' ? 'bg-green-500 text-white' : 'bg-green-100 text-green-700 hover:bg-green-200'
@@ -591,7 +564,7 @@ const AppointmentsList = () => {
                   >
                     Confirmed
                   </button>
-                  <button 
+                  <button
                     onClick={() => setStatusFilter('cancelled')}
                     className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
                       statusFilter === 'cancelled' ? 'bg-red-500 text-white' : 'bg-red-100 text-red-700 hover:bg-red-200'
@@ -601,16 +574,15 @@ const AppointmentsList = () => {
                   </button>
                 </>
               )}
-              <button 
+              <button
                 onClick={() => setShowFilters(!showFilters)}
                 className="px-3 py-1 rounded-lg text-sm font-medium bg-blue-100 text-blue-700 hover:bg-blue-200 flex items-center"
               >
-                <FaFilter className="mr-1" /> 
+                <FaFilter className="mr-1" />
                 {showFilters ? 'Hide Filters' : 'More Filters'}
               </button>
             </div>
           </div>
-          
           {/* Advanced Filters */}
           {showFilters && (
             <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -627,7 +599,6 @@ const AppointmentsList = () => {
                   <option value="pet_training">Training</option>
                 </select>
               </div>
-              
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
                 <select
@@ -641,7 +612,6 @@ const AppointmentsList = () => {
                   <option value="past">Past</option>
                 </select>
               </div>
-              
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
                 <select
@@ -656,7 +626,6 @@ const AppointmentsList = () => {
                   <option value="service">Service</option>
                 </select>
               </div>
-              
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Sort Order</label>
                 <select
@@ -672,7 +641,7 @@ const AppointmentsList = () => {
           )}
         </div>
       </div>
-      
+
       {/* Results Counter */}
       <div className="mb-4 text-gray-700">
         Showing {sortedAppointments.length} {sortedAppointments.length === 1 ? 'appointment' : 'appointments'}
@@ -680,16 +649,16 @@ const AppointmentsList = () => {
         {categoryFilter !== 'all' && ` in category: ${getCategoryName(categoryFilter)}`}
         {searchTerm && ` matching: "${searchTerm}"`}
       </div>
-      
+
       {/* Appointments Grid */}
       {sortedAppointments.length === 0 ? (
         <div className="bg-white rounded-xl shadow-md p-8 text-center">
           <p className="text-lg text-gray-600">
-            {showHistory 
-              ? 'No completed appointments found matching your criteria.' 
+            {showHistory
+              ? 'No completed appointments found matching your criteria.'
               : 'No appointments found matching your criteria.'}
           </p>
-          <button 
+          <button
             onClick={() => {
               setSearchTerm('');
               setStatusFilter('all');
@@ -709,7 +678,6 @@ const AppointmentsList = () => {
             const owner = pet.owner_id || {};
             const category = service.service_category;
             const scheduled = hasSchedule(appointment._id, category);
-
             return (
               <div key={appointment._id} className="relative bg-white border rounded-xl p-6 shadow hover:shadow-lg transition-shadow">
                 {/* Status and Category Badge */}
@@ -717,55 +685,46 @@ const AppointmentsList = () => {
                   <span className={`text-xs px-3 py-1 rounded-full ${getStatusStyle(appointment.status)}`}>
                     {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
                   </span>
-                  
                   <span className={`text-xs px-3 py-1 rounded-full ${getCategoryBadge(category)}`}>
                     {getCategoryName(category)}
                   </span>
                 </div>
-
                 {/* Service Name */}
                 <h3 className="text-xl font-bold text-gray-800 mb-3">{service.service_name}</h3>
-                
                 {/* Appointment Details */}
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center">
                     <span className="w-24 text-sm font-medium text-gray-500">Pet:</span>
                     <span className="text-sm text-gray-700">{pet.name}</span>
                   </div>
-                  
                   <div className="flex items-center">
                     <span className="w-24 text-sm font-medium text-gray-500">Owner:</span>
                     <span className="text-sm text-gray-700">{owner.full_name}</span>
                   </div>
-                  
                   <div className="flex items-center">
                     <span className="w-24 text-sm font-medium text-gray-500">Phone:</span>
                     <span className="text-sm text-gray-700">{owner.phone_number}</span>
                   </div>
-                  
                   <div className="flex items-center">
                     <span className="w-24 text-sm font-medium text-gray-500">Date:</span>
                     <span className="text-sm text-gray-700">
                       {new Date(appointment.appointment_date).toLocaleDateString('en-US', {
                         weekday: 'short',
-                        month: 'short', 
+                        month: 'short',
                         day: 'numeric',
                         year: 'numeric'
                       })}
                     </span>
                   </div>
-                  
                   <div className="flex items-center">
                     <span className="w-24 text-sm font-medium text-gray-500">Package:</span>
                     <span className="text-sm text-gray-700">{appointment.package_type || 'Standard'}</span>
                   </div>
-                  
                   <div className="flex items-center">
                     <span className="w-24 text-sm font-medium text-gray-500">Discount:</span>
                     <span className="text-sm text-gray-700">Rs.{appointment.discount_applied || 0}</span>
                   </div>
                 </div>
-
                 {/* Action Buttons - Different in history view */}
                 {!showHistory ? (
                   <div className="flex flex-wrap gap-2 mt-4">
@@ -823,27 +782,6 @@ const AppointmentsList = () => {
               </div>
             );
           })}
-        </div>
-      )}
-      
-      {/* Pagination Section - can be implemented if needed */}
-      {sortedAppointments.length > 0 && (
-        <div className="mt-8 flex justify-center">
-          <div className="bg-white rounded-lg shadow px-4 py-3 flex items-center">
-            <button 
-              className="mr-2 px-3 py-1 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50"
-              disabled
-            >
-              Previous
-            </button>
-            <span className="px-3 py-1 rounded bg-blue-600 text-white">1</span>
-            <button 
-              className="ml-2 px-3 py-1 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50"
-              disabled
-            >
-              Next
-            </button>
-          </div>
         </div>
       )}
     </div>
