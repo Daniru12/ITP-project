@@ -46,11 +46,11 @@ export const addService = async (req, res) => {
       }
 
       // Validate duration minimum
-      if (package_tier.duration < 15) {
-        return res.status(400).json({
-          message: `${tier} package duration must be at least 15 minutes`,
-        });
-      }
+      // if (package_tier.duration < 15) {
+      //   return res.status(400).json({
+      //     message: `${tier} package duration must be at least 15 minutes`,
+      //   });
+      // }
 
       // Validate price is not negative
       if (package_tier.price < 0) {
@@ -89,12 +89,12 @@ export const addService = async (req, res) => {
     await newService.save();
 
     res.status(201).json({
-      message: "Your grooming service has been created successfully!",
+      message: "Your service has been created successfully!",
       service: newService,
     });
   } catch (error) {
     res.status(500).json({
-      message: "Sorry, we couldn't save your grooming service",
+      message: "Sorry, we couldn't save your service",
       error: error.message,
     });
   }
