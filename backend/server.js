@@ -14,6 +14,8 @@ import AdvertisementRoutes from "./routes/Advertisement/advertisementRouter.js";
 import faqAllRouter from "./routes/Reviews/faqAllRoutes.js";
 import productRouter from "./routes/Products/productRouter.js";
 import orderRouter from "./routes/Products/orderRouter.js";
+import petBookRouter from "./routes/petBookRoutes.js";
+
 
 
 dotenv.config();
@@ -55,6 +57,7 @@ app.use("/api/advertisement",AdvertisementRoutes);
 app.use("/api/Products", productRouter);
 app.use("/api/faqAll", faqAllRouter);
 app.use("/api/orders", orderRouter);
+app.use("/api/petbook", petBookRouter);
 
 
 const PORT = process.env.PORT || 3000;
