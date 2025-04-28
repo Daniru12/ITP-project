@@ -126,14 +126,24 @@ export const createOrderFromCart = async (req, res) => {
 // Get user's own orders
 export const getOwnOrders = async (req, res) => {
   try {
+    console.log('Fetching orders for user:', req.user._id); // Debug log
+
     const orders = await Order.find({ pet_owner: req.user._id })
-      .populate('products.product')
+      .populate({
+        path: 'products.product',
+        select: 'name price image' // Select the fields you need
+      })
       .sort({ createdAt: -1 });
+
+    console.log('Found orders:', orders); // Debug log
 
     res.status(200).json(orders);
   } catch (error) {
     console.error("Error fetching orders:", error);
-    res.status(500).json({ message: "Error fetching orders" });
+    res.status(500).json({ 
+      message: "Error fetching orders",
+      error: error.message 
+    });
   }
 };
 
@@ -193,5 +203,52 @@ export const updateOrderStatus = async (req, res) => {
   } catch (error) {
     console.error("Error updating order status:", error);
     res.status(500).json({ message: "Error updating order status" });
+  }
+};
+
+// Update the cancelOrder controller
+export const cancelOrder = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    const userId = req.user._id;
+
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Check if user owns this order
+    if (order.pet_owner.toString() !== userId.toString()) {
+      return res.status(403).json({ message: "Not authorized to cancel this order" });
+    }
+
+    // Check if order is within 24 hours
+    const orderDate = new Date(order.createdAt);
+    const now = new Date();
+    const hoursDifference = (now - orderDate) / (1000 * 60 * 60);
+
+    if (hoursDifference > 24) {
+      return res.status(400).json({ 
+        message: "Orders can only be cancelled within 24 hours of placing" 
+      });
+    }
+
+    // Restore product quantities
+    for (const item of order.products) {
+      await Product.findByIdAndUpdate(
+        item.product,
+        { $inc: { quantity: item.quantity } }
+      );
+    }
+
+    // Delete the order instead of updating status
+    await Order.findByIdAndDelete(orderId);
+
+    res.status(200).json({
+      message: "Order cancelled and deleted successfully"
+    });
+  } catch (error) {
+    console.error("Error cancelling order:", error);
+    res.status(500).json({ message: "Error cancelling order" });
   }
 };

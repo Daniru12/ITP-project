@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { SearchAndCart } from '../../Components/SearchAndCart'
 import { ProductGrid } from '../../Components/ProductGrid'
 import { FilterBar } from '../../Components/FilterBar'
-import { PawPrintIcon, ShoppingCartIcon } from 'lucide-react'
+import { PawPrintIcon, ShoppingCartIcon, PackageIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const PetMarketplace = () => {
@@ -32,13 +32,21 @@ const PetMarketplace = () => {
             <h1 className="text-2xl font-bold text-gray-900">Pet Products</h1>
           </div>
           
-          {/* Cart icon */}
-          <Link 
-            to="/cart" 
-            className="p-2 text-gray-600 hover:text-blue-600 relative"
-          >
-            <ShoppingCartIcon className="w-6 h-6" />
-          </Link>
+          {/* Cart and Orders icons */}
+          <div className="flex items-center gap-4">
+            <Link 
+              to="/cart" 
+              className="p-2 text-gray-600 hover:text-blue-600 relative"
+            >
+              <ShoppingCartIcon className="w-6 h-6" />
+            </Link>
+            <Link 
+              to="/orders" 
+              className="p-2 text-gray-600 hover:text-blue-600 relative"
+            >
+              <PackageIcon className="w-6 h-6" />
+            </Link>
+          </div>
         </div>
       </header>
 

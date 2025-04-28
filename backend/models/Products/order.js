@@ -35,6 +35,8 @@ const orderSchema = new mongoose.Schema(
       required: [true, "petowner is required"],
     },
     shipping_details: {
+      receiverName: { type: String, required: [true, "Receiver's name is required"] },
+      phoneNumber: { type: String, required: [true, "Phone number is required"] },
       address: { type: String, required: [true, "Shipping address is required"] },
       city: { type: String, required: [true, "City is required"] },
       postalCode: { type: String, required: [true, "Postal code is required"] },
