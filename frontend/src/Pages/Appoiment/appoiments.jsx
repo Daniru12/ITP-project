@@ -12,8 +12,7 @@ import {
   FaFileExport,
   FaPrint,
   FaDownload,
-  FaThumbsUp,
-  FaHistory
+  FaThumbsUp
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import HamsterLoader from '../../components/HamsterLoader';
@@ -28,6 +27,7 @@ const AppointmentsList = () => {
   const [error, setError] = useState(null);
 
   // UI states
+  const [viewMode, setViewMode] = useState('active'); // 'active' or 'archived'
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
@@ -35,7 +35,6 @@ const AppointmentsList = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState('date');
   const [sortOrder, setSortOrder] = useState('desc');
-  const [showHistory, setShowHistory] = useState(false); // New state for history view
 
   const navigate = useNavigate();
 
@@ -79,16 +78,6 @@ const AppointmentsList = () => {
     };
     fetchAll();
   }, []);
-
-  // Filter completed appointments for history view
-  const completedAppointments = useMemo(() => {
-    return appointments.filter(app => app.status === 'completed');
-  }, [appointments]);
-
-  // Filter current appointments for main view
-  const currentAppointments = useMemo(() => {
-    return appointments.filter(app => app.status !== 'completed');
-  }, [appointments]);
 
   const hasSchedule = (appointmentId, category) => {
     if (category === 'pet_boarding') {
@@ -262,17 +251,21 @@ const AppointmentsList = () => {
 
   // Filter and search logic with useMemo for performance
   const filteredAppointments = useMemo(() => {
-    const appsToFilter = showHistory ? completedAppointments : currentAppointments;
-    return appsToFilter.filter(appointment => {
+    return appointments.filter(appointment => {
+      // View mode filtering
+      if (viewMode === 'active' && !['pending', 'confirmed'].includes(appointment.status)) return false;
+      if (viewMode === 'archived' && !['completed', 'cancelled'].includes(appointment.status)) return false;
+
       const matchesSearch =
         (appointment.pet_id?.name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
         (appointment.pet_id?.owner_id?.full_name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
         (appointment.service_id?.service_name?.toLowerCase() || '').includes(searchTerm.toLowerCase());
+
       const matchesStatus = statusFilter === 'all' || appointment.status === statusFilter;
+
       const category = appointment.service_id?.service_category;
       const matchesCategory = categoryFilter === 'all' || category === categoryFilter;
 
-      // Date filter logic
       let matchesDate = true;
       if (dateFilter === 'today') {
         const today = new Date().toDateString();
@@ -290,7 +283,7 @@ const AppointmentsList = () => {
 
       return matchesSearch && matchesStatus && matchesCategory && matchesDate;
     });
-  }, [currentAppointments, completedAppointments, showHistory, searchTerm, statusFilter, categoryFilter, dateFilter]);
+  }, [appointments, viewMode, searchTerm, statusFilter, categoryFilter, dateFilter]);
 
   // Sorting logic
   const sortedAppointments = useMemo(() => {
@@ -332,7 +325,7 @@ const AppointmentsList = () => {
 
   // Stats for dashboard
   const stats = useMemo(() => {
-    const total = appointments.length;
+    const totalActive = appointments.filter(a => ['pending', 'confirmed'].includes(a.status)).length;
     const confirmed = appointments.filter(a => a.status === 'confirmed').length;
     const pending = appointments.filter(a => a.status === 'pending').length;
     const cancelled = appointments.filter(a => a.status === 'cancelled').length;
@@ -341,7 +334,7 @@ const AppointmentsList = () => {
     const grooming = appointments.filter(a => a.service_id?.service_category === 'pet_grooming').length;
     const training = appointments.filter(a => a.service_id?.service_category === 'pet_training').length;
     return {
-      total, confirmed, pending, cancelled, completed,
+      totalActive, confirmed, pending, cancelled, completed,
       boarding, grooming, training
     };
   }, [appointments]);
@@ -359,13 +352,11 @@ const AppointmentsList = () => {
       package: appointment.package_type || 'Standard',
       discount: appointment.discount_applied || 0
     }));
-
     // Create CSV content
     let csvContent = "Pet Name,Owner Name,Service,Category,Status,Date,Package,Discount\n";
     reportData.forEach(item => {
       csvContent += `${item.petName},${item.ownerName},${item.service},${item.category},${item.status},${item.date},${item.package},$${item.discount}\n`;
     });
-
     // Create and trigger download
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
@@ -382,7 +373,6 @@ const AppointmentsList = () => {
   // Print report function
   const printReport = () => {
     const printWindow = window.open('', '_blank');
-
     // Create HTML content for printing
     let printContent = `
       <html>
@@ -408,7 +398,7 @@ const AppointmentsList = () => {
           </div>
           <div class="summary">
             <h2>Summary</h2>
-            <p>Total Appointments: ${stats.total}</p>
+            <p>Total Active Appointments: ${stats.totalActive}</p>
             <p>Confirmed: ${stats.confirmed} | Pending: ${stats.pending} | Cancelled: ${stats.cancelled} | Completed: ${stats.completed}</p>
             <p>Boarding: ${stats.boarding} | Grooming: ${stats.grooming} | Training: ${stats.training}</p>
           </div>
@@ -471,20 +461,9 @@ const AppointmentsList = () => {
         <div className="flex flex-col md:flex-row justify-between items-center mb-4">
           <h2 className="text-3xl font-bold text-gray-800 flex items-center">
             <span className="mr-2"> </span>
-            {showHistory ? 'Completed Appointments History' : 'Appointments'}
+            Appointments
           </h2>
           <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
-            <button
-              onClick={() => setShowHistory(!showHistory)}
-              className={`px-4 py-2 rounded-lg flex items-center transition-colors ${
-                showHistory
-                  ? 'bg-indigo-600 text-white hover:bg-indigo-700'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              <FaHistory className="mr-2" />
-              {showHistory ? 'Back to Current' : 'View History'}
-            </button>
             <button
               onClick={generateReport}
               className="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center hover:bg-green-700 transition-colors"
@@ -499,29 +478,25 @@ const AppointmentsList = () => {
             </button>
           </div>
         </div>
-
-        {/* Stats cards - only show in current view */}
-        {!showHistory && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-purple-50 rounded-lg p-4 border border-purple-100 shadow-sm">
-              <p className="text-sm text-purple-600">Total</p>
-              <p className="text-2xl font-bold text-purple-700">{stats.total}</p>
-            </div>
-            <div className="bg-green-50 rounded-lg p-4 border border-green-100 shadow-sm">
-              <p className="text-sm text-green-600">Confirmed</p>
-              <p className="text-2xl font-bold text-green-700">{stats.confirmed}</p>
-            </div>
-            <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-100 shadow-sm">
-              <p className="text-sm text-yellow-600">Pending</p>
-              <p className="text-2xl font-bold text-yellow-700">{stats.pending}</p>
-            </div>
-            <div className="bg-red-50 rounded-lg p-4 border border-red-100 shadow-sm">
-              <p className="text-sm text-red-600">Cancelled</p>
-              <p className="text-2xl font-bold text-red-700">{stats.cancelled}</p>
-            </div>
+        {/* Stats cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div className="bg-purple-50 rounded-lg p-4 border border-purple-100 shadow-sm">
+            <p className="text-sm text-purple-600">Total Active</p>
+            <p className="text-2xl font-bold text-purple-700">{stats.totalActive}</p>
           </div>
-        )}
-
+          <div className="bg-green-50 rounded-lg p-4 border border-green-100 shadow-sm">
+            <p className="text-sm text-green-600">Confirmed</p>
+            <p className="text-2xl font-bold text-green-700">{stats.confirmed}</p>
+          </div>
+          <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-100 shadow-sm">
+            <p className="text-sm text-yellow-600">Pending</p>
+            <p className="text-2xl font-bold text-yellow-700">{stats.pending}</p>
+          </div>
+          <div className="bg-red-50 rounded-lg p-4 border border-red-100 shadow-sm">
+            <p className="text-sm text-red-600">Cancelled</p>
+            <p className="text-2xl font-bold text-red-700">{stats.cancelled}</p>
+          </div>
+        </div>
         {/* Search and Filter Bar */}
         <div className="bg-gray-50 rounded-lg p-4 mb-6">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
@@ -530,7 +505,7 @@ const AppointmentsList = () => {
               <FaSearch className="absolute left-3 top-3 text-gray-400" />
               <input
                 type="text"
-                placeholder={`Search by pet, owner or service...`}
+                placeholder="Search by pet, owner or service..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-400 focus:border-transparent"
@@ -538,16 +513,16 @@ const AppointmentsList = () => {
             </div>
             {/* Quick Filters */}
             <div className="flex flex-wrap gap-2 justify-center md:justify-end w-full md:w-2/3">
-              {!showHistory && (
+              <button
+                onClick={() => setStatusFilter('all')}
+                className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                  statusFilter === 'all' ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                All
+              </button>
+              {viewMode === 'active' ? (
                 <>
-                  <button
-                    onClick={() => setStatusFilter('all')}
-                    className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
-                      statusFilter === 'all' ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    }`}
-                  >
-                    All
-                  </button>
                   <button
                     onClick={() => setStatusFilter('pending')}
                     className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
@@ -563,6 +538,17 @@ const AppointmentsList = () => {
                     }`}
                   >
                     Confirmed
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => setStatusFilter('completed')}
+                    className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                      statusFilter === 'completed' ? 'bg-blue-500 text-white' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                    }`}
+                  >
+                    Completed
                   </button>
                   <button
                     onClick={() => setStatusFilter('cancelled')}
@@ -642,10 +628,41 @@ const AppointmentsList = () => {
         </div>
       </div>
 
+      {/* View Mode Tabs */}
+      <div className="flex gap-4 mb-6">
+        <button
+          onClick={() => {
+            setViewMode('active');
+            setStatusFilter('all');
+          }}
+          className={`px-6 py-3 rounded-xl text-lg font-semibold transition-colors ${
+            viewMode === 'active'
+              ? 'bg-blue-600 text-white shadow-lg'
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+          }`}
+        >
+          Active Appointments
+        </button>
+        <button
+          onClick={() => {
+            setViewMode('archived');
+            setStatusFilter('all');
+          }}
+          className={`px-6 py-3 rounded-xl text-lg font-semibold transition-colors ${
+            viewMode === 'archived'
+              ? 'bg-blue-600 text-white shadow-lg'
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+          }`}
+        >
+          Appointments History
+        </button>
+      </div>
+
       {/* Results Counter */}
       <div className="mb-4 text-gray-700">
-        Showing {sortedAppointments.length} {sortedAppointments.length === 1 ? 'appointment' : 'appointments'}
-        {!showHistory && statusFilter !== 'all' && ` with status: ${statusFilter}`}
+        Showing {sortedAppointments.length}{' '}
+        {sortedAppointments.length === 1 ? 'appointment' : 'appointments'}
+        {statusFilter !== 'all' && ` with status: ${statusFilter}`}
         {categoryFilter !== 'all' && ` in category: ${getCategoryName(categoryFilter)}`}
         {searchTerm && ` matching: "${searchTerm}"`}
       </div>
@@ -653,11 +670,7 @@ const AppointmentsList = () => {
       {/* Appointments Grid */}
       {sortedAppointments.length === 0 ? (
         <div className="bg-white rounded-xl shadow-md p-8 text-center">
-          <p className="text-lg text-gray-600">
-            {showHistory
-              ? 'No completed appointments found matching your criteria.'
-              : 'No appointments found matching your criteria.'}
-          </p>
+          <p className="text-lg text-gray-600">No appointments found matching your criteria.</p>
           <button
             onClick={() => {
               setSearchTerm('');
@@ -680,6 +693,25 @@ const AppointmentsList = () => {
             const scheduled = hasSchedule(appointment._id, category);
             return (
               <div key={appointment._id} className="relative bg-white border rounded-xl p-6 shadow hover:shadow-lg transition-shadow">
+                {/* Schedule buttons */}
+                {appointment.status === 'confirmed' && !scheduled && (
+                  <button
+                    onClick={() => handleSchedule(appointment)}
+                    className="absolute top-4 right-4 bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors"
+                    title="Create Schedule"
+                  >
+                    <FaCalendarPlus />
+                  </button>
+                )}
+                {appointment.status === 'confirmed' && scheduled && (
+                  <button
+                    onClick={() => handleViewSchedule(appointment)}
+                    className="absolute top-4 right-4 bg-blue-100 text-blue-700 p-2 rounded-full hover:bg-blue-200 transition-colors"
+                    title="View Schedule"
+                  >
+                    <FaCalendarAlt />
+                  </button>
+                )}
                 {/* Status and Category Badge */}
                 <div className="flex flex-wrap gap-2 mb-3">
                   <span className={`text-xs px-3 py-1 rounded-full ${getStatusStyle(appointment.status)}`}>
@@ -722,27 +754,19 @@ const AppointmentsList = () => {
                   </div>
                   <div className="flex items-center">
                     <span className="w-24 text-sm font-medium text-gray-500">Discount:</span>
-                    <span className="text-sm text-gray-700">Rs.{appointment.discount_applied || 0}</span>
+                    <span className="text-sm text-gray-700">Rs. {appointment.discount_applied || 0}</span>
                   </div>
                 </div>
-                {/* Action Buttons - Different in history view */}
-                {!showHistory ? (
+                {/* Action Buttons */}
+                {viewMode === 'active' && (
                   <div className="flex flex-wrap gap-2 mt-4">
                     {appointment.status === 'pending' && (
-                      <>
-                        <button
-                          onClick={() => handleConfirm(appointment._id)}
-                          className="text-white bg-green-600 hover:bg-green-700 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center"
-                        >
-                          <FaCheck className="mr-1" /> Confirm
-                        </button>
-                        <button
-                          onClick={() => handleCancel(appointment._id)}
-                          className="text-white bg-red-600 hover:bg-red-700 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center"
-                        >
-                          <FaTimes className="mr-1" /> Cancel
-                        </button>
-                      </>
+                      <button
+                        onClick={() => handleConfirm(appointment._id)}
+                        className="text-white bg-green-600 hover:bg-green-700 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center"
+                      >
+                        <FaCheck className="mr-1" /> Confirm
+                      </button>
                     )}
                     {appointment.status === 'confirmed' && (
                       <>
@@ -760,6 +784,10 @@ const AppointmentsList = () => {
                         </button>
                       </>
                     )}
+                  </div>
+                )}
+                {viewMode === 'archived' && (
+                  <div className="flex flex-wrap gap-2 mt-4">
                     {(appointment.status === 'completed' || appointment.status === 'cancelled') && (
                       <button
                         onClick={() => handleDelete(appointment._id)}
@@ -768,15 +796,6 @@ const AppointmentsList = () => {
                         <FaTrash className="mr-1" /> Remove
                       </button>
                     )}
-                  </div>
-                ) : (
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    <button
-                      onClick={() => handleDelete(appointment._id)}
-                      className="text-white bg-gray-600 hover:bg-gray-700 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center"
-                    >
-                      <FaTrash className="mr-1" /> Remove
-                    </button>
                   </div>
                 )}
               </div>
