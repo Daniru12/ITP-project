@@ -755,7 +755,7 @@ const AppointmentsList = () => {
                   </div>
                   <div className="flex items-center">
                     <span className="w-24 text-sm font-medium text-gray-500">Discount:</span>
-                    <span className="text-sm text-gray-700">Rs. {appointment.discount_applied || 0}</span>
+                    <span className="text-sm text-gray-700">{appointment.discount_applied || 0}%</span>
                   </div>
                 </div>
                 {/* Action Buttons */}

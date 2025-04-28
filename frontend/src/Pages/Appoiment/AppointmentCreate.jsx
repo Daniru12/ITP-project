@@ -92,10 +92,46 @@ const AppointmentCreate = () => {
       return;
     }
     try {
-      await axios.post(`${backendUrl}/api/appointments/create`, formData, {
+      // Get current loyalty points before booking
+      const userResponse = await axios.get(`${backendUrl}/api/users/loyalty-points`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      
+      const currentPoints = userResponse.data.points;
+      const possibleDiscount = userResponse.data.possibleDiscount;
+
+      // Only proceed with points if user has enough and wants to use them
+      if (formData.usePoints) {
+        if (!currentPoints || currentPoints < 20) {
+          toast.error("You need at least 20 points to get a discount");
+          setSubmitLoading(false);
+          return;
+        }
+        toast.success(`You have ${currentPoints} points available for a $${possibleDiscount} discount!`);
+      }
+
+      // Create the appointment
+      const response = await axios.post(
+        `${backendUrl}/api/appointments/create`,
+        {
+          ...formData,
+          pet_id: formData.pet_id,
+          service_id: services[0]?._id,
+          appointment_date: formData.appointment_date,
+          package_type: formData.package_type,
+          special_notes: formData.special_notes,
+          usePoints: formData.usePoints
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
       toast.success("Appointment booked successfully!");
+      if (response.data.pointsUsed > 0) {
+        toast.success(`Used ${response.data.pointsUsed} points for a $${response.data.discountApplied} discount!`);
+      }
+
       setFormData({
         pet_id: "",
         service_id: "",
@@ -104,6 +140,7 @@ const AppointmentCreate = () => {
         special_notes: "",
         usePoints: false,
       });
+      
       setTimeout(() => {
         navigate("/Appointment");
       }, 1000);

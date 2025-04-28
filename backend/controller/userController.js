@@ -198,16 +198,22 @@ export const getPets = async (req, res) => {
 export const getLoyaltyPoints = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
-    const possibleDiscount = calculateDiscount(user.loyalty_points);
-
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    // Calculate possible discount (20 points = $2 discount)
+    const possibleDiscount = Math.floor(user.loyalty_points / 20) * 2;
+    
     res.status(200).json({
       points: user.loyalty_points,
       possibleDiscount: possibleDiscount
     });
   } catch (error) {
-    res.status(500).json({
+    console.error("Error fetching loyalty points:", error);
+    res.status(500).json({ 
       message: "Error fetching loyalty points",
-      error: error.message
+      error: error.message 
     });
   }
 };
@@ -706,5 +712,32 @@ export async function loginWithGoogle(req,res){
     });
   }
 }
+
+// Delete user (admin only)
+export const deleteUser = async (req, res) => {
+  try {
+    // Check if user is admin
+    if (req.user.user_type !== "admin") {
+      return res.status(403).json({ message: "Only admin can delete users" });
+    }
+
+    const userId = req.params.id;
+    
+    // Find and delete the user
+    const deletedUser = await User.findByIdAndDelete(userId);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).json({ 
+      message: "Error deleting user",
+      error: error.message 
+    });
+  }
+};
 
 export default router;
