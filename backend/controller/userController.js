@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import Pet from "../models/Pets.js";
 import express from "express";
+import axios from "axios";
 
 dotenv.config();
 
@@ -197,16 +198,22 @@ export const getPets = async (req, res) => {
 export const getLoyaltyPoints = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
-    const possibleDiscount = calculateDiscount(user.loyalty_points);
-
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    // Calculate possible discount (20 points = $2 discount)
+    const possibleDiscount = Math.floor(user.loyalty_points / 20) * 2;
+    
     res.status(200).json({
       points: user.loyalty_points,
       possibleDiscount: possibleDiscount
     });
   } catch (error) {
-    res.status(500).json({
+    console.error("Error fetching loyalty points:", error);
+    res.status(500).json({ 
       message: "Error fetching loyalty points",
-      error: error.message
+      error: error.message 
     });
   }
 };
@@ -602,6 +609,133 @@ export const deactivateAccount = async (req, res) => {
     res.status(500).json({
       message: "Error updating account status",
       error: error.message
+    });
+  }
+};
+
+export async function loginWithGoogle(req,res){
+  const { accessToken } = req.body;
+  
+  if (!accessToken) {
+    return res.status(400).json({ message: "Access token is required" });
+  }
+
+  try {
+    const response = await axios.get(
+      "https://www.googleapis.com/oauth2/v3/userinfo",
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    const { email, name, picture } = response.data;
+
+    let user = await User.findOne({ email });
+    
+    if (user) {
+      // Check if account is active
+      if (!user.isActive) {
+        return res.status(403).json({ message: "Your account has been deactivated. Please contact support." });
+      }
+
+      const token = jwt.sign(
+        {
+          _id: user._id,
+          username: user.username,
+          full_name: user.full_name,
+          email: user.email,
+          phone_number: user.phone_number,
+          user_type: user.user_type,
+          profile_picture: user.profile_picture,
+          isActive: user.isActive
+        },
+        process.env.JWT_SECRET
+      );
+      
+      return res.status(200).json({
+        message: "Login successful",
+        token,
+        user
+      });
+    } else {
+      // Create new user with a default phone number
+      const newUser = new User({
+        username: name,
+        full_name: name,
+        email,
+        phone_number: "Update Required", // Default phone number that user should update later
+        user_type: "pet_owner",
+        profile_picture: picture,
+        password: bcrypt.hashSync(Math.random().toString(36), 8), // Generate random secure password
+        isActive: true
+      });
+
+      const savedUser = await newUser.save();
+      
+      const token = jwt.sign(
+        {
+          _id: savedUser._id,
+          username: savedUser.username,
+          full_name: savedUser.full_name,
+          email: savedUser.email,
+          phone_number: savedUser.phone_number,
+          user_type: savedUser.user_type,
+          profile_picture: savedUser.profile_picture,
+          isActive: savedUser.isActive
+        },
+        process.env.JWT_SECRET
+      );
+
+      return res.status(200).json({
+        message: "Account created successfully. Please update your phone number in your profile.",
+        token,
+        user: savedUser,
+        requiresPhoneNumber: true
+      });
+    }
+  } catch (error) {
+    console.error("Error in loginWithGoogle:", error);
+    
+    // Check if it's a Google API error
+    if (error.response?.status === 401) {
+      return res.status(401).json({
+        message: "Invalid Google access token",
+        error: "Invalid token"
+      });
+    }
+    
+    res.status(500).json({
+      message: "Error logging in with Google",
+      error: error.message
+    });
+  }
+}
+
+// Delete user (admin only)
+export const deleteUser = async (req, res) => {
+  try {
+    // Check if user is admin
+    if (req.user.user_type !== "admin") {
+      return res.status(403).json({ message: "Only admin can delete users" });
+    }
+
+    const userId = req.params.id;
+    
+    // Find and delete the user
+    const deletedUser = await User.findByIdAndDelete(userId);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).json({ 
+      message: "Error deleting user",
+      error: error.message 
     });
   }
 };

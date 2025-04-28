@@ -203,6 +203,8 @@ const EditProfile = () => {
             <input
               type="email"
               name="email"
+              disabled
+              placeholder="Email cannot be changed"
               value={formData.email}
               onChange={handleChange}
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20 transition-all duration-300"

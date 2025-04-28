@@ -1,5 +1,6 @@
 import './App.css'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import Home from './Pages/Home/home'
 import LoginPage from './Pages/Login/login'
 import { Toaster } from 'react-hot-toast'
@@ -15,6 +16,7 @@ import AddGrooming from './Pages/Providers/addGrooming'
 import AddService from './Pages/Providers/addService'
 import RegisterPet from './Pages/PetOwner/registerPet'
 import CreateFaq from './Pages/FAQ/faq'
+import PetBookPage from './Pages/PetOwner/PetBookPage'
 
 import PaymentPage from './Pages/Payment/PaymentPage'
 import ServiceSummary from './Pages/Payment/AppointmentSummary'
@@ -70,19 +72,25 @@ import VeiwOwnerOerders from './Pages/Orders/viewOwnerOrders'
 import PaymentReviewPage from './Pages/Payment/payemntreview'
 import EditProfile from './Pages/Providers/EditProfile'
 import EditProfilePetOwner from './Pages/PetOwner/EditProfile'
+import GeminiChatApp from './Components/GeminiAPI'
+import { ShoppingCart } from './Components/ShoppingCart';
+import CartPage from './Pages/productMarket/CartPage'
+import OrderConfirmPage from './Pages/productMarket/OrderConfirmPage'
+import OrdersPage from './Pages/productMarket/OrdersPage'
 
 // Wrapper component to handle NavBar conditional rendering
 const AppContent = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
-
+  const isHomePage = location.pathname === '/'; 
   return (
-    <>
+    <GoogleOAuthProvider clientId="758186960483-nfdtc5n6je1spmkfvu3764emq9qmo41q.apps.googleusercontent.com">
       <Toaster position="bottom-right" />
       {!isAdminRoute && <NavBar />}
       <div className={`${!isAdminRoute ? 'pt-15' : ''}`}>
         <Routes>
           <Route path='/' element={<Home />} />
+          
           <Route path='/login' element={<LoginPage />} />
 
           {/* Admin Dashboard with nested routes */}
@@ -156,10 +164,16 @@ const AppContent = () => {
           <Route path="/average-rating/:serviceId" element={<AverageRating />} />
           <Route path='/adminList' element={<FaqAdminTable/>}/>
           <Route path='/ownerOrders' element={<VeiwOwnerOerders/>}/>
+          <Route path="/cart" element={<CartPage />} />
+
+          <Route path='/petbook/:petId' element={<PetBookPage />} />
+          <Route path="/order-confirm" element={<OrderConfirmPage />} />
+          <Route path="/orders" element={<OrdersPage />} />
 
         </Routes>
+        {isHomePage && <GeminiChatApp />}
       </div>
-    </>
+    </GoogleOAuthProvider>
   );
 };
 

@@ -180,3 +180,72 @@ export const getOwnProducts = async (req, res) => {
     res.status(500).json({ message: "Server error, unable to retrieve products." });
   }
 };
+
+// Search products by name or description
+export const searchProducts = async (req, res) => {
+  try {
+    const { query } = req.query;
+    const searchRegex = new RegExp(query, 'i');
+
+    const products = await Product.find({
+      $or: [
+        { name: searchRegex },
+        { description: searchRegex }
+      ]
+    }).populate("serviceProvider", "username email");
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error("Error searching products:", error);
+    res.status(500).json({ message: "Server error, unable to search products." });
+  }
+};
+
+// Get products by category
+export const getProductsByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+    const products = await Product.find({ category })
+      .populate("serviceProvider", "username email");
+
+    if (!products.length) {
+      return res.status(404).json({ 
+        message: `No products found in category: ${category}` 
+      });
+    }
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error("Error getting products by category:", error);
+    res.status(500).json({ 
+      message: "Server error, unable to get products by category." 
+    });
+  }
+};
+
+// Add validation to check product quantity before adding to cart
+export const addToCart = async (req, res) => {
+  try {
+    const { productId, quantity } = req.body;
+    const userId = req.user._id;
+
+    // Check if product exists and has enough quantity
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    if (product.quantity < quantity) {
+      return res.status(400).json({ 
+        message: "Not enough product quantity available",
+        availableQuantity: product.quantity 
+      });
+    }
+
+    // ... rest of add to cart logic ...
+
+  } catch (error) {
+    console.error("Error adding to cart:", error);
+    res.status(500).json({ message: "Error adding product to cart" });
+  }
+};

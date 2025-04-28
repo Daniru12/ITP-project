@@ -9,36 +9,72 @@ import { calculateLoyaltyPoints, calculateDiscount } from "../../utils/loyaltyHe
 // Book a new appointment
 export const bookAppointment = async (req, res) => {
   try {
+    // Validate pet ownership
     const pet = await Pet.findOne({ _id: req.body.pet_id, owner_id: req.user._id });
     if (!pet) return res.status(403).json({ message: "Pet not found or not owned by user" });
 
+    // Validate service exists
+    const service = await GroomingService.findById(req.body.service_id);
+    if (!service) return res.status(404).json({ message: "Service not found" });
+
+    // Get the user and check loyalty points if they want to use them
     const usePoints = req.body.usePoints === true;
     let discount = 0;
+    let pointsUsed = 0;
 
-    if (usePoints) {
-      const user = await User.findById(req.user._id);
-      discount = calculateDiscount(user.loyalty_points);
+    // Get fresh user data to ensure accurate points
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (usePoints && user.loyalty_points >= 20) {
+      // Calculate maximum possible discount (20 points = $2 discount)
+      const maxDiscount = Math.floor(user.loyalty_points / 20) * 2;
+      
+      // Get the package price from service
+      const packagePrice = service.packages[req.body.package_type]?.price || 0;
+      
+      // Limit discount to package price
+      discount = Math.min(maxDiscount, packagePrice);
+      
       if (discount > 0) {
-        user.loyalty_points = 0;
+        // Calculate points to use based on actual discount
+        pointsUsed = Math.ceil(discount / 2) * 20;
+        
+        // Update user's loyalty points
+        user.loyalty_points -= pointsUsed;
         await user.save();
+
+        console.log(`User ${user._id} used ${pointsUsed} points for $${discount} discount on package price $${packagePrice}`);
       }
     }
 
+    // Create new appointment with discount
     const newAppointment = new Appointment({
-      ...req.body,
-      status: "pending",
-      discount_applied: discount,
+      pet_id: req.body.pet_id,
+      service_id: req.body.service_id,
+      appointment_date: req.body.appointment_date,
       package_type: req.body.package_type,
+      special_notes: req.body.special_notes,
+      status: "pending",
+      discount_applied: discount // This will now have the actual calculated discount
     });
 
     await newAppointment.save();
 
+    // Return success response with details
     res.status(201).json({
       message: "Appointment booked successfully",
       appointment: newAppointment,
       discountApplied: discount,
+      pointsUsed: pointsUsed,
+      remainingPoints: user.loyalty_points,
+      originalPrice: service.packages[req.body.package_type]?.price || 0,
+      finalPrice: (service.packages[req.body.package_type]?.price || 0) - discount
     });
   } catch (error) {
+    console.error("Error in bookAppointment:", error);
     res.status(500).json({ message: "Error booking appointment", error: error.message });
   }
 };
@@ -97,6 +133,7 @@ export const getProviderAppointments = async (req, res) => {
 // Confirm or reject appointment by provider
 export const updateAppointmentStatus = async (req, res) => {
   try {
+    // Ensure only service providers can update appointment status
     if (req.user.user_type !== "service_provider") {
       return res.status(403).json({ message: "Only service providers can update appointment status" });
     }
@@ -104,8 +141,9 @@ export const updateAppointmentStatus = async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
-    if (!status || !["confirmed", "rejected", "cancelled"].includes(status)) {
-      return res.status(400).json({ message: "Status must be 'confirmed', 'rejected' or 'cancelled'" });
+    // Validate status to ensure it is one of the allowed values
+    if (!status || !["confirmed", "rejected", "cancelled", "completed"].includes(status)) {
+      return res.status(400).json({ message: "Status must be 'confirmed', 'rejected', 'cancelled', or 'completed'" });
     }
 
     const appointment = await Appointment.findById(id);
@@ -116,15 +154,21 @@ export const updateAppointmentStatus = async (req, res) => {
       return res.status(403).json({ message: "Unauthorized access to appointment" });
     }
 
+    // Update appointment status
     appointment.status = status;
     await appointment.save();
 
+    // If the appointment is confirmed, award loyalty points to the pet owner
     if (status === "confirmed") {
       const pet = await Pet.findById(appointment.pet_id);
       const petOwner = await User.findById(pet.owner_id);
       const pointsEarned = calculateLoyaltyPoints(appointment.package_type);
+      
+      // Add points to user's account
       petOwner.loyalty_points += pointsEarned;
       await petOwner.save();
+
+      console.log(`User ${petOwner._id} earned ${pointsEarned} points from appointment ${appointment._id}`);
 
       return res.status(200).json({
         message: "Appointment confirmed successfully",
@@ -134,11 +178,13 @@ export const updateAppointmentStatus = async (req, res) => {
       });
     }
 
+    // If status is not 'confirmed', simply return a success message
     res.status(200).json({
       message: `Appointment ${status} successfully`,
       appointment,
     });
   } catch (error) {
+    console.error("Error in updateAppointmentStatus:", error);
     res.status(500).json({ message: "Failed to update appointment", error: error.message });
   }
 };

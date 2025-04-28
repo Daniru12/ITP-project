@@ -49,7 +49,7 @@ const ProviderProfile = () => {
 
   // Function to format price display
   const formatPrice = (price) => {
-    return `$${price.toFixed(2)}`;
+    return `Rs.${price.toFixed(2)}`;
   };
 
   const generateServiceReport = () => {
@@ -266,7 +266,7 @@ function handleDeleteService(serviceId) {
                 )}
               </div>
               <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-accent)' }}>{providerInfo?.full_name || "Service Provider"}</h1>
-              <p className="text-gray-500">Professional Groomer</p>
+              <p className="text-gray-500">Professional Provider</p>
             </div>
 
             <div className="space-y-6">

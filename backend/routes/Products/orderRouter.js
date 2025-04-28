@@ -1,14 +1,26 @@
 import express from "express";
 // Import controller functions
-import { createOrder, getOwnOrders } from "../../controller/ProductsCRUD/OrderController.js";
+import { 
+  createOrder, 
+  createOrderFromCart, 
+  getOwnOrders,
+  getOrderById,
+  updateOrderStatus,
+  cancelOrder
+} from "../../controller/ProductsCRUD/OrderController.js";
 import { protect } from "../../middleware/authMiddleware.js"; // Import the protect middleware
 
 const orderRouter = express.Router();
 
-// Create a new order (protected route)
-orderRouter.post("/create", protect, createOrder);
+// Protect all order routes
+orderRouter.use(protect);
 
-// Get orders specific to the logged-in user (protected route)
-orderRouter.get("/own", protect, getOwnOrders);
+// Routes
+orderRouter.post("/create", createOrder);
+orderRouter.post("/create-from-cart", createOrderFromCart);
+orderRouter.get("/my-orders", getOwnOrders);  // Make sure this matches your frontend call
+orderRouter.get("/:id", getOrderById);
+orderRouter.put("/:id/status", updateOrderStatus);
+orderRouter.post('/:id/cancel', cancelOrder);
 
 export default orderRouter;
