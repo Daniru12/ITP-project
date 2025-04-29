@@ -67,6 +67,64 @@ export const getServiceReviews = async (req, res) => {
 };
 
 
+// Get average rating for a service ✅
+export const getAverageRating = async (req, res) => {
+  try {
+    const { serviceId } = req.params;
+
+    // Validate the serviceId parameter
+    if (!serviceId) {
+      return res.status(400).json({
+        message: "Service ID is required"
+      });
+    }
+
+    console.log("Service ID:", serviceId); // Log the serviceId for debugging
+
+    // Aggregation query to calculate average rating
+    const result = await Review.aggregate([
+      {
+        $match: { service: new mongoose.Types.ObjectId(serviceId) }
+      },
+      {
+        $group: {
+          _id: "$service",
+          averageRating: { $avg: "$rating" }, // Calculates average rating
+          totalReviews: { $sum: 1 } // Counts total number of reviews
+        }
+      }
+    ]);
+
+    console.log("Aggregation Result:", result); // Log the aggregation result for debugging
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        message: "No reviews found for this service",
+        averageRating: 0,
+        totalReviews: 0
+      });
+    }
+
+    // Safely access averageRating and totalReviews
+    const { averageRating, totalReviews } = result[0];
+
+    res.status(200).json({
+      serviceId,
+      averageRating: averageRating ? averageRating.toFixed(1) : 0, // Ensure fixed decimal
+      totalReviews
+    });
+  } catch (error) {
+    console.error("Error fetching average rating:", error); // Log the error for debugging
+    res.status(500).json({ 
+      message: "Error calculating average rating",
+      error: error.message
+    });
+  }
+};
+
+
+
+
 // ✅ Update a review
 export const updateReview = async (req, res) => {
   try {
