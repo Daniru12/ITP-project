@@ -52,7 +52,8 @@ const CreateFaq = () => {
     console.log("Form Data Before Submit:", formData);
 
     try {
-      const backendUrl = process.env.REACT_APP_BACKEND_URL; // Make sure this is defined
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
       const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
 
       const response = await axios.post(
