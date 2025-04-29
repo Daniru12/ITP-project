@@ -10,7 +10,8 @@ import {
   FaBars as FiMenu,
   FaTimes as FiX,
   FaDesktop as FiMonitor,
-  FaPaw
+  FaPaw,
+  FaTag
 } from 'react-icons/fa';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -272,6 +273,13 @@ const AdminDashboard = () => {
                 to="/admin/AdvertisingManagement" 
                 active={activeItem === 'advertisements'} 
                 onClick={() => setActiveItem('advertisements')}
+              />
+              <SidebarItem 
+                icon={<FaTag />} 
+                text="Promo Codes" 
+                to="/admin/promocodes" 
+                active={activeItem === 'promocodes'} 
+                onClick={() => setActiveItem('promocodes')}
               />
               <SidebarItem 
                 icon={<FiSettings />} 

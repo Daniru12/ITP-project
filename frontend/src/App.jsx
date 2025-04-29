@@ -80,6 +80,7 @@ import CartPage from './Pages/productMarket/CartPage'
 import OrderConfirmPage from './Pages/productMarket/OrderConfirmPage'
 import OrdersPage from './Pages/productMarket/OrdersPage'
 import ProviderOrderManagement from './Pages/Orders/ProviderOrderManagement'
+import PromoCodeManagement from './Pages/Admin/PromoCodeManagement'
 
 // Wrapper component to handle NavBar conditional rendering
 const AppContent = () => {
@@ -105,6 +106,7 @@ const AppContent = () => {
             <Route path="Services" element={<ServiceManagement />} />
             <Route path="AllPets" element={<PetsManagement />} />
             <Route path="AdvertisingManagement" element={<AdvertisingManagement />} />
+            <Route path="promocodes" element={<PromoCodeManagement />} />
           </Route>
 
           <Route path='/register' element={<RegisterPage />} />
