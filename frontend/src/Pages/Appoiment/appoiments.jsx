@@ -16,6 +16,7 @@ import {
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import HamsterLoader from '../../components/HamsterLoader';
+import { FaPaw, FaBath, FaGraduationCap } from 'react-icons/fa'; // Add new icons
 
 const AppointmentsList = () => {
   // Base states
@@ -25,7 +26,7 @@ const AppointmentsList = () => {
   const [trainingSchedules, setTrainingSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  
   // UI states
   const [viewMode, setViewMode] = useState('active'); // 'active' or 'archived'
   const [searchTerm, setSearchTerm] = useState('');
@@ -92,6 +93,24 @@ const AppointmentsList = () => {
     return false;
   };
 
+  const scheduleTabs = [
+    {
+      name: 'Boarding Schedule',
+      path: '/schedule/boarding',
+      icon: <FaPaw className="mr-3" />,
+    },
+    {
+      name: 'Grooming Schedule',
+      path: '/schedule/grooming',
+      icon: <FaBath className="mr-3" />,
+    },
+    {
+      name: 'Training Schedule',
+      path: '/schedule/training',
+      icon: <FaGraduationCap className="mr-3" />,
+    },
+  ];
+
   const handleConfirm = async (appointmentId) => {
     try {
       const token = localStorage.getItem('token');
@@ -154,19 +173,24 @@ const AppointmentsList = () => {
   };
 
   const handleDelete = async (appointmentId) => {
-    if (!window.confirm("Are you sure to delete this appointment?")) return;
+    if (!window.confirm("Are you sure you want to delete this appointment?")) return;
+  
     try {
       const token = localStorage.getItem('token');
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  
+      // Send delete request to backend
       await axios.delete(`${backendUrl}/api/appointments/${appointmentId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+  
       toast.success('Appointment deleted!');
-      setAppointments((prev) => prev.filter((a) => a._id !== appointmentId));
+      setAppointments((prev) => prev.filter((a) => a._id !== appointmentId));  // Update state
     } catch (error) {
       toast.error(error.response?.data?.message || 'Delete failed');
     }
   };
+  
 
   const handleSchedule = (appointment) => {
     const category = appointment?.service_id?.service_category;
@@ -432,7 +456,7 @@ const AppointmentsList = () => {
           <td>${appointment.status}</td>
           <td>${new Date(appointment.appointment_date).toLocaleDateString()}</td>
           <td>${appointment.package_type || 'Standard'}</td>
-          <td>$${appointment.discount_applied || 0}</td>
+          <td>Rs.${appointment.discount_applied || 0}</td>
         </tr>
       `;
     });
@@ -455,7 +479,12 @@ const AppointmentsList = () => {
   if (error) return <div className="text-center text-red-600 mt-10 text-xl">{error}</div>;
 
   return (
+
     <div className="max-w-7xl mx-auto p-6">
+      {/* Schedule Tabs */}
+      
+    <div className="max-w-7xl mx-auto p-6">
+      
       {/* Header with title and stats */}
       <div className="bg-white rounded-xl shadow-md mb-6 p-6">
         <div className="flex flex-col md:flex-row justify-between items-center mb-4">
@@ -625,7 +654,27 @@ const AppointmentsList = () => {
               </div>
             </div>
           )}
+          
         </div>
+        <div className="bg-white rounded-xl shadow-md mb-6 p-4">
+        <h3 className="text-lg font-semibold text-gray-800 mb-3">Schedule Management</h3>
+        <div className="flex flex-wrap gap-2">
+          {scheduleTabs.map((tab, index) => (
+            <button
+              key={index}
+              onClick={() => navigate(tab.path)}
+              className={`flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                location.pathname === tab.path
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              {tab.icon}
+              {tab.name}
+            </button>
+          ))}
+        </div>
+      </div>
       </div>
 
       {/* View Mode Tabs */}
@@ -804,6 +853,7 @@ const AppointmentsList = () => {
           })}
         </div>
       )}
+    </div>
     </div>
   );
 };
