@@ -224,7 +224,7 @@ const UpdateService = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-base font-medium text-[#333333] mb-2">
-                        Price ($)
+                        Price (Rs.)
                       </label>
                       <input
                         type="number"

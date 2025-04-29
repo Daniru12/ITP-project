@@ -10,7 +10,7 @@ const PackageCard = ({ tier, details }) => {
     <div className="p-6 border border-gray-100 rounded-xl bg-white">
       <h4 className="text-xl font-bold text-[#333333] capitalize mb-4">{tier}</h4>
       <div className="space-y-3">
-        <p className="text-3xl font-bold text-[#347486]">${details.price}</p>
+        <p className="text-3xl font-bold text-[#347486]">Rs.{details.price}</p>
         <p className="text-base text-gray-600">{details.duration} minutes</p>
         <div className="mt-4">
           <p className="text-base font-medium text-[#333333] mb-3">Includes:</p>
@@ -168,7 +168,7 @@ const ServiceManagement = () => {
   const getBasicPrice = (service) => {
     try {
       return service.packages?.basic?.price 
-        ? `$${service.packages.basic.price}` 
+        ? `Rs.${service.packages.basic.price}` 
         : 'N/A';
     } catch (error) {
       return 'N/A';

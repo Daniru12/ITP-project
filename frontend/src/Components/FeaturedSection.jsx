@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Star } from 'lucide-react';
+import { Star, MapPin, Clock, ArrowRight } from 'lucide-react';
 import axios from 'axios';
 
 const FeaturedSection = () => {
@@ -101,30 +101,48 @@ const FeaturedSection = () => {
               {featuredProviders.map((provider, index) => (
                 <div
                   key={provider.id}
-                  className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300"
+                  className="group bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
                 >
+                  {/* Card Header with Image */}
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+                    <img
+                      src={provider.image}
+                      alt={provider.name}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                    {/* Rating Badge */}
+                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1 z-20">
+                      <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                      <span className="font-medium">{provider.rating}</span>
+                    </div>
+                  </div>
+
+                  {/* Card Content */}
                   <div className="p-6">
-                    <div className="flex items-center">
-                      <img
-                        src={provider.image}
-                        alt={provider.name}
-                        className="h-16 w-16 rounded-full object-cover"
-                      />
-                      <div className="ml-4">
-                        <h3 className="text-lg font-semibold" style={{ color: 'var(--color-primary)' }}>
+                    {/* Provider Info */}
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="text-xl font-semibold text-gray-800 group-hover:text-primary transition-colors">
                           {provider.name}
                         </h3>
-                        <p style={{ color: 'var(--color-accent)' }} className="capitalize">
+                        <p className="text-accent font-medium mt-1 capitalize">
                           {provider.service}
                         </p>
-                        <div className="flex items-center mt-1">
-                          <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                          <span className="ml-1 text-sm text-gray-600">{provider.rating}</span>
-                        </div>
-                        <p className="text-sm text-gray-500 mt-1">
-                          {provider.location}
-                        </p>
                       </div>
+
+                      {/* Location and Details */}
+                      <div className="space-y-2">
+                        <div className="flex items-center text-gray-600">
+                          <MapPin className="w-4 h-4 mr-2" />
+                          <span className="text-sm">{provider.location}</span>
+                        </div>
+                        <div className="flex items-center text-gray-600">
+                          <Clock className="w-4 h-4 mr-2" />
+                          <span className="text-sm">Available per {provider.unit}</span>
+                        </div>
+                      </div>
+
                     </div>
                   </div>
                 </div>
