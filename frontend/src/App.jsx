@@ -151,6 +151,7 @@ const AppContent = () => {
           <Route path='/delete-product' element={<DeleteProduct />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/product-management" element={<ProductManagement />} />
+          <Route path="/provider/order-management" element={<ProviderOrderManagement />} />
 
           <Route path='/display-services' element={<DisplayServices />} />
           <Route path='/service-overview/:id' element={<ServiceOverview />} />
@@ -174,8 +175,6 @@ const AppContent = () => {
           <Route path="/my-orders" element={<OrdersPage />} />
           <Route path="/provider/orders" element={<OrdersPage />} />
           <Route path="/admin/orders" element={<OrdersPage />} />
-          <Route path="/provider/order-management" element={<ProviderOrderManagement />} />
-
         </Routes>
         {isHomePage && <GeminiChatApp />}
       </div>

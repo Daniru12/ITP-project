@@ -257,11 +257,12 @@ export const cancelOrder = async (req, res) => {
 export const getProviderOrders = async (req, res) => {
   try {
     const providerId = req.user._id;
-    console.log('Provider ID:', providerId); // Debug log
+    console.log('Provider ID:', providerId);
+    console.log('User type:', req.user.user_type);
     
     // First, find all products by this provider
     const providerProducts = await Product.find({ serviceProvider: providerId });
-    console.log('Provider products:', providerProducts.length); // Debug log
+    console.log('Provider products found:', providerProducts.length);
     
     if (!providerProducts.length) {
       return res.status(200).json({
@@ -270,6 +271,8 @@ export const getProviderOrders = async (req, res) => {
           total: 0,
           pending: 0,
           processing: 0,
+          shipped: 0,
+          delivered: 0,
           totalRevenue: 0
         }
       });
@@ -289,9 +292,9 @@ export const getProviderOrders = async (req, res) => {
     .populate('pet_owner', 'username email')
     .sort({ createdAt: -1 });
 
-    console.log('Found orders:', orders.length); // Debug log
+    console.log('Found orders:', orders.length);
 
-    // Calculate stats
+    // Calculate stats with null checks
     const stats = {
       total: orders.length,
       pending: orders.filter(o => o.order_status === 'Pending').length,
@@ -301,7 +304,7 @@ export const getProviderOrders = async (req, res) => {
       totalRevenue: orders.reduce((sum, order) => {
         // Only count revenue from this provider's products
         const providerRevenue = order.products
-          .filter(item => productIds.includes(item.product._id))
+          .filter(item => item.product && productIds.includes(item.product._id))
           .reduce((total, item) => total + (item.price * item.quantity), 0);
         return sum + providerRevenue;
       }, 0)
@@ -315,7 +318,8 @@ export const getProviderOrders = async (req, res) => {
     console.error("Error fetching provider orders:", error);
     res.status(500).json({ 
       message: "Error fetching orders",
-      error: error.message 
+      error: error.message,
+      stack: error.stack
     });
   }
 };

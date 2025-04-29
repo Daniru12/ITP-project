@@ -20,6 +20,8 @@ orderRouter.use(protect);
 // User routes
 orderRouter.get("/user/my-orders", getOwnOrders);  // Match frontend route
 orderRouter.get("/provider/orders", getProviderOrders); // Match frontend route
+orderRouter.get("/own", getOwnOrders);  // for viewOwnerOrders.jsx
+orderRouter.get("/provider/orders", getProviderOrders); // for ProviderOrderManagement.jsx
 orderRouter.get("/all", getAllOrders); // For admin
 
 // General routes
