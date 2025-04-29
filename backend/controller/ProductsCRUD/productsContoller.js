@@ -166,18 +166,50 @@ export const updateProduct = async (req, res) => {
 // Retrieve Products for a Specific Service Provider (Own Products)
 export const getOwnProducts = async (req, res) => {
   try {
-    const serviceProviderId = req.user._id; // Assuming the service provider's ID is stored in the token
+    // Debug logs
+    console.log("User from request:", req.user);
+    console.log("User ID:", req.user._id);
 
-    const products = await Product.find({ serviceProvider: serviceProviderId });
+    // Validate user and authorization
+    if (!req.user || !req.user._id) {
+      console.log("Unauthorized: No user in request");
+      return res.status(401).json({ message: "Unauthorized access" });
+    }
 
-    if (!products.length) {
+    if (req.user.user_type !== "service_provider" && req.user.user_type !== "admin") {
+      console.log("Unauthorized: User type not allowed", req.user.user_type);
+      return res.status(403).json({ message: "Only service providers can access their products" });
+    }
+
+    const serviceProviderId = req.user._id;
+    console.log("Searching for products with serviceProvider:", serviceProviderId);
+
+    // Use lean() for better performance when you don't need Mongoose documents
+    const products = await Product.find({ serviceProvider: serviceProviderId })
+      .populate('serviceProvider', 'username email')
+      .sort({ createdAt: -1 })
+      .lean();
+
+    console.log("Found products:", products);
+
+    if (!products) {
       return res.status(404).json({ message: "No products found" });
     }
 
     res.status(200).json(products);
+
   } catch (error) {
-    console.error("Error retrieving own products:", error);
-    res.status(500).json({ message: "Server error, unable to retrieve products." });
+    console.error("Detailed error in getOwnProducts:", {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
+    
+    res.status(500).json({ 
+      message: "Server error, unable to retrieve products.",
+      error: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 };
 

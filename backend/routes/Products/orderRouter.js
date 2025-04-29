@@ -6,21 +6,27 @@ import {
   getOwnOrders,
   getOrderById,
   updateOrderStatus,
-  cancelOrder
+  cancelOrder,
+  getProviderOrders,
+  getAllOrders
 } from "../../controller/ProductsCRUD/OrderController.js";
 import { protect } from "../../middleware/authMiddleware.js"; // Import the protect middleware
 
 const orderRouter = express.Router();
 
-// Protect all order routes
+// Protect all routes
 orderRouter.use(protect);
 
-// Routes
+// User routes
+orderRouter.get("/user/my-orders", getOwnOrders);  // Match frontend route
+orderRouter.get("/provider/orders", getProviderOrders); // Match frontend route
+orderRouter.get("/all", getAllOrders); // For admin
+
+// General routes
 orderRouter.post("/create", createOrder);
 orderRouter.post("/create-from-cart", createOrderFromCart);
-orderRouter.get("/my-orders", getOwnOrders);  // Make sure this matches your frontend call
 orderRouter.get("/:id", getOrderById);
 orderRouter.put("/:id/status", updateOrderStatus);
-orderRouter.post('/:id/cancel', cancelOrder);
+orderRouter.post("/:id/cancel", cancelOrder);
 
 export default orderRouter;
