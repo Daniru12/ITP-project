@@ -78,14 +78,6 @@ const AllReviews = () => {
         >
           Submit Another Review
         </button>
-
-        {/* View Average Rating Button */}
-        <button
-          onClick={() => navigate(`/average-rating/${reviews[0]?.service?._id}`)} // Navigate to the Average Rating page
-          className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition mt-4"
-        >
-          View Average Rating
-        </button>
       </div>
     </div>
   );
