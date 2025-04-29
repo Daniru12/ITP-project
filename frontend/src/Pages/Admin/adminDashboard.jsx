@@ -274,6 +274,13 @@ const AdminDashboard = () => {
                 onClick={() => setActiveItem('advertisements')}
               />
               <SidebarItem 
+  icon={<FaQuestionCircle />}  // You can use the FaQuestionCircle icon for FAQs
+  text="FAQ" 
+  to="/admin/faq" 
+  active={activeItem === 'faq'} 
+  onClick={() => setActiveItem('faq')}
+/>
+              <SidebarItem 
                 icon={<FiSettings />} 
                 text="Settings" 
                 to="/admin/settings" 
