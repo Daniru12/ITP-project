@@ -47,28 +47,33 @@ const SchedulingSchema = new mongoose.Schema(
 // Middleware to **automatically calculate end_time** based on duration
 SchedulingSchema.pre("save", function (next) {
     if (this.start_time) {
-        let endTime = new Date(this.start_time);
+      let endTime = new Date(this.start_time);
+  
+      // Only calculate end_time if it is not provided and if duration is not custom
+      if (this.duration !== 'custom' && !this.end_time) {
         switch (this.duration) {
-            case "overnight":
-                endTime.setHours(endTime.getHours() + 12); // 12-hour stay
-                break;
-            case "weekday":
-                endTime.setDate(endTime.getDate() + 5); // Monday-Friday
-                break;
-            case "weekend":
-                endTime.setDate(endTime.getDate() + 2); // Saturday-Sunday
-                break;
-            case "day":
-                endTime.setHours(endTime.getHours() + 8); // Full-day daycare (8 hours)
-                break;
-            default:
-                endTime = this.end_time; // Custom user-defined end_time
-                break;
+          case "overnight":
+            endTime.setHours(endTime.getHours() + 12); // 12-hour stay
+            break;
+          case "weekday":
+            endTime.setDate(endTime.getDate() + 5); // Monday-Friday
+            break;
+          case "weekend":
+            endTime.setDate(endTime.getDate() + 2); // Saturday-Sunday
+            break;
+          case "day":
+            endTime.setHours(endTime.getHours() + 8); // Full-day daycare (8 hours)
+            break;
+          default:
+            endTime = this.end_time || endTime; // Default to existing end_time if custom
+            break;
         }
         this.end_time = endTime;
+      }
     }
     next();
-});
+  });
+  
 
 const Scheduling = mongoose.model("Boarding", SchedulingSchema);
 

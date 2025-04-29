@@ -50,7 +50,7 @@ const CreateFaq = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
+      console.log("Response from API:", response);
       toast.success("FAQ created successfully!");
       setFormData({ question: "", category: "" });
       navigate("/faqList");

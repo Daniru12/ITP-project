@@ -7,6 +7,7 @@ const AverageRating = () => {
   const { serviceId } = useParams();
   const [ratingData, setRatingData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
@@ -17,6 +18,7 @@ const AverageRating = () => {
         );
         setRatingData(response.data);
       } catch (error) {
+        setError(error.response?.data?.message || "Error loading ratings");
         toast.error(error.response?.data?.message || "Error loading ratings");
       } finally {
         setLoading(false);
@@ -46,13 +48,21 @@ const AverageRating = () => {
     return <div className="text-center mt-8">Loading ratings...</div>;
   }
 
+  if (error) {
+    return <div className="text-center mt-8 text-red-500">{error}</div>;
+  }
+
+  if (!ratingData || ratingData.averageRating === undefined) {
+    return <div className="text-center mt-8 text-red-500">Failed to load rating data.</div>;
+  }
+
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md mt-8">
       <h2 className="text-2xl font-bold mb-4 text-center">
         Service Rating Overview
       </h2>
       
-      {ratingData.averageRating === 0 ? (
+      {ratingData.averageRating === "0" || ratingData.averageRating === 0 ? (
         <p className="text-center text-gray-500">
           No ratings available for this service yet
         </p>
@@ -60,7 +70,7 @@ const AverageRating = () => {
         <div className="text-center">
           <div className="mb-4">
             <div className="flex justify-center items-center gap-1 mb-2">
-              {renderStars(ratingData.averageRating)}
+              {renderStars(Number(ratingData.averageRating))}
             </div>
             <p className="text-xl font-semibold">
               {ratingData.averageRating} out of 5

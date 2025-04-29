@@ -357,7 +357,7 @@ const AppointmentCreate = () => {
                     className="text-lg font-semibold mb-3"
                     style={{ color: "#347486" }}
                   >
-                    <span className="mr-2">📅</span>Choose Date & Time
+                    <span className="mr-2"></span>Choose Date & Time
                   </h3>
                   <div
                     style={{
@@ -441,7 +441,7 @@ const AppointmentCreate = () => {
                           </h4>
                         </div>
                         <p className="text-gray-500 text-sm mb-3">
-                          Price: ${pkg.price} | Duration: {pkg.duration} min
+                          Price: Rs. {pkg.price} | Duration: {pkg.duration} min
                         </p>
                         <div className="space-y-1">
                           {pkg.includes.map((item, index) => (
