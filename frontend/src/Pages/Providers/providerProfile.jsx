@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { FaStar, FaEdit, FaTrash, FaCalendarAlt, FaUser, FaCut, FaBox, FaDownload } from 'react-icons/fa';
+import { FaStar, FaEdit, FaTrash, FaCalendarAlt, FaUser, FaCut, FaBox, FaDownload, FaBullhorn } from 'react-icons/fa';
+
 import { Link } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import HamsterLoader from '../../Components/HamsterLoader';
@@ -321,6 +322,20 @@ function handleDeleteService(serviceId) {
               </Link>
             </div>
 
+            <div className="flex justify-between items-center mb-8">
+              <div className="flex items-center">
+                <FaCut className="w-6 h-6 mr-3" style={{ color: 'var(--color-accent)' }} />
+                <h2 className="text-2xl font-bold" style={{ color: 'var(--color-accent)' }}>My Advertisement</h2>
+              </div>
+              <Link 
+                to="/AddAdvertisementForm"
+                className="px-6 py-2.5 rounded-full text-white transition-all duration-300 hover:shadow-md"
+                style={{ backgroundColor: 'var(--color-primary)' }}
+              >
+                Add New Advertisement
+              </Link>
+            </div>
+
             {services.length === 0 ? (
               <div className="text-center py-12">
                 <FaCut className="w-12 h-12 mx-auto mb-4 text-gray-300" />
@@ -414,6 +429,22 @@ function handleDeleteService(serviceId) {
                 View Products
               </Link>
             </div>
+
+              {/* Advertisements */}
+              <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
+              <div className="flex items-center mb-6">
+                <FaBullhorn className="w-6 h-6 mr-3" style={{ color: 'var(--color-accent)' }} />
+                <h2 className="text-xl font-bold" style={{ color: 'var(--color-accent)' }}>Advertisements</h2>
+              </div>
+              <p className="text-gray-600 mb-6">Review and manage all your advertisements</p>
+              <Link
+                to="/AdReviewComponent"
+                className="inline-flex items-center px-6 py-2.5 rounded-full text-white transition-all duration-300 hover:shadow-md"
+                style={{ backgroundColor: 'var(--color-primary)' }}
+              >
+                View Advertisements
+              </Link>
+              </div>
           </div>
         </div>
       </div>
