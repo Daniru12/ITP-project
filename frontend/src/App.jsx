@@ -52,7 +52,8 @@ import AverageRating from './Components/AverageRatings'
 import FaqList from './Pages/FAQ/faqCategory'
 import FaqAdmin from './Pages/FAQ/FaqAnswers'
 import FaqAdminTable from './Pages/FAQ/AdminfaqCategory'
-import ServiceReviews from './Pages/Review/reviewdisplay'
+import AllReviews from './Pages/Review/reviewdisplay'
+import ServiceReviews from './Components/ServiceReviews';
 import DisplayServices from './Pages/Home/displayServices'
 import ServiceOverview from './Pages/Home/serviceOverview'
 import AddBoarding from './Pages/Providers/addBoarding'
@@ -162,8 +163,14 @@ const AppContent = () => {
           <Route path='/update-service/:id' element={<UpdateService />} />
           <Route path='/faqList' element={<FaqList />} />
           <Route path='/faqAdmin' element={<FaqAdmin/>}/> 
+<<<<<<< HEAD
           <Route path='/reviewdisplay' element={<ServiceReviews/>}/>
           <Route path="/average-rating/:serviceId" element={<AverageRating />} />
+=======
+          <Route path='/reviewdisplay' element={<AllReviews/>}/>
+          <Route path="/services/:serviceId/reviews" element={<ServiceReviews />} />
+          <Route path="/average/:serviceId" element={<AverageRating />} />
+>>>>>>> Development-Branch
           <Route path='/adminList' element={<FaqAdminTable/>}/>
           <Route path='/ownerOrders' element={<VeiwOwnerOerders/>}/>
           <Route path="/cart" element={<CartPage />} />
