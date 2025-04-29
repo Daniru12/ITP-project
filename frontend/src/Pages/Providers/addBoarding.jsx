@@ -199,11 +199,11 @@ const AddBoarding = () => {
         return false;
       }
 
-      // Check duration
-      // if (!package_.duration || Number(package_.duration) < 15) {
-      //   toast.error(`${tier} package duration must be at least 15 minutes`);
-      //   return false;
-      // }
+      
+      if (!package_.duration || Number(package_.duration) < 1) {
+        toast.error(`${tier} package duration must be at least 1 day`);
+        return false;
+      }
 
       // Check included services
       if (package_.includes.length === 0 || package_.includes.some(service => !service.trim())) {
