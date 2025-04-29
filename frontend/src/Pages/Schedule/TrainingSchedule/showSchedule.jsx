@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Dialog } from '@headlessui/react';
+import { useNavigate } from 'react-router-dom';
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -19,6 +20,9 @@ const MyTrainingSchedules = () => {
     status: '',
     notes: '',
   });
+  
+  // Add navigation hook
+  const navigate = useNavigate();
 
   // Fetch schedules on component mount
   useEffect(() => {
@@ -141,6 +145,10 @@ const MyTrainingSchedules = () => {
     }
   };
 
+  // Navigate to new schedule page
+  const handleAddNewSchedule = () => {
+    navigate('/AppointmentLIST');
+  };
 
   // Organize sessions by day
   const getSessionsByDay = () => {
@@ -192,9 +200,22 @@ const MyTrainingSchedules = () => {
 
   return (
     <div className="max-w-7xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-[#347486] mb-2">Training Calendar</h2>
-        <p className="text-gray-600">Manage your pet training sessions</p>
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h2 className="text-3xl font-bold text-[#347486] mb-2">Training Calendar</h2>
+          <p className="text-gray-600">Manage your pet training sessions</p>
+        </div>
+        
+        {/* New Schedule Button */}
+        <button 
+          onClick={handleAddNewSchedule}
+          className="flex items-center gap-2 px-5 py-3 bg-[#DFA55D] text-white rounded-lg hover:bg-[#DFA55D]/90 transition-colors font-medium shadow-md"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+          </svg>
+          New Training Schedule
+        </button>
       </div>
 
       {loading ? (
@@ -294,7 +315,6 @@ const MyTrainingSchedules = () => {
                             />
                           </svg>
                         </button>
-                        
                       </div>
                     </div>
                     {session.notes && (
@@ -311,6 +331,15 @@ const MyTrainingSchedules = () => {
               <div className="text-center py-12 bg-white rounded-lg border border-dashed border-gray-300">
                 <div className="text-4xl mb-3">🐾</div>
                 <p className="text-gray-500">No training sessions scheduled for {activeDay}</p>
+                <button 
+                  onClick={handleAddNewSchedule}
+                  className="mt-4 flex items-center gap-2 px-5 py-2 bg-[#DFA55D] text-white rounded-lg hover:bg-[#DFA55D]/90 transition-colors font-medium mx-auto"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                  </svg>
+                  Add Schedule
+                </button>
               </div>
             )}
           </div>

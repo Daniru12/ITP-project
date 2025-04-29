@@ -154,7 +154,7 @@ const GroomingScheduleList = () => {
             <p className="text-teal-100 mt-1">Manage your pet grooming appointments</p>
           </div>
           <button 
-            onClick={() => navigate('/create-groomingschedule')}
+            onClick={() => navigate('/AppointmentLIST')}
             className="bg-red-700 hover:bg-red-800 text-white px-5 py-2 rounded-lg shadow-md transition-all duration-200 flex items-center"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -237,7 +237,7 @@ const GroomingScheduleList = () => {
                 : 'Create your first grooming schedule to get started!'}
             </p>
             <button 
-              onClick={() => navigate('/create-groomingschedule')}
+              onClick={() => navigate('/AppointmentLIST')}
               className="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded-lg shadow-md transition-all duration-200"
             >
               Create Schedule
