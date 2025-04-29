@@ -188,9 +188,21 @@ export const updateOrderStatus = async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
-    // Only admin can update order status
-    if (req.user.user_type !== 'admin') {
+    // Allow both admin and service provider to update status
+    if (req.user.user_type !== 'admin' && req.user.user_type !== 'service_provider') {
       return res.status(403).json({ message: "Not authorized to update order status" });
+    }
+
+    // If service provider, verify they own products in the order
+    if (req.user.user_type === 'service_provider') {
+      const hasProviderProducts = await Product.exists({
+        _id: { $in: order.products.map(p => p.product) },
+        serviceProvider: req.user._id
+      });
+
+      if (!hasProviderProducts) {
+        return res.status(403).json({ message: "Not authorized to update this order" });
+      }
     }
 
     order.order_status = status;
