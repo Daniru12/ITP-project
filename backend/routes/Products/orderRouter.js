@@ -8,7 +8,8 @@ import {
   updateOrderStatus,
   cancelOrder,
   getProviderOrders,
-  getAllOrders
+  getAllOrders,
+  getPetOwnerProductOrders
 } from "../../controller/ProductsCRUD/OrderController.js";
 import { protect } from "../../middleware/authMiddleware.js"; // Import the protect middleware
 
@@ -19,6 +20,7 @@ orderRouter.use(protect);
 
 // User routes
 orderRouter.get("/user/my-orders", getOwnOrders);  // Match frontend route
+orderRouter.get("/user/product-orders", getPetOwnerProductOrders);  // Add this new route
 orderRouter.get("/provider/orders", getProviderOrders); // Match frontend route
 orderRouter.get("/own", getOwnOrders);  // for viewOwnerOrders.jsx
 orderRouter.get("/provider/orders", getProviderOrders); // for ProviderOrderManagement.jsx

@@ -1,6 +1,7 @@
 import Order from "../../models/Products/order.js";
 import Cart from "../../models/Products/cart.js";
 import Product from "../../models/Products/Product.js";
+import PromoCode from "../../models/Products/PromoCode.js";
 
 // Create a new order directly
 export const createOrder = async (req, res) => {
@@ -60,7 +61,7 @@ export const createOrder = async (req, res) => {
 // Create order from cart
 export const createOrderFromCart = async (req, res) => {
   try {
-    const { shipping_details } = req.body;
+    const { shipping_details, promo_code } = req.body;
     const userId = req.user._id;
 
     // Get user's cart
@@ -69,35 +70,43 @@ export const createOrderFromCart = async (req, res) => {
       return res.status(400).json({ message: "Cart is empty" });
     }
 
-    // Calculate total and prepare products array
-    let total_price = 0;
-    const products = [];
+    let total_price = cart.items.reduce((total, item) => 
+      total + (item.product.price * item.quantity), 0);
+    
+    let discountAmount = 0;
+    let appliedPromoCode = null;
 
-    for (const item of cart.items) {
-      const product = item.product;
-      
-      // Check if enough quantity is available
-      if (product.quantity < item.quantity) {
-        return res.status(400).json({ 
-          message: `Not enough quantity available for ${product.name}` 
-        });
-      }
-
-      total_price += product.price * item.quantity;
-      products.push({
-        product: product._id,
-        quantity: item.quantity,
-        price: product.price
+    // Apply promo code if provided
+    if (promo_code) {
+      appliedPromoCode = await PromoCode.findOne({ 
+        code: promo_code,
+        isActive: true
       });
+
+      if (appliedPromoCode) {
+        // Calculate discount
+        discountAmount = (total_price * appliedPromoCode.discount) / 100;
+        total_price -= discountAmount;
+
+        // Increment promo code usage
+        appliedPromoCode.currentUses += 1;
+        await appliedPromoCode.save();
+      }
     }
 
     // Create new order
     const newOrder = new Order({
-      products,
+      products: cart.items.map(item => ({
+        product: item.product._id,
+        quantity: item.quantity,
+        price: item.product.price
+      })),
       total_price,
       pet_owner: userId,
       shipping_details,
-      order_status: "Pending"
+      order_status: "Pending",
+      promo_code_applied: promo_code || null,
+      discount_amount: discountAmount
     });
 
     const savedOrder = await newOrder.save();
@@ -357,6 +366,34 @@ export const getAllOrders = async (req, res) => {
     console.error("Error fetching all orders:", error);
     res.status(500).json({ 
       message: "Error fetching orders",
+      error: error.message 
+    });
+  }
+};
+
+// Add this new function for pet owner's product orders
+export const getPetOwnerProductOrders = async (req, res) => {
+  try {
+    console.log('Fetching product orders for user:', req.user._id);
+
+    const orders = await Order.find({ 
+      pet_owner: req.user._id,
+      // Add a check to ensure these are product orders
+      'products.product': { $exists: true }
+    })
+    .populate({
+      path: 'products.product',
+      select: 'name price image' // Select the fields you need
+    })
+    .sort({ createdAt: -1 });
+
+    console.log('Found product orders:', orders);
+
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error("Error fetching product orders:", error);
+    res.status(500).json({ 
+      message: "Error fetching product orders",
       error: error.message 
     });
   }

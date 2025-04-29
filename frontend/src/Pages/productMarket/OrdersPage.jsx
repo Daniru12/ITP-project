@@ -57,9 +57,23 @@ const OrdersPage = () => {
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('user') || '{}');
-    setUserType(userData.user_type || '');
-    fetchOrders();
-  }, []);
+    const userType = userData.user_type;
+    const currentPath = window.location.pathname;
+    
+    // Only redirect if on an incorrect path
+    if (currentPath === '/orders') {
+      // This is the product orders page - no redirect needed
+      setUserType(userType);
+      fetchOrders();
+    } else if (userType === 'service_provider' && !currentPath.includes('/provider/orders')) {
+      navigate('/provider/orders');
+    } else if (userType === 'admin' && !currentPath.includes('/admin/orders')) {
+      navigate('/admin/orders');
+    } else {
+      setUserType(userType);
+      fetchOrders();
+    }
+  }, [navigate]);
 
   const fetchOrders = async () => {
     try {
@@ -75,21 +89,19 @@ const OrdersPage = () => {
       const userType = userData.user_type || '';
       setUserType(userType);
       
-      let endpoint;
-      switch(userType) {
-        case 'service_provider':
-          endpoint = `${backendUrl}/api/orders/provider/orders`;
-          break;
-        case 'admin':
-          endpoint = `${backendUrl}/api/orders/all`;
-          break;
-        default: // pet_owner
-          endpoint = `${backendUrl}/api/orders/user/my-orders`;
+      let endpoint = '';
+      // Updated endpoint selection
+      if (window.location.pathname === '/orders') {
+        // This is for the product orders page
+        endpoint = `${backendUrl}/api/orders/user/product-orders`;
+      } else if (window.location.pathname.includes('/provider/orders')) {
+        endpoint = `${backendUrl}/api/orders/provider/orders`;
+      } else if (window.location.pathname.includes('/admin/orders')) {
+        endpoint = `${backendUrl}/api/orders/all`;
       }
       
       console.log('Using endpoint:', endpoint);
       console.log('User type:', userType);
-      console.log('Token:', token);
       
       const response = await axios.get(
         endpoint,
@@ -107,8 +119,6 @@ const OrdersPage = () => {
         if (userType === 'service_provider') {
           setOrders(response.data.orders || []);
           setOrderStats(response.data.stats || null);
-          console.log('Set provider orders:', response.data.orders);
-          console.log('Set provider stats:', response.data.stats);
         } else {
           setOrders(Array.isArray(response.data) ? response.data : []);
         }
@@ -180,9 +190,11 @@ const OrdersPage = () => {
   };
 
   const getPageTitle = () => {
+    const currentPath = window.location.pathname;
+    if (currentPath === '/orders') {
+      return 'My Product Orders';
+    }
     switch(userType) {
-      case 'pet_owner':
-        return 'My Orders';
       case 'service_provider':
         return 'Customer Orders';
       case 'admin':
@@ -303,12 +315,32 @@ const OrdersPage = () => {
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-gray-500">Total Amount</p>
-                        <p className="text-lg font-bold">
-                          Rs.{order.total_price.toFixed(2)}
-                        </p>
-                        
-                        {/* Status update dropdown for admin */}
+                        <div className="space-y-1">
+                          <p className="text-sm text-gray-500">Subtotal</p>
+                          <p className="text-base">
+                            Rs.{(order.total_price + (order.discount_amount || 0)).toFixed(2)}
+                          </p>
+                          
+                          {order.promo_code_applied && order.discount_amount > 0 && (
+                            <div className="text-green-600">
+                              <p className="text-sm">Discount Applied</p>
+                              <p className="text-base">
+                                - Rs.{order.discount_amount.toFixed(2)}
+                                <span className="text-xs ml-1">
+                                  (Code: {order.promo_code_applied})
+                                </span>
+                              </p>
+                            </div>
+                          )}
+                          
+                          <div className="pt-2 border-t border-gray-200">
+                            <p className="text-sm font-medium text-gray-500">Total Amount</p>
+                            <p className="text-lg font-bold">
+                              Rs.{order.total_price.toFixed(2)}
+                            </p>
+                          </div>
+                        </div>
+
                         {canUpdateStatus() && (
                           <div className="mt-2">
                             <select 
@@ -325,7 +357,6 @@ const OrdersPage = () => {
                           </div>
                         )}
                         
-                        {/* Cancel button for pet owners */}
                         {canCancelOrder(order) && (
                           <button
                             onClick={() => handleCancelOrder(order._id)}

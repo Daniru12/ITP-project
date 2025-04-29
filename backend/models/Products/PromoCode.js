@@ -31,7 +31,8 @@ const promoCodeSchema = new mongoose.Schema({
   },
   minPurchaseAmount: {
     type: Number,
-    default: 0
+    required: true,
+    min: 0
   },
   isActive: {
     type: Boolean,
@@ -46,5 +47,7 @@ const promoCodeSchema = new mongoose.Schema({
   timestamps: true
 });
 
-const PromoCode = mongoose.model('PromoCode', promoCodeSchema);
+// Check if model exists before creating
+const PromoCode = mongoose.models.PromoCode || mongoose.model('PromoCode', promoCodeSchema);
+
 export default PromoCode; 

@@ -23,11 +23,15 @@ export const createPromoCode = async (req, res) => {
       return res.status(400).json({ message: 'Promo code already exists' });
     }
 
+    // Convert dates to UTC
+    const startDateTime = new Date(startDate);
+    const endDateTime = new Date(endDate);
+
     const promoCode = new PromoCode({
       code: code.toUpperCase(),
       discount,
-      startDate,
-      endDate,
+      startDate: startDateTime,
+      endDate: endDateTime,
       maxUses,
       minPurchaseAmount,
       createdBy: req.user._id
@@ -70,44 +74,78 @@ export const getAllPromoCodes = async (req, res) => {
 export const validatePromoCode = async (req, res) => {
   try {
     const { code, purchaseAmount } = req.body;
-
-    const promoCode = await PromoCode.findOne({ 
+    
+    const promoCode = await PromoCode.findOne({
       code: code.toUpperCase(),
       isActive: true
     });
 
     if (!promoCode) {
-      return res.status(404).json({ message: 'Invalid promo code' });
+      return res.status(400).json({ message: "Invalid promo code" });
     }
 
-    // Check if code is expired
+    // Debug logs
+    console.log('Promo Code Found:', {
+      code: promoCode.code,
+      startDate: promoCode.startDate,
+      endDate: promoCode.endDate,
+      currentDate: new Date(),
+      isActive: promoCode.isActive,
+      maxUses: promoCode.maxUses,
+      currentUses: promoCode.currentUses,
+      minPurchaseAmount: promoCode.minPurchaseAmount
+    });
+
+    // Convert all dates to UTC for consistent comparison
     const now = new Date();
-    if (now < promoCode.startDate || now > promoCode.endDate) {
-      return res.status(400).json({ message: 'Promo code has expired' });
+    const startDate = new Date(promoCode.startDate);
+    const endDate = new Date(promoCode.endDate);
+
+    // Debug date comparisons
+    console.log('Date Comparisons:', {
+      nowUTC: now.toISOString(),
+      startUTC: startDate.toISOString(),
+      endUTC: endDate.toISOString(),
+      beforeStart: now < startDate,
+      afterEnd: now > endDate
+    });
+
+    // Check if promo code is within valid date range
+    // Add a small buffer (1 day) to account for timezone differences
+    const oneDayBuffer = 24 * 60 * 60 * 1000; // 1 day in milliseconds
+    if (now.getTime() + oneDayBuffer < startDate.getTime() || now.getTime() > endDate.getTime() + oneDayBuffer) {
+      return res.status(400).json({ 
+        message: "Promo code has expired or not yet active",
+        debug: {
+          current: now.toISOString(),
+          start: startDate.toISOString(),
+          end: endDate.toISOString()
+        }
+      });
     }
 
-    // Check usage limit
-    if (promoCode.maxUses && promoCode.currentUses >= promoCode.maxUses) {
-      return res.status(400).json({ message: 'Promo code usage limit reached' });
+    // Check if maximum uses reached
+    if (promoCode.maxUses !== null && promoCode.currentUses >= promoCode.maxUses) {
+      return res.status(400).json({ message: "Promo code has reached maximum uses" });
     }
 
     // Check minimum purchase amount
     if (purchaseAmount < promoCode.minPurchaseAmount) {
       return res.status(400).json({ 
-        message: `Minimum purchase amount of Rs.${promoCode.minPurchaseAmount} required`
+        message: `Minimum purchase amount of Rs.${promoCode.minPurchaseAmount} required` 
       });
     }
 
+    // If all validations pass, return the promo code details
     res.status(200).json({
-      valid: true,
+      code: promoCode.code,
       discount: promoCode.discount,
-      message: 'Promo code is valid'
+      minPurchaseAmount: promoCode.minPurchaseAmount
     });
+
   } catch (error) {
-    res.status(500).json({
-      message: 'Error validating promo code',
-      error: error.message
-    });
+    console.error('Promo code validation error:', error);
+    res.status(500).json({ message: "Error validating promo code" });
   }
 };
 
