@@ -4,6 +4,33 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import mediaUpload from "../../../utils/mediaUpload";
 import { FiUser, FiMail, FiLock, FiPhone, FiUpload, FiUserPlus } from 'react-icons/fi';
+import { motion } from 'framer-motion';
+
+// Animation variants
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            duration: 0.5,
+            staggerChildren: 0.1
+        }
+    }
+};
+
+const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+        y: 0,
+        opacity: 1,
+        transition: { duration: 0.5, ease: "easeOut" }
+    }
+};
+
+const formControlVariants = {
+    focus: { scale: 1.02, transition: { duration: 0.2 } },
+    tap: { scale: 0.98 }
+};
 
 export default function RegisterPage() {
     const [formData, setFormData] = useState({
@@ -151,25 +178,58 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="min-h-screen flex bg-gray-50">
+        <motion.div 
+            className="min-h-screen flex bg-gray-50"
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+        >
             {/* Left Section - Registration Form */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+            <motion.div 
+                className="w-full lg:w-1/2 flex items-center justify-center p-8"
+                variants={itemVariants}
+            >
                 <div className="w-full max-w-md">
-                    <div className="bg-white p-8 rounded-lg shadow-lg">
-                        <div className="text-center mb-8">
-                            <h2 className="text-3xl font-bold text-gray-900">
+                    <motion.div 
+                        className="bg-white p-8 rounded-lg shadow-lg"
+                        initial={{ x: -20, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <motion.div 
+                            className="text-center mb-8"
+                            variants={itemVariants}
+                        >
+                            <motion.h2 
+                                className="text-3xl font-bold text-gray-900"
+                                initial={{ y: -20 }}
+                                animate={{ y: 0 }}
+                                transition={{ duration: 0.5, delay: 0.2 }}
+                            >
                                 Create Account
-                            </h2>
-                            <p className="text-gray-600 mt-2">
+                            </motion.h2>
+                            <motion.p 
+                                className="text-gray-600 mt-2"
+                                variants={itemVariants}
+                            >
                                 Join our pet care community
-                            </p>
-                        </div>
+                            </motion.p>
+                        </motion.div>
 
-                        <form onSubmit={handleSubmit} className="space-y-4">
+                        <motion.form 
+                            onSubmit={handleSubmit} 
+                            className="space-y-4"
+                            variants={containerVariants}
+                        >
                             {/* Username */}
-                            <div>
+                            <motion.div variants={itemVariants}>
                                 <label className="block text-sm font-medium text-gray-700">Username</label>
-                                <div className="mt-1 relative">
+                                <motion.div 
+                                    className="mt-1 relative"
+                                    whileFocus="focus"
+                                    whileTap="tap"
+                                    variants={formControlVariants}
+                                >
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <FiUser className="h-5 w-5 text-gray-400" />
                                     </div>
@@ -179,16 +239,21 @@ export default function RegisterPage() {
                                         required
                                         value={formData.username}
                                         onChange={handleChange}
-                                        className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] sm:text-sm"
+                                        className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] sm:text-sm transition-all duration-300"
                                         placeholder="Choose a username"
                                     />
-                                </div>
-                            </div>
+                                </motion.div>
+                            </motion.div>
 
                             {/* Full Name */}
-                            <div>
+                            <motion.div variants={itemVariants}>
                                 <label className="block text-sm font-medium text-gray-700">Full Name</label>
-                                <div className="mt-1 relative">
+                                <motion.div 
+                                    className="mt-1 relative"
+                                    whileFocus="focus"
+                                    whileTap="tap"
+                                    variants={formControlVariants}
+                                >
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <FiUser className="h-5 w-5 text-gray-400" />
                                     </div>
@@ -198,16 +263,21 @@ export default function RegisterPage() {
                                         required
                                         value={formData.full_name}
                                         onChange={handleChange}
-                                        className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] sm:text-sm"
+                                        className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] sm:text-sm transition-all duration-300"
                                         placeholder="Enter your full name"
                                     />
-                                </div>
-                            </div>
+                                </motion.div>
+                            </motion.div>
 
                             {/* Email */}
-                            <div>
+                            <motion.div variants={itemVariants}>
                                 <label className="block text-sm font-medium text-gray-700">Email</label>
-                                <div className="mt-1 relative">
+                                <motion.div 
+                                    className="mt-1 relative"
+                                    whileFocus="focus"
+                                    whileTap="tap"
+                                    variants={formControlVariants}
+                                >
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <FiMail className="h-5 w-5 text-gray-400" />
                                     </div>
@@ -217,16 +287,21 @@ export default function RegisterPage() {
                                         required
                                         value={formData.email}
                                         onChange={handleChange}
-                                        className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] sm:text-sm"
+                                        className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] sm:text-sm transition-all duration-300"
                                         placeholder="Enter your email"
                                     />
-                                </div>
-                            </div>
+                                </motion.div>
+                            </motion.div>
 
                             {/* Password */}
-                            <div>
+                            <motion.div variants={itemVariants}>
                                 <label className="block text-sm font-medium text-gray-700">Password</label>
-                                <div className="mt-1 relative">
+                                <motion.div 
+                                    className="mt-1 relative"
+                                    whileFocus="focus"
+                                    whileTap="tap"
+                                    variants={formControlVariants}
+                                >
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <FiLock className="h-5 w-5 text-gray-400" />
                                     </div>
@@ -236,19 +311,27 @@ export default function RegisterPage() {
                                         required
                                         value={formData.password}
                                         onChange={handleChange}
-                                        className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] sm:text-sm"
+                                        className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] sm:text-sm transition-all duration-300"
                                         placeholder="Create a password"
                                     />
-                                </div>
-                                <p className="mt-1 text-xs text-gray-500">
+                                </motion.div>
+                                <motion.p 
+                                    className="mt-1 text-xs text-gray-500"
+                                    variants={itemVariants}
+                                >
                                     Must be at least 6 characters and contain a number
-                                </p>
-                            </div>
+                                </motion.p>
+                            </motion.div>
 
                             {/* Phone Number */}
-                            <div>
+                            <motion.div variants={itemVariants}>
                                 <label className="block text-sm font-medium text-gray-700">Phone Number</label>
-                                <div className="mt-1 relative">
+                                <motion.div 
+                                    className="mt-1 relative"
+                                    whileFocus="focus"
+                                    whileTap="tap"
+                                    variants={formControlVariants}
+                                >
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <FiPhone className="h-5 w-5 text-gray-400" />
                                     </div>
@@ -258,40 +341,50 @@ export default function RegisterPage() {
                                         required
                                         value={formData.phone_number}
                                         onChange={handleChange}
-                                        className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] sm:text-sm"
+                                        className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] sm:text-sm transition-all duration-300"
                                         placeholder="Enter your phone number"
                                     />
-                                </div>
-                            </div>
+                                </motion.div>
+                            </motion.div>
 
                             {/* User Type */}
-                            <div>
+                            <motion.div variants={itemVariants}>
                                 <label className="block text-sm font-medium text-gray-700">Account Type</label>
-                                <select
+                                <motion.select
                                     name="user_type"
                                     value={formData.user_type}
                                     onChange={handleChange}
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] sm:text-sm"
+                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] sm:text-sm transition-all duration-300"
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
                                 >
                                     <option value="pet_owner">Pet Owner</option>
                                     <option value="service_provider">Service Provider</option>
-                                </select>
-                            </div>
+                                </motion.select>
+                            </motion.div>
 
                             {/* Profile Picture */}
-                            <div>
+                            <motion.div variants={itemVariants}>
                                 <label className="block text-sm font-medium text-gray-700">
                                     Profile Picture (Optional)
                                 </label>
-                                <div className="mt-1 flex items-center space-x-4">
+                                <motion.div 
+                                    className="mt-1 flex items-center space-x-4"
+                                    whileHover={{ scale: 1.02 }}
+                                >
                                     {imagePreview && (
-                                        <div className="flex-shrink-0 h-12 w-12">
+                                        <motion.div 
+                                            className="flex-shrink-0 h-12 w-12"
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: 1 }}
+                                            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                                        >
                                             <img
                                                 src={imagePreview}
                                                 alt="Preview"
                                                 className="h-12 w-12 rounded-full object-cover"
                                             />
-                                        </div>
+                                        </motion.div>
                                     )}
                                     <div className="flex-1">
                                         <div className="relative">
@@ -302,58 +395,93 @@ export default function RegisterPage() {
                                                 className="sr-only"
                                                 id="profile-image"
                                             />
-                                            <label
+                                            <motion.label
                                                 htmlFor="profile-image"
-                                                className="cursor-pointer inline-flex items-center px-4 py-2 border border-[var(--color-accent)] rounded-md shadow-sm text-sm font-medium text-[var(--color-accent)] bg-white hover:bg-[var(--color-accent-light)] focus:outline-none"
+                                                className="cursor-pointer inline-flex items-center px-4 py-2 border border-[var(--color-accent)] rounded-md shadow-sm text-sm font-medium text-[var(--color-accent)] bg-white hover:bg-[var(--color-accent-light)] focus:outline-none transition-all duration-300"
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
                                             >
                                                 <FiUpload className="h-5 w-5 mr-2" />
                                                 Upload Photo
-                                            </label>
+                                            </motion.label>
                                         </div>
-                                        <p className="mt-1 text-xs text-gray-500">
+                                        <motion.p 
+                                            className="mt-1 text-xs text-gray-500"
+                                            variants={itemVariants}
+                                        >
                                             JPG, PNG or GIF (max. 5MB)
-                                        </p>
+                                        </motion.p>
                                     </div>
-                                </div>
-                            </div>
+                                </motion.div>
+                            </motion.div>
 
                             {/* Submit Button */}
-                            <button
+                            <motion.button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-[var(--text-on-primary)] bg-[var(--color-primary)] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-accent)] disabled:opacity-50 disabled:cursor-not-allowed mt-6"
+                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-[var(--text-on-primary)] bg-[var(--color-primary)] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-accent)] disabled:opacity-50 disabled:cursor-not-allowed mt-6 transition-all duration-300"
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                variants={itemVariants}
                             >
-                                {isLoading ? 'Creating Account...' : 'Create Account'}
-                            </button>
+                                {isLoading ? (
+                                    <motion.div
+                                        animate={{ rotate: 360 }}
+                                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                                    >
+                                        <FiUserPlus className="h-5 w-5" />
+                                    </motion.div>
+                                ) : (
+                                    'Create Account'
+                                )}
+                            </motion.button>
 
                             {/* Login Link */}
-                            <div className="text-center mt-4">
+                            <motion.div 
+                                className="text-center mt-4"
+                                variants={itemVariants}
+                            >
                                 <span className="text-gray-600">Already have an account? </span>
-                                <Link to="/login" className="font-medium text-[var(--color-accent)] hover:text-[var(--color-primary)]">
-                                    Sign in here
-                                </Link>
-                            </div>
-                        </form>
-                    </div>
+                                <motion.span
+                                    whileHover={{ scale: 1.05 }}
+                                >
+                                    <Link to="/login" className="font-medium text-[var(--color-accent)] hover:text-[var(--color-primary)] transition-colors duration-300">
+                                        Sign in here
+                                    </Link>
+                                </motion.span>
+                            </motion.div>
+                        </motion.form>
+                    </motion.div>
                 </div>
-            </div>
+            </motion.div>
 
             {/* Right Section - Image and Text */}
-            <div className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center bg-white p-12">
+            <motion.div 
+                className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center bg-white p-12"
+                variants={itemVariants}
+            >
                 <div className="w-full max-w-md">
-                    <img 
+                    <motion.img 
                         src="https://img.freepik.com/free-photo/cute-pets-collage_23-2150007429.jpg" 
                         alt="Pet Care Services" 
                         className="w-full h-auto rounded-lg shadow-md mb-8"
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ duration: 0.3 }}
                     />
-                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                    <motion.h2 
+                        className="text-2xl font-bold text-gray-800 mb-4"
+                        variants={itemVariants}
+                    >
                         Join Our Pet Care Community
-                    </h2>
-                    <p className="text-gray-600">
+                    </motion.h2>
+                    <motion.p 
+                        className="text-gray-600"
+                        variants={itemVariants}
+                    >
                         Connect with professional pet care providers, schedule services, and give your pets the care they deserve. Start your journey with us today!
-                    </p>
+                    </motion.p>
                 </div>
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
     );
 }
