@@ -16,7 +16,8 @@ import AddGrooming from './Pages/Providers/addGrooming'
 import AddService from './Pages/Providers/addService'
 import RegisterPet from './Pages/PetOwner/registerPet'
 import CreateFaq from './Pages/FAQ/faq'
-import AdvertisingManagement from './Pages/Admin/advertiseManagement';
+import PetBookPage from './Pages/PetOwner/PetBookPage'
+import AdvertisingManagement from './Pages/Admin/advertiseManagement'
 
 import PaymentPage from './Pages/Payment/PaymentPage'
 import ServiceSummary from './Pages/Payment/AppointmentSummary'
@@ -47,8 +48,10 @@ import UpdateAppointment from './Pages/Appoiment/UpdateAppointment'
 import AppointmentCreate from './Pages/Appoiment/AppointmentCreate'
 import UserAppointments from './Pages/Appoiment/UserAppointments'
 import CreateReview from './Pages/Review/review'
+import AverageRating from './Components/AverageRatings'
 import FaqList from './Pages/FAQ/faqCategory'
 import FaqAdmin from './Pages/FAQ/FaqAnswers'
+import FaqAdminTable from './Pages/FAQ/AdminfaqCategory'
 import ServiceReviews from './Pages/Review/reviewdisplay'
 import DisplayServices from './Pages/Home/displayServices'
 import ServiceOverview from './Pages/Home/serviceOverview'
@@ -71,6 +74,10 @@ import PaymentReviewPage from './Pages/Payment/payemntreview'
 import EditProfile from './Pages/Providers/EditProfile'
 import EditProfilePetOwner from './Pages/PetOwner/EditProfile'
 import GeminiChatApp from './Components/GeminiAPI'
+import { ShoppingCart } from './Components/ShoppingCart';
+import CartPage from './Pages/productMarket/CartPage'
+import OrderConfirmPage from './Pages/productMarket/OrderConfirmPage'
+import OrdersPage from './Pages/productMarket/OrdersPage'
 
 // Wrapper component to handle NavBar conditional rendering
 const AppContent = () => {
@@ -97,7 +104,7 @@ const AppContent = () => {
             <Route path="Services" element={<ServiceManagement />} />
             <Route path="AllPets" element={<PetsManagement />} />
             <Route path="settings" element={<div className="p-6"><h2 className="text-2xl font-semibold mb-6">Admin Settings</h2></div>} />
-            <Route path="AdvertisingManagement" element={<AdvertisingManagement/>}/>
+            <Route path="AdvertisingManagement" element={<AdvertisingManagement />} />
             
           </Route>
 
@@ -154,10 +161,16 @@ const AppContent = () => {
           <Route path='/edit-pet/:id' element={<UpdatePet />} />
           <Route path='/update-service/:id' element={<UpdateService />} />
           <Route path='/faqList' element={<FaqList />} />
-          <Route path='/faqAdmin' element={<FaqAdmin/>}/> 
+          <Route path='/faqAdmin/:id' element={<FaqAdmin/>}/> 
           <Route path='/reviewdisplay' element={<ServiceReviews/>}/>
-
+          <Route path="/average-rating/:serviceId" element={<AverageRating />} />
+          <Route path='/adminList' element={<FaqAdminTable/>}/>
           <Route path='/ownerOrders' element={<VeiwOwnerOerders/>}/>
+          <Route path="/cart" element={<CartPage />} />
+
+          <Route path='/petbook/:petId' element={<PetBookPage />} />
+          <Route path="/order-confirm" element={<OrderConfirmPage />} />
+          <Route path="/orders" element={<OrdersPage />} />
 
         </Routes>
         {isHomePage && <GeminiChatApp />}
