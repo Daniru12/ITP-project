@@ -14,17 +14,22 @@ import { protect } from "../../middleware/authMiddleware.js"; // Import the prot
 
 const productRouter = express.Router();
 
-// Public routes
+// Public routes (no authentication required)
 productRouter.get("/all", getAllProducts);
 productRouter.get("/search", searchProducts);
 productRouter.get("/category/:category", getProductsByCategory);
-productRouter.get("/:id", getProductById);
+productRouter.get("/details/:id", getProductById); // Public route for product details
 
-// Protected routes
-productRouter.use(protect);
-productRouter.post("/create", createProduct);
+// Protected routes (authentication required)
+productRouter.use(protect); // Apply auth middleware to all routes below this
+
+// Get own products and management routes
 productRouter.get("/own", getOwnProducts);
-productRouter.delete("/delete/:id", deleteProduct);
+productRouter.get("/management/:id", getProductById); // Protected route for product management
+
+// Protected CRUD operations
+productRouter.post("/create", createProduct);
 productRouter.put("/update/:id", updateProduct);
+productRouter.delete("/delete/:id", deleteProduct);
 
 export default productRouter;

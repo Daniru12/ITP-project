@@ -27,14 +27,27 @@ const ViewOwnerOrders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/orders/own', {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+        const token = localStorage.getItem('token');
+        
+        if (!token) {
+          setError('Authentication token not found');
+          setLoading(false);
+          return;
+        }
+
+        // Updated API endpoint
+        const response = await axios.get(`${backendUrl}/api/orders/own`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
           },
         });
+
         setOrders(response.data);
         setLoading(false);
       } catch (err) {
+        console.error('Error details:', err.response || err);
         setError(err.response?.data?.message || 'Failed to fetch orders');
         setLoading(false);
       }

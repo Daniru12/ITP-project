@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { ArrowLeftIcon, PackageIcon, TruckIcon, CheckCircleIcon, XCircleIcon, ClockIcon } from 'lucide-react';
@@ -7,54 +7,9 @@ import { ArrowLeftIcon, PackageIcon, TruckIcon, CheckCircleIcon, XCircleIcon, Cl
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchOrders();
-  }, []);
-
-  const fetchOrders = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL;
-      
-      const response = await axios.get(
-        `${backendUrl}/api/orders/my-orders`,
-        { 
-          headers: { 
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          } 
-        }
-      );
-      
-      if (response.data) {
-        console.log('Orders received:', response.data);
-        setOrders(response.data);
-      }
-    } catch (error) {
-      console.error('Error fetching orders:', error.response || error);
-      toast.error(error.response?.data?.message || 'Failed to load orders');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case 'Pending':
-        return <ClockIcon className="w-6 h-6 text-yellow-500" />;
-      case 'Processing':
-        return <PackageIcon className="w-6 h-6 text-blue-500" />;
-      case 'Shipped':
-        return <TruckIcon className="w-6 h-6 text-purple-500" />;
-      case 'Delivered':
-        return <CheckCircleIcon className="w-6 h-6 text-green-500" />;
-      case 'Cancelled':
-        return <XCircleIcon className="w-6 h-6 text-red-500" />;
-      default:
-        return <ClockIcon className="w-6 h-6 text-gray-500" />;
-    }
-  };
+  const [userType, setUserType] = useState('');
+  const [orderStats, setOrderStats] = useState(null);
+  const navigate = useNavigate();
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -73,13 +28,99 @@ const OrdersPage = () => {
     }
   };
 
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 'Pending':
+        return <ClockIcon className="w-6 h-6 text-yellow-500" />;
+      case 'Processing':
+        return <PackageIcon className="w-6 h-6 text-blue-500" />;
+      case 'Shipped':
+        return <TruckIcon className="w-6 h-6 text-purple-500" />;
+      case 'Delivered':
+        return <CheckCircleIcon className="w-6 h-6 text-green-500" />;
+      case 'Cancelled':
+        return <XCircleIcon className="w-6 h-6 text-red-500" />;
+      default:
+        return null;
+    }
+  };
+
+  const canUpdateStatus = () => {
+    return userType === 'service_provider' || userType === 'admin';
+  };
+
   const canCancelOrder = (order) => {
-    const orderDate = new Date(order.createdAt);
-    const now = new Date();
-    const hoursDifference = (now - orderDate) / (1000 * 60 * 60);
-    
-    // Only allow cancellation within 24 hours
-    return hoursDifference <= 24;
+    return userType === 'pet_owner' && 
+           order.order_status === 'Pending' &&
+           new Date() - new Date(order.createdAt) < 24 * 60 * 60 * 1000;
+  };
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    setUserType(userData.user_type || '');
+    fetchOrders();
+  }, []);
+
+  const fetchOrders = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        toast.error('Please login first');
+        navigate('/login');
+        return;
+      }
+
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
+      const userData = JSON.parse(localStorage.getItem('user') || '{}');
+      const userType = userData.user_type || '';
+      setUserType(userType);
+      
+      let endpoint;
+      switch(userType) {
+        case 'service_provider':
+          endpoint = `${backendUrl}/api/orders/provider/orders`;
+          break;
+        case 'admin':
+          endpoint = `${backendUrl}/api/orders/all`;
+          break;
+        default: // pet_owner
+          endpoint = `${backendUrl}/api/orders/user/my-orders`;
+      }
+      
+      console.log('Using endpoint:', endpoint);
+      console.log('User type:', userType);
+      console.log('Token:', token);
+      
+      const response = await axios.get(
+        endpoint,
+        { 
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          } 
+        }
+      );
+      
+      console.log('Response:', response.data);
+      
+      if (response.data) {
+        if (userType === 'service_provider') {
+          setOrders(response.data.orders || []);
+          setOrderStats(response.data.stats || null);
+          console.log('Set provider orders:', response.data.orders);
+          console.log('Set provider stats:', response.data.stats);
+        } else {
+          setOrders(Array.isArray(response.data) ? response.data : []);
+        }
+      }
+    } catch (error) {
+      console.error('Error details:', error.response || error);
+      const errorMessage = error.response?.data?.message || 'Failed to load orders';
+      toast.error(errorMessage);
+      setOrders([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCancelOrder = async (orderId) => {
@@ -111,6 +152,46 @@ const OrdersPage = () => {
     }
   };
 
+  const handleUpdateStatus = async (orderId, newStatus) => {
+    try {
+      const token = localStorage.getItem('token');
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
+      
+      await axios.put(
+        `${backendUrl}/api/orders/${orderId}/status`,
+        { status: newStatus },
+        { 
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          } 
+        }
+      );
+      
+      toast.success(`Order status updated to ${newStatus}`);
+      // Update the order status in the state
+      setOrders(orders.map(order => 
+        order._id === orderId ? {...order, order_status: newStatus} : order
+      ));
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      toast.error(error.response?.data?.message || 'Failed to update order status');
+    }
+  };
+
+  const getPageTitle = () => {
+    switch(userType) {
+      case 'pet_owner':
+        return 'My Orders';
+      case 'service_provider':
+        return 'Customer Orders';
+      case 'admin':
+        return 'All Orders';
+      default:
+        return 'Orders';
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -130,8 +211,30 @@ const OrdersPage = () => {
             <ArrowLeftIcon className="w-4 h-4 mr-2" />
             Back to Shop
           </Link>
-          <h1 className="text-2xl font-bold">My Orders</h1>
+          <h1 className="text-2xl font-bold">{getPageTitle()}</h1>
         </div>
+
+        {/* Add stats section for service providers */}
+        {userType === 'service_provider' && orderStats && (
+          <div className="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="bg-white p-4 rounded-lg shadow">
+              <h3 className="text-lg font-semibold">Total Orders</h3>
+              <p className="text-2xl font-bold">{orderStats.total}</p>
+            </div>
+            <div className="bg-white p-4 rounded-lg shadow">
+              <h3 className="text-lg font-semibold">Pending</h3>
+              <p className="text-2xl font-bold text-yellow-500">{orderStats.pending}</p>
+            </div>
+            <div className="bg-white p-4 rounded-lg shadow">
+              <h3 className="text-lg font-semibold">Processing</h3>
+              <p className="text-2xl font-bold text-blue-500">{orderStats.processing}</p>
+            </div>
+            <div className="bg-white p-4 rounded-lg shadow">
+              <h3 className="text-lg font-semibold">Revenue</h3>
+              <p className="text-2xl font-bold text-green-500">Rs.{orderStats.totalRevenue.toFixed(2)}</p>
+            </div>
+          </div>
+        )}
 
         {orders.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-lg shadow">
@@ -156,6 +259,11 @@ const OrdersPage = () => {
                       <p className="text-sm text-gray-500">
                         Placed on: {new Date(order.createdAt).toLocaleDateString()}
                       </p>
+                      {(userType === 'admin' || userType === 'service_provider') && order.pet_owner && (
+                        <p className="text-sm text-gray-500">
+                          Customer: {order.pet_owner.username || order.pet_owner}
+                        </p>
+                      )}
                     </div>
                     <div className="flex items-center space-x-2">
                       {getStatusIcon(order.order_status)}
@@ -199,6 +307,25 @@ const OrdersPage = () => {
                         <p className="text-lg font-bold">
                           Rs.{order.total_price.toFixed(2)}
                         </p>
+                        
+                        {/* Status update dropdown for admin */}
+                        {canUpdateStatus() && (
+                          <div className="mt-2">
+                            <select 
+                              className="p-2 border rounded text-sm"
+                              value={order.order_status}
+                              onChange={(e) => handleUpdateStatus(order._id, e.target.value)}
+                            >
+                              <option value="Pending">Pending</option>
+                              <option value="Processing">Processing</option>
+                              <option value="Shipped">Shipped</option>
+                              <option value="Delivered">Delivered</option>
+                              <option value="Cancelled">Cancelled</option>
+                            </select>
+                          </div>
+                        )}
+                        
+                        {/* Cancel button for pet owners */}
                         {canCancelOrder(order) && (
                           <button
                             onClick={() => handleCancelOrder(order._id)}
