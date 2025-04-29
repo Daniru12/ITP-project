@@ -14,7 +14,7 @@ import {
 } from 'react-icons/fa';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-
+import FaqAdmin from './FaqAnswers';
 // Dashboard components
 const DashboardHome = () => {
   // State to store the counts
@@ -260,7 +260,7 @@ const AdminDashboard = () => {
                 onClick={() => setActiveItem('analytics')}
               />
               <SidebarItem 
-                icon={<FiMessageSquare />} 
+                icon={<FaPaw  />} 
                 text="Pets" 
                 to="/admin/AllPets" 
                 active={activeItem === 'messages'} 
@@ -273,13 +273,17 @@ const AdminDashboard = () => {
                 active={activeItem === 'advertisements'} 
                 onClick={() => setActiveItem('advertisements')}
               />
-              <SidebarItem 
-  icon={<FaQuestionCircle />}  // You can use the FaQuestionCircle icon for FAQs
-  text="FAQ" 
+
+
+<SidebarItem 
+  icon={<FiMessageSquare />} 
+  text="FAQs" 
   to="/admin/faq" 
-  active={activeItem === 'faq'} 
-  onClick={() => setActiveItem('faq')}
+  active={activeItem === 'faqs'} 
+  onClick={() => setActiveItem('faqs')}
 />
+
+
               <SidebarItem 
                 icon={<FiSettings />} 
                 text="Settings" 

@@ -19,7 +19,6 @@ import CreateFaq from './Pages/FAQ/faq'
 import PetBookPage from './Pages/PetOwner/PetBookPage'
 import AdvertisingManagement from './Pages/Admin/advertiseManagement'
 
-
 import PaymentPage from './Pages/Payment/PaymentPage'
 import ServiceSummary from './Pages/Payment/AppointmentSummary'
 import PaymentForm from './Pages/Payment/PaymentForm'
@@ -41,7 +40,8 @@ import PetMarketplace from './Pages/productMarket/PetMarketplace'
 import CreateProduct from './Pages/productMarket/CreateProduct'
 import UpdateProduct from './Pages/productMarket/UpdateProduct'
 import DeleteProduct from './Pages/productMarket/deleteProducts'
-import ProductManagement from './Pages/productMarket/ProductManagement'
+
+
 
 import AppointmentsList from './Pages/Appoiment/appoiments'
 import UpdateAppointment from './Pages/Appoiment/UpdateAppointment'
@@ -50,7 +50,7 @@ import UserAppointments from './Pages/Appoiment/UserAppointments'
 import CreateReview from './Pages/Review/review'
 import AverageRating from './Components/AverageRatings'
 import FaqList from './Pages/FAQ/faqCategory'
-import FaqAdmin from './Pages/FAQ/FaqAnswers'
+import FaqAdmin from './Pages/Admin/FaqAnswers'
 import FaqAdminTable from './Pages/FAQ/AdminfaqCategory'
 import AllReviews from './Pages/Review/reviewdisplay'
 import ServiceReviews from './Components/ServiceReviews';
@@ -79,7 +79,6 @@ import { ShoppingCart } from './Components/ShoppingCart';
 import CartPage from './Pages/productMarket/CartPage'
 import OrderConfirmPage from './Pages/productMarket/OrderConfirmPage'
 import OrdersPage from './Pages/productMarket/OrdersPage'
-import ProviderOrderManagement from './Pages/Orders/ProviderOrderManagement'
 
 // Wrapper component to handle NavBar conditional rendering
 const AppContent = () => {
@@ -102,9 +101,13 @@ const AppContent = () => {
             <Route path="users/update/:id" element={<UpdateUser />} />
             <Route path="services/update/:id" element={<AdminUpdateService />} />
             <Route path="pets/update/:id" element={<AdminUpdatePet />} />
+            <Route path="products" element={<div className="p-6"><h2 className="text-2xl font-semibold mb-6">Products Management</h2></div>} />
             <Route path="Services" element={<ServiceManagement />} />
             <Route path="AllPets" element={<PetsManagement />} />
+            <Route path="faq" element={<FaqAdmin />} />
+            <Route path="settings" element={<div className="p-6"><h2 className="text-2xl font-semibold mb-6">Admin Settings</h2></div>} />
             <Route path="AdvertisingManagement" element={<AdvertisingManagement />} />
+            
           </Route>
 
           <Route path='/register' element={<RegisterPage />} />
@@ -144,8 +147,6 @@ const AppContent = () => {
           <Route path='/AddAdvertisementForm' element={<AddAdvertisementForm/>}/>
           <Route path='/AdReviewComponent' element={<AdReviewComponent/>}/>
           <Route path='/update-ad/:id' element={<UpdateAdvertisementForm/>}/>
-          <Route path="/UpdateAdvertisementForm/:adId" element={<UpdateAdvertisementForm />} />
-
         
 
           <Route path='/petmarketplace' element={<PetMarketplace />} /> 
@@ -153,8 +154,6 @@ const AppContent = () => {
           <Route path='/update-product/:id' element={<UpdateProduct />} />
           <Route path='/delete-product' element={<DeleteProduct />} />
           <Route path="/product/:id" element={<ProductDetail />} />
-          <Route path="/product-management" element={<ProductManagement />} />
-          <Route path="/provider/order-management" element={<ProviderOrderManagement />} />
 
           <Route path='/display-services' element={<DisplayServices />} />
           <Route path='/service-overview/:id' element={<ServiceOverview />} />
@@ -164,15 +163,10 @@ const AppContent = () => {
           <Route path='/edit-pet/:id' element={<UpdatePet />} />
           <Route path='/update-service/:id' element={<UpdateService />} />
           <Route path='/faqList' element={<FaqList />} />
-          <Route path='/faqAdmin' element={<FaqAdmin/>}/> 
-
-          <Route path='/reviewdisplay' element={<ServiceReviews/>}/>
-          <Route path="/average-rating/:serviceId" element={<AverageRating />} />
-
+          
           <Route path='/reviewdisplay' element={<AllReviews/>}/>
           <Route path="/services/:serviceId/reviews" element={<ServiceReviews />} />
           <Route path="/average/:serviceId" element={<AverageRating />} />
-
           <Route path='/adminList' element={<FaqAdminTable/>}/>
           <Route path='/ownerOrders' element={<VeiwOwnerOerders/>}/>
           <Route path="/cart" element={<CartPage />} />
@@ -180,9 +174,7 @@ const AppContent = () => {
           <Route path='/petbook/:petId' element={<PetBookPage />} />
           <Route path="/order-confirm" element={<OrderConfirmPage />} />
           <Route path="/orders" element={<OrdersPage />} />
-          <Route path="/my-orders" element={<OrdersPage />} />
-          <Route path="/provider/orders" element={<OrdersPage />} />
-          <Route path="/admin/orders" element={<OrdersPage />} />
+
         </Routes>
         {isHomePage && <GeminiChatApp />}
       </div>
