@@ -159,7 +159,7 @@ const AppContent = () => {
           <Route path='/edit-pet/:id' element={<UpdatePet />} />
           <Route path='/update-service/:id' element={<UpdateService />} />
           <Route path='/faqList' element={<FaqList />} />
-          <Route path='/faqAdmin/:id' element={<FaqAdmin/>}/> 
+          <Route path='/faqAdmin' element={<FaqAdmin/>}/> 
           <Route path='/reviewdisplay' element={<ServiceReviews/>}/>
           <Route path="/average-rating/:serviceId" element={<AverageRating />} />
           <Route path='/adminList' element={<FaqAdminTable/>}/>

@@ -313,9 +313,7 @@ export const deleteAppointment = async (req, res) => {
       return res.status(403).json({ message: "This appointment doesn't belong to your services" });
     }
 
-    if (appointment.status === "completed") {
-      return res.status(400).json({ message: "You can't delete completed appointments" });
-    }
+    
 
     await Appointment.findByIdAndDelete(appointmentId);
 

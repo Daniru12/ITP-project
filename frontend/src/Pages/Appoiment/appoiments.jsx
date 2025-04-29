@@ -154,19 +154,24 @@ const AppointmentsList = () => {
   };
 
   const handleDelete = async (appointmentId) => {
-    if (!window.confirm("Are you sure to delete this appointment?")) return;
+    if (!window.confirm("Are you sure you want to delete this appointment?")) return;
+  
     try {
       const token = localStorage.getItem('token');
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  
+      // Send delete request to backend
       await axios.delete(`${backendUrl}/api/appointments/${appointmentId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+  
       toast.success('Appointment deleted!');
-      setAppointments((prev) => prev.filter((a) => a._id !== appointmentId));
+      setAppointments((prev) => prev.filter((a) => a._id !== appointmentId));  // Update state
     } catch (error) {
       toast.error(error.response?.data?.message || 'Delete failed');
     }
   };
+  
 
   const handleSchedule = (appointment) => {
     const category = appointment?.service_id?.service_category;
