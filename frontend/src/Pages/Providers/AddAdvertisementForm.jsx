@@ -52,8 +52,13 @@ const AddAdvertisementForm = ({ onClose }) => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-xl bg-white p-6 rounded-xl shadow-lg">
-        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Add Advertisement</h2>
+        {/* Header - updated */}
+        <h2 className="text-3xl font-bold text-center text-[#347486] mb-6">
+          Add Advertisement
+        </h2>
+
         {error && <div className="text-red-600 text-center mb-4">{error}</div>}
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-gray-700 text-lg mb-1">Title</label>
@@ -118,11 +123,13 @@ const AddAdvertisementForm = ({ onClose }) => {
               />
             </div>
           </div>
+
+          {/* Button - color already updated as you wanted */}
           <div>
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-3 bg-blue-600 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ease-in-out ${
+              className={`w-full py-3 bg-[#BC4626] text-white text-lg font-semibold rounded-lg shadow-md hover:bg-[#a33d21] transition duration-300 ease-in-out ${
                 loading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >

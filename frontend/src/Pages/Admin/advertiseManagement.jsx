@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FiEdit, FiTrash2, FiSearch, FiFilter, FiAlertCircle, FiToggleLeft, FiToggleRight, FiPlusCircle } from 'react-icons/fi';
+import { FiEdit, FiTrash2, FiSearch, FiFilter, FiAlertCircle, FiCheckCircle, FiXCircle, FiPlusCircle } from 'react-icons/fi';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
@@ -46,7 +46,7 @@ const AdvertisingManagement = () => {
         imageUrl: ad.image_url || '',
         startDate: ad.start_date ? new Date(ad.start_date).toLocaleDateString() : 'N/A',
         endDate: ad.end_date ? new Date(ad.end_date).toLocaleDateString() : 'N/A',
-        isActive: ad.isActive ?? true
+        approvalStatus: ad.approvalStatus || 'Pending',  // Add approval status
       }));
 
       setAds(formattedAds);
@@ -66,7 +66,8 @@ const AdvertisingManagement = () => {
 
   const filteredAds = ads.filter(ad => {
     const matchesSearch = ad.title.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = selectedStatus === 'All' || (selectedStatus === 'Active' ? ad.isActive : !ad.isActive);
+    const matchesStatus =
+      selectedStatus === 'All' || ad.approvalStatus === selectedStatus;
     return matchesSearch && matchesStatus;
   });
 
@@ -78,7 +79,7 @@ const AdvertisingManagement = () => {
         return;
       }
       const apiUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      await axios.delete(`${apiUrl}/api/advertisement/${adId}`, {
+      await axios.delete(`${apiUrl}/api/advertisement/delete/${adId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setAds(ads.filter(ad => ad.id !== adId));
@@ -90,10 +91,10 @@ const AdvertisingManagement = () => {
   };
 
   const handleEditAd = (adId) => {
-    navigate(`/api/advertisement/update/${adId}`);
+    navigate(`/api/advertisement/update-ad/${adId}`);
   };
 
-  const handleToggleAdStatus = async (adId, currentStatus) => {
+  const handleApproveAd = async (adId) => {
     try {
       const token = getToken();
       if (!token) {
@@ -101,16 +102,37 @@ const AdvertisingManagement = () => {
         return;
       }
       const apiUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-      await axios.put(`${apiUrl}/api/advertisement/update${adId}/toggle-status`, { isActive: !currentStatus }, {
+      await axios.put(`${apiUrl}/api/advertisement/approve/${adId}`, { approvalStatus: 'Approved' }, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setAds(ads.map(ad => 
-        ad.id === adId ? { ...ad, isActive: !currentStatus } : ad
+      setAds(ads.map(ad =>
+        ad.id === adId ? { ...ad, approvalStatus: 'Approved' } : ad
       ));
-      toast.success(`Ad ${!currentStatus ? 'activated' : 'deactivated'} successfully`);
+      toast.success('Advertisement approved');
     } catch (err) {
-      console.error('Error toggling ad status:', err);
-      toast.error(err.response?.data?.message || 'Failed to update ad status');
+      console.error('Error approving ad:', err);
+      toast.error(err.response?.data?.message || 'Failed to approve advertisement');
+    }
+  };
+
+  const handleRejectAd = async (adId) => {
+    try {
+      const token = getToken();
+      if (!token) {
+        redirectToLogin();
+        return;
+      }
+      const apiUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+      await axios.put(`${apiUrl}/api/advertisement/reject/${adId}`, { approvalStatus: 'Rejected' }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setAds(ads.map(ad =>
+        ad.id === adId ? { ...ad, approvalStatus: 'Rejected' } : ad
+      ));
+      toast.success('Advertisement rejected');
+    } catch (err) {
+      console.error('Error rejecting ad:', err);
+      toast.error(err.response?.data?.message || 'Failed to reject advertisement');
     }
   };
 
@@ -149,6 +171,7 @@ const AdvertisingManagement = () => {
         </button>
       </div>
 
+      {/* Search and filter */}
       <div className="bg-white p-6 rounded-xl shadow-sm mb-8">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
@@ -168,14 +191,16 @@ const AdvertisingManagement = () => {
               onChange={(e) => setSelectedStatus(e.target.value)}
               className="pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#347486] focus:border-transparent transition-all"
             >
-              <option value="All">All Status</option>
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
+              <option value="All">All</option>
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
             </select>
           </div>
         </div>
       </div>
 
+      {/* Ads table */}
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
@@ -197,22 +222,20 @@ const AdvertisingManagement = () => {
                       <div className="text-sm text-gray-500">{ad.description}</div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <button
-                      onClick={() => handleToggleAdStatus(ad.id, ad.isActive)}
-                      className={`flex items-center space-x-2 px-4 py-2 rounded-full text-base font-medium ${
-                        ad.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                      }`}
-                    >
-                      {ad.isActive ? <FiToggleRight /> : <FiToggleLeft />}
-                      <span>{ad.isActive ? 'Active' : 'Inactive'}</span>
-                    </button>
+                  <td className="px-6 py-4 whitespace-nowrap text-base font-semibold">
+                    {ad.approvalStatus}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-base">
                     {ad.startDate} → {ad.endDate}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap flex space-x-4 text-lg">
-                    <button onClick={() => handleEditAd(ad.id)} className="text-[#347486] hover:text-[#2a5d6b]">
+                  <td className="px-6 py-4 whitespace-nowrap flex space-x-3 text-lg">
+                    <button onClick={() => handleApproveAd(ad.id)} className="text-green-600 hover:text-green-800">
+                      <FiCheckCircle />
+                    </button>
+                    <button onClick={() => handleRejectAd(ad.id)} className="text-red-600 hover:text-red-800">
+                      <FiXCircle />
+                    </button>
+                    <button onClick={() => handleEditAd(ad.id)} className="text-blue-600 hover:text-blue-800">
                       <FiEdit />
                     </button>
                     <button onClick={() => handleDeleteAd(ad.id)} className="text-[#BC4626] hover:text-[#a33d21]">
@@ -226,6 +249,7 @@ const AdvertisingManagement = () => {
         </div>
       </div>
 
+      {/* Add Ad Modal */}
       {isAddAdModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-8 w-full max-w-md">

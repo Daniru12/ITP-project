@@ -23,8 +23,8 @@ import ServiceSummary from './Pages/Payment/AppointmentSummary'
 import PaymentForm from './Pages/Payment/PaymentForm'
 import AppointmentSummary from './Pages/Payment/OrderSummary'
 
-import AddAdvertisementForm from './Pages/Advertisement/AddAdvertisementForm'
-import AdReviewComponent from './Pages/Advertisement/AdReviewComponent'
+import AddAdvertisementForm from './Pages/Providers/AddAdvertisementForm'
+import AdReviewComponent from './Pages/Providers/AdReviewComponent'
 import UpdateAdvertisementForm from './Pages/Advertisement/UpdateAdvertisementForm'
 
 
