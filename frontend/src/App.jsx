@@ -163,9 +163,14 @@ const AppContent = () => {
           <Route path='/update-service/:id' element={<UpdateService />} />
           <Route path='/faqList' element={<FaqList />} />
           <Route path='/faqAdmin' element={<FaqAdmin/>}/> 
+
+          <Route path='/reviewdisplay' element={<ServiceReviews/>}/>
+          <Route path="/average-rating/:serviceId" element={<AverageRating />} />
+
           <Route path='/reviewdisplay' element={<AllReviews/>}/>
           <Route path="/services/:serviceId/reviews" element={<ServiceReviews />} />
           <Route path="/average/:serviceId" element={<AverageRating />} />
+
           <Route path='/adminList' element={<FaqAdminTable/>}/>
           <Route path='/ownerOrders' element={<VeiwOwnerOerders/>}/>
           <Route path="/cart" element={<CartPage />} />

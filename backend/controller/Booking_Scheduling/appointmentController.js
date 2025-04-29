@@ -281,9 +281,7 @@ export const deleteUserAppointment = async (req, res) => {
       return res.status(403).json({ message: "You can only delete your own appointments" });
     }
 
-    if (["completed"].includes(appointment.status)) {
-      return res.status(400).json({ message: `You cannot delete a ${appointment.status} appointment` });
-    }
+ 
 
     await Appointment.findByIdAndDelete(appointmentId);
 
@@ -313,9 +311,7 @@ export const deleteAppointment = async (req, res) => {
       return res.status(403).json({ message: "This appointment doesn't belong to your services" });
     }
 
-    if (appointment.status === "completed") {
-      return res.status(400).json({ message: "You can't delete completed appointments" });
-    }
+    
 
     await Appointment.findByIdAndDelete(appointmentId);
 
