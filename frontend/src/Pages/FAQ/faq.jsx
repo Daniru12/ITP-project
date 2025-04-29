@@ -6,7 +6,6 @@ const CreateFaq = () => {
     question: "",
     category: "",
   });
-
   const [loading, setLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
@@ -48,6 +47,19 @@ const CreateFaq = () => {
     e.preventDefault();
     setSubmitLoading(true);
 
+    // Debugging: Log form data before submitting
+    console.log("Form Data Before Submit:", formData);
+
+    try {
+      const response = await axios.post(
+        `${backendUrl}/api/faqs/create`,
+        formData,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log("Response from API:", response);
+      toast.success("FAQ created successfully!");
     // Simulate API call
     setTimeout(() => {
       showToast("FAQ created successfully!");

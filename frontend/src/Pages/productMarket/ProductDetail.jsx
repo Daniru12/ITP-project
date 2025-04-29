@@ -30,7 +30,7 @@ export const ProductDetail = () => {
 
       try {
         const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-        const response = await axios.get(`${backendUrl}/api/Products/${id}`);
+        const response = await axios.get(`${backendUrl}/api/products/details/${id}`);
         
         if (!response.data) {
           throw new Error('Product not found');

@@ -1,92 +1,154 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
-  FiHome, 
-  FiUsers, 
-  FiShoppingBag, 
-  FiSettings, 
-  FiBarChart2, 
-  FiMessageSquare, 
-  FiLogOut,
-  FiMenu,
-  FiX,
-  FiMonitor
-} from 'react-icons/fi';
+  FaHome as FiHome, 
+  FaUsers as FiUsers, 
+  FaShoppingBag as FiShoppingBag, 
+  FaCog as FiSettings, 
+  FaChartBar as FiBarChart2, 
+  FaComments as FiMessageSquare, 
+  FaSignOutAlt as FiLogOut,
+  FaBars as FiMenu,
+  FaTimes as FiX,
+  FaDesktop as FiMonitor,
+  FaPaw
+} from 'react-icons/fa';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 // Dashboard components
-const DashboardHome = () => (
-  <div className="p-6">
-    <h2 className="text-4xl font-bold text-[#333333] mb-8">Dashboard Overview</h2>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <StatCard 
-        title="Total Users" 
-        value="1,245" 
-        icon={<FiUsers className="text-[#347486] text-2xl" />} 
-        bgColor="bg-[#347486]/10"
-      />
-      <StatCard 
-        title="Total Orders" 
-        value="342" 
-        icon={<FiShoppingBag className="text-[#BC4626] text-2xl" />} 
-        bgColor="bg-[#BC4626]/10"
-      />
-      <StatCard 
-        title="Revenue" 
-        value="$12,345" 
-        icon={<FiBarChart2 className="text-[#DFA55D] text-2xl" />} 
-        bgColor="bg-[#DFA55D]/10"
-      />
-      <StatCard 
-        title="Messages" 
-        value="24" 
-        icon={<FiMessageSquare className="text-[#347486] text-2xl" />} 
-        bgColor="bg-[#347486]/10"
-      />
-    </div>
-    
-    <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <h3 className="text-2xl font-bold text-[#333333] mb-6">Recent Activity</h3>
-        <div className="space-y-4">
-          {[1, 2, 3, 4].map((item) => (
-            <div key={item} className="flex items-center border-b border-gray-100 pb-4">
-              <div className="w-12 h-12 rounded-full bg-[#347486]/10 flex items-center justify-center mr-4">
-                <FiUsers className="text-[#347486] text-xl" />
-              </div>
-              <div>
-                <p className="text-base font-medium text-gray-900">New user registered</p>
-                <p className="text-base text-gray-500">2 hours ago</p>
-              </div>
-            </div>
-          ))}
-        </div>
+const DashboardHome = () => {
+  // State to store the counts
+  const [counts, setCounts] = useState({
+    users: 0,
+    services: 0,
+    pets: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  // Fetch counts when component mounts
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        // Get token from localStorage
+        const token = localStorage.getItem('token');
+        if (!token) {
+          toast.error('Please login to continue');
+          return;
+        }
+
+        const headers = {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        };
+
+        // Fetch all counts in parallel
+        const [usersRes, servicesRes, petsRes] = await Promise.all([
+          fetch('http://localhost:3000/api/users/count/users', { headers }),
+          fetch('http://localhost:3000/api/users/count/services', { headers }),
+          fetch('http://localhost:3000/api/users/count/pets', { headers })
+        ]);
+
+        // Check if any request failed
+        if (!usersRes.ok || !servicesRes.ok || !petsRes.ok) {
+          throw new Error('Failed to fetch counts');
+        }
+
+        // Get the count data
+        const [usersData, servicesData, petsData] = await Promise.all([
+          usersRes.json(),
+          servicesRes.json(),
+          petsRes.json()
+        ]);
+
+        setCounts({
+          users: usersData.count,
+          services: servicesData.count,
+          pets: petsData.count
+        });
+      } catch (error) {
+        console.error('Error fetching counts:', error);
+        toast.error('Failed to fetch dashboard data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCounts();
+  }, []);
+
+  return (
+    <div className="p-6">
+      <h2 className="text-4xl font-bold text-[#333333] mb-8">Dashboard Overview</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatCard 
+          title="Total Users" 
+          value={loading ? "Loading..." : counts.users} 
+          icon={<FiUsers className="text-[#347486] text-2xl" />} 
+          bgColor="bg-[#347486]/10"
+        />
+        <StatCard 
+          title="Total Services" 
+          value={loading ? "Loading..." : counts.services} 
+          icon={<FiBarChart2 className="text-[#BC4626] text-2xl" />} 
+          bgColor="bg-[#BC4626]/10"
+        />
+        <StatCard 
+          title="Total Pets" 
+          value={loading ? "Loading..." : counts.pets} 
+          icon={<FaPaw className="text-[#DFA55D] text-2xl" />} 
+          bgColor="bg-[#DFA55D]/10"
+        />
+        <StatCard 
+          title="Messages" 
+          value="24" 
+          icon={<FiMessageSquare className="text-[#347486] text-2xl" />} 
+          bgColor="bg-[#347486]/10"
+        />
       </div>
       
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <h3 className="text-2xl font-bold text-[#333333] mb-6">Quick Actions</h3>
-        <div className="grid grid-cols-2 gap-4">
-          <button className="p-6 bg-[#347486]/10 rounded-xl flex flex-col items-center justify-center hover:bg-[#347486]/20 transition-all duration-300">
-            <FiUsers className="text-[#347486] text-2xl mb-3" />
-            <span className="text-base font-medium text-gray-900">Add User</span>
-          </button>
-          <button className="p-6 bg-[#BC4626]/10 rounded-xl flex flex-col items-center justify-center hover:bg-[#BC4626]/20 transition-all duration-300">
-            <FiShoppingBag className="text-[#BC4626] text-2xl mb-3" />
-            <span className="text-base font-medium text-gray-900">New Product</span>
-          </button>
-          <button className="p-6 bg-[#DFA55D]/10 rounded-xl flex flex-col items-center justify-center hover:bg-[#DFA55D]/20 transition-all duration-300">
-            <FiBarChart2 className="text-[#DFA55D] text-2xl mb-3" />
-            <span className="text-base font-medium text-gray-900">View Reports</span>
-          </button>
-          <button className="p-6 bg-[#347486]/10 rounded-xl flex flex-col items-center justify-center hover:bg-[#347486]/20 transition-all duration-300">
-            <FiSettings className="text-[#347486] text-2xl mb-3" />
-            <span className="text-base font-medium text-gray-900">Settings</span>
-          </button>
+      <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white rounded-xl shadow-sm p-6">
+          <h3 className="text-2xl font-bold text-[#333333] mb-6">Recent Activity</h3>
+          <div className="space-y-4">
+            {[1, 2, 3, 4].map((item) => (
+              <div key={item} className="flex items-center border-b border-gray-100 pb-4">
+                <div className="w-12 h-12 rounded-full bg-[#347486]/10 flex items-center justify-center mr-4">
+                  <FiUsers className="text-[#347486] text-xl" />
+                </div>
+                <div>
+                  <p className="text-base font-medium text-gray-900">New user registered</p>
+                  <p className="text-base text-gray-500">2 hours ago</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        <div className="bg-white rounded-xl shadow-sm p-6">
+          <h3 className="text-2xl font-bold text-[#333333] mb-6">Quick Actions</h3>
+          <div className="grid grid-cols-2 gap-4">
+            <button className="p-6 bg-[#347486]/10 rounded-xl flex flex-col items-center justify-center hover:bg-[#347486]/20 transition-all duration-300">
+              <FiUsers className="text-[#347486] text-2xl mb-3" />
+              <span className="text-base font-medium text-gray-900">Add User</span>
+            </button>
+            <button className="p-6 bg-[#BC4626]/10 rounded-xl flex flex-col items-center justify-center hover:bg-[#BC4626]/20 transition-all duration-300">
+              <FiShoppingBag className="text-[#BC4626] text-2xl mb-3" />
+              <span className="text-base font-medium text-gray-900">New Product</span>
+            </button>
+            <button className="p-6 bg-[#DFA55D]/10 rounded-xl flex flex-col items-center justify-center hover:bg-[#DFA55D]/20 transition-all duration-300">
+              <FiBarChart2 className="text-[#DFA55D] text-2xl mb-3" />
+              <span className="text-base font-medium text-gray-900">View Reports</span>
+            </button>
+            <button className="p-6 bg-[#347486]/10 rounded-xl flex flex-col items-center justify-center hover:bg-[#347486]/20 transition-all duration-300">
+              <FiSettings className="text-[#347486] text-2xl mb-3" />
+              <span className="text-base font-medium text-gray-900">Settings</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 // Stat Card Component
 const StatCard = ({ title, value, icon, bgColor }) => (
@@ -121,10 +183,10 @@ const SidebarItem = ({ icon, text, to, active, onClick, isButton = false }) => {
 // Advertisement Management Page
 const AdvertisementManagement = () => (
   <div className="p-6">
-    <h2 className="text-4xl font-bold text-[#333333] mb-8">Advertisement Management</h2>
+    {/* <h2 className="text-4xl font-bold text-[#333333] mb-8">Advertisement Management</h2>
     <div className="bg-white p-6 rounded-xl shadow-sm">
       <p className="text-base text-gray-600">Manage your advertisements here. You can add, edit, or remove ads.</p>
-    </div>
+    </div> */}
   </div>
 );
 

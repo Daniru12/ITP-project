@@ -15,6 +15,20 @@ const UserManagement = () => {
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
   const navigate = useNavigate();
 
+  // Add new form state
+  const [newUser, setNewUser] = useState({
+    full_name: '',
+    username: '',
+    email: '',
+    phone_number: '',
+    password: '',
+    user_type: 'pet_owner'
+  });
+
+  // Add form validation state
+  const [formErrors, setFormErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // Format user type for display
   const formatUserType = (userType) => {
     switch(userType) {
@@ -228,6 +242,129 @@ const UserManagement = () => {
     } catch (err) {
       console.error('Error toggling account status:', err);
       toast.error(err.response?.data?.message || 'Failed to update account status');
+    }
+  };
+
+  // Handle input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewUser(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    // Clear error when user starts typing
+    if (formErrors[name]) {
+      setFormErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  };
+
+  // Validate form
+  const validateForm = () => {
+    const errors = {};
+    
+    if (!newUser.full_name.trim()) {
+      errors.full_name = 'Full name is required';
+    }
+    
+    if (!newUser.username.trim()) {
+      errors.username = 'Username is required';
+    }
+    
+    if (!newUser.email.trim()) {
+      errors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(newUser.email)) {
+      errors.email = 'Email is invalid';
+    }
+    
+    if (!newUser.phone_number.trim()) {
+      errors.phone_number = 'Phone number is required';
+    }
+    
+    if (!newUser.password) {
+      errors.password = 'Password is required';
+    } else if (newUser.password.length < 6) {
+      errors.password = 'Password must be at least 6 characters';
+    }
+    
+    return errors;
+  };
+
+  // Handle form submission
+  const handleAddUser = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    // Validate form
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      setIsSubmitting(false);
+      return;
+    }
+    
+    try {
+      const token = getToken();
+      if (!token) {
+        redirectToLogin();
+        return;
+      }
+      
+      const apiUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+      
+      // Make API call to create user
+      const response = await axios.post(
+        `${apiUrl}/api/users/`,
+        newUser,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      
+      if (response.data) {
+        // Add new user to the list
+        const formattedUser = {
+          name: response.data.full_name,
+          username: response.data.username,
+          email: response.data.email,
+          phone: response.data.phone_number,
+          role: formatUserType(response.data.user_type),
+          profilePicture: response.data.profile_picture || '',
+          loyaltyPoints: 0,
+          isActive: true
+        };
+        
+        setUsers(prevUsers => [...prevUsers, formattedUser]);
+        
+        // Reset form and close modal
+        setNewUser({
+          full_name: '',
+          username: '',
+          email: '',
+          phone_number: '',
+          password: '',
+          user_type: 'pet_owner'
+        });
+        setIsAddUserModalOpen(false);
+        // Redirect to dashboard after successful user addition
+        navigate('/admin');
+        toast.success('User added successfully');
+      }
+    } catch (err) {
+      console.error('Error adding user:', err);
+      const errorMessage = err.response?.data?.message || 'Failed to add user';
+      toast.error(errorMessage);
+      
+      // Set specific field errors if they exist in the response
+      if (err.response?.data?.errors) {
+        setFormErrors(err.response.data.errors);
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -447,54 +584,121 @@ const UserManagement = () => {
         </div>
       </div>
 
-      {/* Add User Modal */}
+      {/* Update Add User Modal */}
       {isAddUserModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-8 w-full max-w-md">
             <h3 className="text-3xl font-bold text-[#333333] mb-6">Add New User</h3>
-            <form className="space-y-4">
+            <form onSubmit={handleAddUser} className="space-y-4">
               <div>
                 <label className="block text-base font-medium text-gray-700 mb-1">Full Name</label>
-                <input type="text" className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#347486] focus:border-transparent transition-all duration-300 text-base" />
+                <input
+                  type="text"
+                  name="full_name"
+                  value={newUser.full_name}
+                  onChange={handleInputChange}
+                  className={`w-full p-3 border ${formErrors.full_name ? 'border-red-500' : 'border-gray-200'} rounded-lg focus:outline-none focus:ring-2 focus:ring-[#347486] focus:border-transparent transition-all duration-300 text-base`}
+                />
+                {formErrors.full_name && (
+                  <p className="mt-1 text-sm text-red-500">{formErrors.full_name}</p>
+                )}
               </div>
+              
               <div>
                 <label className="block text-base font-medium text-gray-700 mb-1">Username</label>
-                <input type="text" className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#347486] focus:border-transparent transition-all duration-300 text-base" />
+                <input
+                  type="text"
+                  name="username"
+                  value={newUser.username}
+                  onChange={handleInputChange}
+                  className={`w-full p-3 border ${formErrors.username ? 'border-red-500' : 'border-gray-200'} rounded-lg focus:outline-none focus:ring-2 focus:ring-[#347486] focus:border-transparent transition-all duration-300 text-base`}
+                />
+                {formErrors.username && (
+                  <p className="mt-1 text-sm text-red-500">{formErrors.username}</p>
+                )}
               </div>
+              
               <div>
                 <label className="block text-base font-medium text-gray-700 mb-1">Email</label>
-                <input type="email" className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#347486] focus:border-transparent transition-all duration-300 text-base" />
+                <input
+                  type="email"
+                  name="email"
+                  value={newUser.email}
+                  onChange={handleInputChange}
+                  className={`w-full p-3 border ${formErrors.email ? 'border-red-500' : 'border-gray-200'} rounded-lg focus:outline-none focus:ring-2 focus:ring-[#347486] focus:border-transparent transition-all duration-300 text-base`}
+                />
+                {formErrors.email && (
+                  <p className="mt-1 text-sm text-red-500">{formErrors.email}</p>
+                )}
               </div>
+              
               <div>
                 <label className="block text-base font-medium text-gray-700 mb-1">Phone Number</label>
-                <input type="tel" className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#347486] focus:border-transparent transition-all duration-300 text-base" />
+                <input
+                  type="tel"
+                  name="phone_number"
+                  value={newUser.phone_number}
+                  onChange={handleInputChange}
+                  className={`w-full p-3 border ${formErrors.phone_number ? 'border-red-500' : 'border-gray-200'} rounded-lg focus:outline-none focus:ring-2 focus:ring-[#347486] focus:border-transparent transition-all duration-300 text-base`}
+                />
+                {formErrors.phone_number && (
+                  <p className="mt-1 text-sm text-red-500">{formErrors.phone_number}</p>
+                )}
               </div>
+              
               <div>
                 <label className="block text-base font-medium text-gray-700 mb-1">Password</label>
-                <input type="password" className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#347486] focus:border-transparent transition-all duration-300 text-base" />
+                <input
+                  type="password"
+                  name="password"
+                  value={newUser.password}
+                  onChange={handleInputChange}
+                  className={`w-full p-3 border ${formErrors.password ? 'border-red-500' : 'border-gray-200'} rounded-lg focus:outline-none focus:ring-2 focus:ring-[#347486] focus:border-transparent transition-all duration-300 text-base`}
+                />
+                {formErrors.password && (
+                  <p className="mt-1 text-sm text-red-500">{formErrors.password}</p>
+                )}
               </div>
+              
               <div>
                 <label className="block text-base font-medium text-gray-700 mb-1">Role</label>
-                <select className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#347486] focus:border-transparent transition-all duration-300 text-base">
+                <select
+                  name="user_type"
+                  value={newUser.user_type}
+                  onChange={handleInputChange}
+                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#347486] focus:border-transparent transition-all duration-300 text-base"
+                >
                   <option value="pet_owner">Pet Owner</option>
                   <option value="service_provider">Service Provider</option>
                   <option value="admin">Admin</option>
                 </select>
               </div>
+              
               <div className="flex justify-end space-x-3 pt-4">
                 <button 
                   type="button" 
                   className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-all duration-300 text-base"
-                  onClick={() => setIsAddUserModalOpen(false)}
+                  onClick={() => {
+                    setIsAddUserModalOpen(false);
+                    setFormErrors({});
+                    setNewUser({
+                      full_name: '',
+                      username: '',
+                      email: '',
+                      phone_number: '',
+                      password: '',
+                      user_type: 'pet_owner'
+                    });
+                  }}
                 >
                   Cancel
                 </button>
                 <button 
-                  type="button" 
-                  className="px-6 py-3 bg-[#BC4626] text-white rounded-lg hover:bg-[#a33d21] transition-all duration-300 text-base"
-                  onClick={() => setIsAddUserModalOpen(false)}
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={`px-6 py-3 bg-[#BC4626] text-white rounded-lg hover:bg-[#a33d21] transition-all duration-300 text-base ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
-                  Add User
+                  {isSubmitting ? 'Adding...' : 'Add User'}
                 </button>
               </div>
             </form>

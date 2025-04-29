@@ -188,9 +188,21 @@ export const updateOrderStatus = async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
-    // Only admin can update order status
-    if (req.user.user_type !== 'admin') {
+    // Allow both admin and service provider to update status
+    if (req.user.user_type !== 'admin' && req.user.user_type !== 'service_provider') {
       return res.status(403).json({ message: "Not authorized to update order status" });
+    }
+
+    // If service provider, verify they own products in the order
+    if (req.user.user_type === 'service_provider') {
+      const hasProviderProducts = await Product.exists({
+        _id: { $in: order.products.map(p => p.product) },
+        serviceProvider: req.user._id
+      });
+
+      if (!hasProviderProducts) {
+        return res.status(403).json({ message: "Not authorized to update this order" });
+      }
     }
 
     order.order_status = status;
@@ -250,5 +262,102 @@ export const cancelOrder = async (req, res) => {
   } catch (error) {
     console.error("Error cancelling order:", error);
     res.status(500).json({ message: "Error cancelling order" });
+  }
+};
+
+// Get orders for service providers (orders containing their products)
+export const getProviderOrders = async (req, res) => {
+  try {
+    const providerId = req.user._id;
+    console.log('Provider ID:', providerId);
+    console.log('User type:', req.user.user_type);
+    
+    // First, find all products by this provider
+    const providerProducts = await Product.find({ serviceProvider: providerId });
+    console.log('Provider products found:', providerProducts.length);
+    
+    if (!providerProducts.length) {
+      return res.status(200).json({
+        orders: [],
+        stats: {
+          total: 0,
+          pending: 0,
+          processing: 0,
+          shipped: 0,
+          delivered: 0,
+          totalRevenue: 0
+        }
+      });
+    }
+
+    // Get product IDs
+    const productIds = providerProducts.map(product => product._id);
+    
+    // Find orders containing any of these products
+    const orders = await Order.find({
+      'products.product': { $in: productIds }
+    })
+    .populate({
+      path: 'products.product',
+      select: 'name price image serviceProvider'
+    })
+    .populate('pet_owner', 'username email')
+    .sort({ createdAt: -1 });
+
+    console.log('Found orders:', orders.length);
+
+    // Calculate stats with null checks
+    const stats = {
+      total: orders.length,
+      pending: orders.filter(o => o.order_status === 'Pending').length,
+      processing: orders.filter(o => o.order_status === 'Processing').length,
+      shipped: orders.filter(o => o.order_status === 'Shipped').length,
+      delivered: orders.filter(o => o.order_status === 'Delivered').length,
+      totalRevenue: orders.reduce((sum, order) => {
+        // Only count revenue from this provider's products
+        const providerRevenue = order.products
+          .filter(item => item.product && productIds.includes(item.product._id))
+          .reduce((total, item) => total + (item.price * item.quantity), 0);
+        return sum + providerRevenue;
+      }, 0)
+    };
+
+    res.status(200).json({
+      orders,
+      stats
+    });
+  } catch (error) {
+    console.error("Error fetching provider orders:", error);
+    res.status(500).json({ 
+      message: "Error fetching orders",
+      error: error.message,
+      stack: error.stack
+    });
+  }
+};
+
+// Get all orders (admin only)
+export const getAllOrders = async (req, res) => {
+  try {
+    // Check if user is admin
+    if (req.user.user_type !== 'admin') {
+      return res.status(403).json({ message: "Not authorized to view all orders" });
+    }
+
+    const orders = await Order.find()
+      .populate({
+        path: 'products.product',
+        select: 'name price image'
+      })
+      .populate('pet_owner', 'username email')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error("Error fetching all orders:", error);
+    res.status(500).json({ 
+      message: "Error fetching orders",
+      error: error.message 
+    });
   }
 };

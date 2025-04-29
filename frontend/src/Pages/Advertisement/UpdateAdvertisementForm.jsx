@@ -19,9 +19,10 @@ const UpdateAdvertisementForm = () => {
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
-    return date.toLocaleDateString("en-CA");  // 'en-CA' for ISO format YYYY-MM-DD
+    return date.toLocaleDateString("en-CA"); // 'en-CA' for ISO format YYYY-MM-DD
   };
 
+  // Fetch ad details on page load
   useEffect(() => {
     const fetchAdDetails = async () => {
       try {
@@ -69,6 +70,7 @@ const UpdateAdvertisementForm = () => {
 
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
+      // Sending PUT request to update the advertisement
       await axios.put(
         `${backendUrl}/api/advertisement/update/${id}`,
         { title, description, category, image_url, start_date, end_date },
@@ -76,7 +78,7 @@ const UpdateAdvertisementForm = () => {
       );
 
       toast.success("Advertisement updated successfully!");
-      navigate("/AdReviewComponent"); // Redirect after update
+      // navigate("/admin/AdvertisingManagement"); // Redirect after update
     } catch (err) {
       if (err.response?.status === 401) {
         toast.error("Unauthorized: Please log in again.");
@@ -171,7 +173,6 @@ const UpdateAdvertisementForm = () => {
           >
             {loading ? "Updating..." : "Update Advertisement"}
           </button>
-
         </form>
       </div>
     </div>
