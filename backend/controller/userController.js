@@ -740,4 +740,59 @@ export const deleteUser = async (req, res) => {
   }
 };
 
+// Count endpoints
+export const getUsersCount = async (req, res) => {
+  try {
+    if (req.user.user_type !== "admin") {
+      return res.status(403).json({
+        message: "You are not authorized to perform this action"
+      });
+    }
+    const count = await User.countDocuments();
+    res.status(200).json({ count });
+  } catch (error) {
+    console.error("Error getting users count:", error);
+    res.status(500).json({ 
+      message: "Error getting users count",
+      error: error.message 
+    });
+  }
+};
+
+export const getServicesCount = async (req, res) => {
+  try {
+    if (req.user.user_type !== "admin") {
+      return res.status(403).json({
+        message: "You are not authorized to perform this action"
+      });
+    }
+    const count = await Service.countDocuments();
+    res.status(200).json({ count });
+  } catch (error) {
+    console.error("Error getting services count:", error);
+    res.status(500).json({ 
+      message: "Error getting services count",
+      error: error.message 
+    });
+  }
+};
+
+export const getPetsCount = async (req, res) => {
+  try {
+    if (req.user.user_type !== "admin") {
+      return res.status(403).json({
+        message: "You are not authorized to perform this action"
+      });
+    }
+    const count = await Pet.countDocuments();
+    res.status(200).json({ count });
+  } catch (error) {
+    console.error("Error getting pets count:", error);
+    res.status(500).json({ 
+      message: "Error getting pets count",
+      error: error.message 
+    });
+  }
+};
+
 export default router;

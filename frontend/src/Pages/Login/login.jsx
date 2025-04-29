@@ -4,6 +4,33 @@ import toast from "react-hot-toast";
 import axios from 'axios';
 import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
 import { useGoogleLogin } from '@react-oauth/google';
+import { motion } from 'framer-motion';
+
+// Animation variants
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            duration: 0.5,
+            staggerChildren: 0.1
+        }
+    }
+};
+
+const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+        y: 0,
+        opacity: 1,
+        transition: { duration: 0.5, ease: "easeOut" }
+    }
+};
+
+const formControlVariants = {
+    focus: { scale: 1.02, transition: { duration: 0.2 } },
+    tap: { scale: 0.98 }
+};
 
 export default function LoginPage() {
     const [formData, setFormData] = useState({
@@ -80,44 +107,88 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex bg-gray-50">
+        <motion.div 
+            className="min-h-screen flex bg-gray-50"
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+        >
             {/* Left Section - Image and Text */}
-            <div className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center bg-white p-12">
+            <motion.div 
+                className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center bg-white p-12"
+                variants={itemVariants}
+            >
                 <div className="w-full max-w-md">
-                    <img 
+                    <motion.img 
                         src="https://img.freepik.com/free-photo/group-portrait-adorable-puppies_53876-64778.jpg" 
                         alt="Pet Care Illustration" 
                         className="w-full h-auto rounded-lg shadow-md mb-8"
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ duration: 0.3 }}
                     />
-                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                    <motion.h2 
+                        className="text-2xl font-bold text-gray-800 mb-4"
+                        variants={itemVariants}
+                    >
                         Welcome to PawCare
-                    </h2>
-                    <p className="text-gray-600">
+                    </motion.h2>
+                    <motion.p 
+                        className="text-gray-600"
+                        variants={itemVariants}
+                    >
                         Your trusted platform for all pet care needs. Connect with professional service providers and ensure the best care for your furry friends.
-                    </p>
+                    </motion.p>
                 </div>
-            </div>
+            </motion.div>
 
             {/* Right Section - Login Form */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+            <motion.div 
+                className="w-full lg:w-1/2 flex items-center justify-center p-8"
+                variants={itemVariants}
+            >
                 <div className="w-full max-w-md">
-                    <div className="bg-white p-8 rounded-lg shadow-lg">
-                        <div className="text-center mb-8">
-                            <h2 className="text-3xl font-bold text-gray-900">
+                    <motion.div 
+                        className="bg-white p-8 rounded-lg shadow-lg"
+                        initial={{ x: 20, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <motion.div 
+                            className="text-center mb-8"
+                            variants={itemVariants}
+                        >
+                            <motion.h2 
+                                className="text-3xl font-bold text-gray-900"
+                                initial={{ y: -20 }}
+                                animate={{ y: 0 }}
+                                transition={{ duration: 0.5, delay: 0.2 }}
+                            >
                                 Sign In
-                            </h2>
-                            <p className="text-gray-600 mt-2">
+                            </motion.h2>
+                            <motion.p 
+                                className="text-gray-600 mt-2"
+                                variants={itemVariants}
+                            >
                                 Welcome back! Please enter your details
-                            </p>
-                        </div>
+                            </motion.p>
+                        </motion.div>
 
-                        <form onSubmit={handleSubmit} className="space-y-6">
+                        <motion.form 
+                            onSubmit={handleSubmit} 
+                            className="space-y-6"
+                            variants={containerVariants}
+                        >
                             {/* Email Field */}
-                            <div>
+                            <motion.div variants={itemVariants}>
                                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                                     Email Address
                                 </label>
-                                <div className="mt-1 relative">
+                                <motion.div 
+                                    className="mt-1 relative"
+                                    whileFocus="focus"
+                                    whileTap="tap"
+                                    variants={formControlVariants}
+                                >
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <FiMail className="h-5 w-5 text-gray-400" />
                                     </div>
@@ -129,18 +200,23 @@ export default function LoginPage() {
                                         required
                                         value={formData.email}
                                         onChange={handleChange}
-                                        className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)]"
+                                        className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] transition-all duration-300"
                                         placeholder="Enter your email"
                                     />
-                                </div>
-                            </div>
+                                </motion.div>
+                            </motion.div>
 
                             {/* Password Field */}
-                            <div>
+                            <motion.div variants={itemVariants}>
                                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                                     Password
                                 </label>
-                                <div className="mt-1 relative">
+                                <motion.div 
+                                    className="mt-1 relative"
+                                    whileFocus="focus"
+                                    whileTap="tap"
+                                    variants={formControlVariants}
+                                >
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <FiLock className="h-5 w-5 text-gray-400" />
                                     </div>
@@ -152,16 +228,20 @@ export default function LoginPage() {
                                         required
                                         value={formData.password}
                                         onChange={handleChange}
-                                        className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)]"
+                                        className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)] transition-all duration-300"
                                         placeholder="Enter your password"
                                     />
-                                </div>
-                            </div>
+                                </motion.div>
+                            </motion.div>
 
                             {/* Remember me and Forgot password */}
-                            <div className="flex items-center justify-between">
+                            <motion.div 
+                                className="flex items-center justify-between"
+                                variants={itemVariants}
+                            >
                                 <div className="flex items-center">
-                                    <input
+                                    <motion.input
+                                        whileTap={{ scale: 0.9 }}
                                         id="remember-me"
                                         name="remember-me"
                                         type="checkbox"
@@ -172,57 +252,83 @@ export default function LoginPage() {
                                     </label>
                                 </div>
 
-                                <div className="text-sm">
-                                    <a href="#" className="font-medium text-[var(--color-accent)] hover:text-[var(--color-primary)]">
+                                <motion.div 
+                                    className="text-sm"
+                                    whileHover={{ scale: 1.05 }}
+                                >
+                                    <a href="#" className="font-medium text-[var(--color-accent)] hover:text-[var(--color-primary)] transition-colors duration-300">
                                         Forgot password?
                                     </a>
-                                </div>
-                            </div>
+                                </motion.div>
+                            </motion.div>
 
                             {/* Submit Button */}
-                            <button
+                            <motion.button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-[var(--text-on-primary)] bg-[var(--color-primary)] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-accent)] disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-[var(--text-on-primary)] bg-[var(--color-primary)] hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-accent)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                variants={itemVariants}
                             >
-                                {isLoading ? 'Signing in...' : 'Sign in'}
-                            </button>
+                                {isLoading ? (
+                                    <motion.div
+                                        animate={{ rotate: 360 }}
+                                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                                    >
+                                        <FiLogIn className="h-5 w-5" />
+                                    </motion.div>
+                                ) : (
+                                    'Sign in'
+                                )}
+                            </motion.button>
 
                             {/* Google Login Button */}
-                            <div className="relative mt-4">
-                                <div className="absolute inset-0 flex items-center">
-                                    <div className="w-full border-t border-gray-300"></div>
+                            <motion.div variants={itemVariants}>
+                                <div className="relative mt-4">
+                                    <div className="absolute inset-0 flex items-center">
+                                        <div className="w-full border-t border-gray-300"></div>
+                                    </div>
+                                    <div className="relative flex justify-center text-sm">
+                                        <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                                    </div>
                                 </div>
-                                <div className="relative flex justify-center text-sm">
-                                    <span className="px-2 bg-white text-gray-500">Or continue with</span>
-                                </div>
-                            </div>
 
-                            <button
-                                type="button"
-                                onClick={() => googleLogin()}
-                                className="w-full flex items-center justify-center gap-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-accent)]"
-                            >
-                                <img 
-                                    src="https://www.google.com/favicon.ico" 
-                                    alt="Google logo" 
-                                    className="w-5 h-5"
-                                />
-                                Sign in with Google
-                            </button>
+                                <motion.button
+                                    type="button"
+                                    onClick={() => googleLogin()}
+                                    className="mt-4 w-full flex items-center justify-center gap-2 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-accent)] transition-all duration-300"
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                >
+                                    <img 
+                                        src="https://www.google.com/favicon.ico" 
+                                        alt="Google logo" 
+                                        className="w-5 h-5"
+                                    />
+                                    Sign in with Google
+                                </motion.button>
+                            </motion.div>
 
                             {/* Register Link */}
-                            <div className="text-center mt-4">
+                            <motion.div 
+                                className="text-center mt-4"
+                                variants={itemVariants}
+                            >
                                 <span className="text-gray-600">Don't have an account? </span>
-                                <Link to="/register" className="font-medium text-[var(--color-accent)] hover:text-[var(--color-primary)]">
-                                    Register here
-                                </Link>
-                            </div>
-                        </form>
-                    </div>
+                                <motion.span
+                                    whileHover={{ scale: 1.05 }}
+                                >
+                                    <Link to="/register" className="font-medium text-[var(--color-accent)] hover:text-[var(--color-primary)] transition-colors duration-300">
+                                        Register here
+                                    </Link>
+                                </motion.span>
+                            </motion.div>
+                        </motion.form>
+                    </motion.div>
                 </div>
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
     );
 }
 
