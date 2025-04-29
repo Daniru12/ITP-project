@@ -96,7 +96,7 @@ const UpdateAdvertisementForm = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-xl bg-white p-6 rounded-xl shadow-lg">
-        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
+        <h2 className="text-3xl font-bold text-center text-[#347486] mb-6">
           Update Advertisement
         </h2>
         {error && <div className="text-red-600 text-center mb-4">{error}</div>}
@@ -167,10 +167,11 @@ const UpdateAdvertisementForm = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-blue-600 text-white text-lg rounded-lg hover:bg-blue-700"
+            className="w-full py-3 bg-[#BC4626] text-white text-lg rounded-lg hover:bg-[#a33d21]"
           >
             {loading ? "Updating..." : "Update Advertisement"}
           </button>
+
         </form>
       </div>
     </div>

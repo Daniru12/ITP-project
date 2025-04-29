@@ -14,7 +14,7 @@ userRouter.get("/all-users", protect, getAllUsers);
 userRouter.get("/all-services", protect, getAllServices);
 userRouter.get("/all-pets", protect, getAllPets);
 userRouter.get("/services", getServicesForDisplay);
-userRouter.get("/service/:id", protect, getServiceById);
+userRouter.get("/service/:id", getServiceById);
 userRouter.get("/pet/:id", protect, getPetById);
 userRouter.delete("/deletePet/:id", protect, deletePet);
 userRouter.delete("/service/:id", protect, deleteService);
