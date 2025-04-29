@@ -39,7 +39,11 @@ if (!mongoUrl) {
 }
 
 mongoose
-  .connect(mongoUrl)
+  .connect(mongoUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000,
+  })
   .then(() => {
     console.log("Connected to MongoDB");
   })
@@ -55,13 +59,37 @@ app.use("/api/reviews", reviewRouter);
 app.use("/api/faqs", faqRouter);
 app.use("/api/payment",paymnetRouter);
 app.use("/api/advertisement",AdvertisementRoutes);
-app.use("/api/Products", productRouter);
+app.use("/api/products", productRouter);
 app.use("/api/faqAll", faqAllRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/petbook", petBookRouter);
 app.use("/api/cart", cartRouter);
 
+// Add this after your routes but before app.listen
+app.use((err, req, res, next) => {
+  console.error('Global error handler:', err);
+  
+  // Mongoose validation error
+  if (err.name === 'ValidationError') {
+    return res.status(400).json({
+      message: "Validation Error",
+      errors: Object.values(err.errors).map(e => e.message)
+    });
+  }
 
+  // Mongoose cast error (invalid ID)
+  if (err.name === 'CastError') {
+    return res.status(400).json({
+      message: "Invalid ID format"
+    });
+  }
+
+  // Default error response
+  res.status(500).json({
+    message: "Internal server error",
+    error: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

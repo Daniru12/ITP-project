@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { SearchIcon } from 'lucide-react'   // search to do and cart to do
 
-export const SearchAndCart = ({ onSearch }) => {
+export const SearchAndCart = ({ onSearch, showCart }) => {
   const [searchValue, setSearchValue] = useState('')
   
   const handleSubmit = (e) => {
