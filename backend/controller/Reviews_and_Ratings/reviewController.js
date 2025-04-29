@@ -52,12 +52,13 @@ export const getAllReviews = async (req, res) => {
 
 
 // ✅ Get reviews for a specific service
+// In reviewController.js (update getServiceReviews)
 export const getServiceReviews = async (req, res) => {
   try {
     const { serviceId } = req.params;
     const reviews = await Review.find({ service: serviceId })
-      .populate("user", "name")
-      .populate("service", "name");
+      .populate("user", "full_name") // Match your user schema
+      .populate("service", "service_name");
 
     res.status(200).json(reviews);
   } catch (error) {

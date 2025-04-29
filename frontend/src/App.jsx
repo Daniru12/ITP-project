@@ -51,7 +51,8 @@ import AverageRating from './Components/AverageRatings'
 import FaqList from './Pages/FAQ/faqCategory'
 import FaqAdmin from './Pages/FAQ/FaqAnswers'
 import FaqAdminTable from './Pages/FAQ/AdminfaqCategory'
-import ServiceReviews from './Pages/Review/reviewdisplay'
+import AllReviews from './Pages/Review/reviewdisplay'
+import ServiceReviews from './Components/ServiceReviews';
 import DisplayServices from './Pages/Home/displayServices'
 import ServiceOverview from './Pages/Home/serviceOverview'
 import AddBoarding from './Pages/Providers/addBoarding'
@@ -159,8 +160,9 @@ const AppContent = () => {
           <Route path='/edit-pet/:id' element={<UpdatePet />} />
           <Route path='/update-service/:id' element={<UpdateService />} />
           <Route path='/faqList' element={<FaqList />} />
-          <Route path='/faqAdmin/:id' element={<FaqAdmin/>}/> 
-          <Route path='/reviewdisplay' element={<ServiceReviews/>}/>
+          <Route path='/faqAdmin' element={<FaqAdmin/>}/> 
+          <Route path='/reviewdisplay' element={<AllReviews/>}/>
+          <Route path="/services/:serviceId/reviews" element={<ServiceReviews />} />
           <Route path="/average/:serviceId" element={<AverageRating />} />
           <Route path='/adminList' element={<FaqAdminTable/>}/>
           <Route path='/ownerOrders' element={<VeiwOwnerOerders/>}/>
