@@ -121,10 +121,10 @@ const SidebarItem = ({ icon, text, to, active, onClick, isButton = false }) => {
 // Advertisement Management Page
 const AdvertisementManagement = () => (
   <div className="p-6">
-    <h2 className="text-4xl font-bold text-[#333333] mb-8">Advertisement Management</h2>
+    {/* <h2 className="text-4xl font-bold text-[#333333] mb-8">Advertisement Management</h2>
     <div className="bg-white p-6 rounded-xl shadow-sm">
       <p className="text-base text-gray-600">Manage your advertisements here. You can add, edit, or remove ads.</p>
-    </div>
+    </div> */}
   </div>
 );
 

@@ -19,6 +19,7 @@ import CreateFaq from './Pages/FAQ/faq'
 import PetBookPage from './Pages/PetOwner/PetBookPage'
 import AdvertisingManagement from './Pages/Admin/advertiseManagement'
 
+
 import PaymentPage from './Pages/Payment/PaymentPage'
 import ServiceSummary from './Pages/Payment/AppointmentSummary'
 import PaymentForm from './Pages/Payment/PaymentForm'
@@ -145,6 +146,8 @@ const AppContent = () => {
           <Route path='/AddAdvertisementForm' element={<AddAdvertisementForm/>}/>
           <Route path='/AdReviewComponent' element={<AdReviewComponent/>}/>
           <Route path='/update-ad/:id' element={<UpdateAdvertisementForm/>}/>
+          <Route path="/UpdateAdvertisementForm/:adId" element={<UpdateAdvertisementForm />} />
+
         
 
           <Route path='/petmarketplace' element={<PetMarketplace />} /> 
