@@ -122,9 +122,26 @@ const ServiceOverview = () => {
 
                         {/* Provider Information */}
                         <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
-                            <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--color-accent)' }}>Average Rating</h2>
-                            <AverageRating serviceId={id} /> {/* Add AverageRating component here */}
-                        </div>
+  <div className="flex items-center mb-6">
+    <FaUser className="w-6 h-6 mr-3" style={{ color: 'var(--color-accent)' }} />
+    <h2 className="text-2xl font-bold" style={{ color: 'var(--color-accent)' }}>Service Provider</h2>
+  </div>
+  <div className="flex items-start space-x-4">
+    <div className="flex-grow">
+      <h3 className="text-xl font-semibold mb-2">{service.provider_id?.full_name || 'Anonymous'}</h3>
+      <div className="flex items-center text-gray-600 mb-2">
+        <FaMapMarkerAlt className="mr-2" />
+        <span>{service.location}</span>
+      </div>
+      <div className="flex items-center text-gray-600">
+        <AverageRating serviceId={id} />
+      </div>
+    </div>
+  </div>
+</div>
+
+                       
+                        
                     </div>
 
                     {/* Right Column - Packages and Booking */}
