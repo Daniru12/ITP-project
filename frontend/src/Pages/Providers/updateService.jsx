@@ -398,11 +398,11 @@ const UpdateService = () => {
                 </div>
 
                 {/* Submit Button */}
-                <div className="flex justify-end space-x-4">
+                <div className="flex justify-end space-x-4 ">
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-300"
+                        className="px-6 py-2 bg-[#BC4626] text-white rounded-md bg-[#DFA55D] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-300"
                     >
                         {isLoading ? 'Updating...' : 'Update Service'}
                     </button>
