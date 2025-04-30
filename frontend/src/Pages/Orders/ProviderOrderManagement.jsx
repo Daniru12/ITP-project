@@ -152,7 +152,7 @@ const ProviderOrderManagement = () => {
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Orders Report - ${new Date().toLocaleDateString()}</title>
+          <title>Orders Report - ${new Date().toLocaleString()}</title>
           <style>
             @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
             
@@ -424,35 +424,35 @@ const ProviderOrderManagement = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--color-primary-light)] flex items-center justify-center">
         <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-accent-light)] p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header Section with Back Button */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
-                onClick={() => navigate(-1)}
+                onClick={() => navigate('/provider-profile')}
                 className="group flex items-center gap-2 px-4 py-2 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 text-gray-600 hover:text-gray-900 border border-gray-100"
               >
                 <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" />
                 <span className="font-medium">Back</span>
               </button>
               <div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Order Management</h1>
-          <p className="text-gray-600">Track and manage your customer orders</p>
+                <h1 className="text-3xl font-bold text-[var(--text-on-secondary)] mb-2">Order Management</h1>
+                <p className="text-[var(--text-on-secondary)] opacity-70">Track and manage your customer orders</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <div className="px-4 py-2 bg-white rounded-xl shadow-sm border border-gray-100">
-                <p className="text-sm text-gray-500">Total Orders</p>
-                <p className="text-xl font-bold text-gray-800">{stats.total}</p>
+                <p className="text-sm text-[var(--text-on-secondary)] opacity-70">Total Orders</p>
+                <p className="text-xl font-bold text-[var(--text-on-secondary)]">{stats.total}</p>
               </div>
             </div>
           </div>
@@ -470,13 +470,13 @@ const ProviderOrderManagement = () => {
                 Total
               </div>
             </div>
-            <h3 className="text-gray-600 text-sm font-medium mb-1">Total Orders</h3>
+            <h3 className="text-[var(--text-on-secondary)] opacity-70 text-sm font-medium mb-1">Total Orders</h3>
             <div className="flex items-baseline">
-              <p className="text-4xl font-bold text-gray-800">{stats.total}</p>
+              <p className="text-4xl font-bold text-[var(--text-on-secondary)]">{stats.total}</p>
               <p className="ml-2 text-sm text-blue-600 font-medium">Orders</p>
             </div>
             <div className="mt-4 pt-4 border-t border-blue-100">
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-sm text-[var(--text-on-secondary)] opacity-70">
                 <TrendingUp className="h-4 w-4 mr-1 text-blue-600" />
                 <span>All time orders</span>
               </div>
@@ -493,13 +493,13 @@ const ProviderOrderManagement = () => {
                 Pending
               </div>
             </div>
-            <h3 className="text-gray-600 text-sm font-medium mb-1">Pending Orders</h3>
+            <h3 className="text-[var(--text-on-secondary)] opacity-70 text-sm font-medium mb-1">Pending Orders</h3>
             <div className="flex items-baseline">
-              <p className="text-4xl font-bold text-gray-800">{stats.pending}</p>
+              <p className="text-4xl font-bold text-[var(--text-on-secondary)]">{stats.pending}</p>
               <p className="ml-2 text-sm text-yellow-600 font-medium">Need Action</p>
             </div>
             <div className="mt-4 pt-4 border-t border-yellow-100">
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-sm text-[var(--text-on-secondary)] opacity-70">
                 <AlertTriangle className="h-4 w-4 mr-1 text-yellow-600" />
                 <span>Requires attention</span>
               </div>
@@ -516,13 +516,13 @@ const ProviderOrderManagement = () => {
                 Active
               </div>
             </div>
-            <h3 className="text-gray-600 text-sm font-medium mb-1">Processing</h3>
+            <h3 className="text-[var(--text-on-secondary)] opacity-70 text-sm font-medium mb-1">Processing</h3>
             <div className="flex items-baseline">
-              <p className="text-4xl font-bold text-gray-800">{stats.processing}</p>
+              <p className="text-4xl font-bold text-[var(--text-on-secondary)]">{stats.processing}</p>
               <p className="ml-2 text-sm text-purple-600 font-medium">In Progress</p>
             </div>
             <div className="mt-4 pt-4 border-t border-purple-100">
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-sm text-[var(--text-on-secondary)] opacity-70">
                 <TrendingUp className="h-4 w-4 mr-1 text-purple-600" />
                 <span>Currently processing</span>
               </div>
@@ -539,16 +539,16 @@ const ProviderOrderManagement = () => {
                 Revenue
               </div>
             </div>
-            <h3 className="text-gray-600 text-sm font-medium mb-1">Total Revenue</h3>
+            <h3 className="text-[var(--text-on-secondary)] opacity-70 text-sm font-medium mb-1">Total Revenue</h3>
             <div className="flex flex-col">
-              <p className="text-3xl font-bold text-gray-800">
+              <p className="text-3xl font-bold text-[var(--text-on-secondary)]">
                 Rs.{stats.totalRevenue.toLocaleString('en-US', {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2
                 })}
               </p>
               <div className="mt-4 pt-4 border-t border-green-100">
-                <div className="flex items-center text-sm text-gray-600">
+                <div className="flex items-center text-sm text-[var(--text-on-secondary)] opacity-70">
                   <TrendingUp className="h-4 w-4 mr-1 text-green-600" />
                   <span>Total earnings</span>
                 </div>
@@ -561,20 +561,20 @@ const ProviderOrderManagement = () => {
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-100">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <h3 className="text-xl font-semibold text-gray-800">Generate Reports</h3>
-              <p className="text-sm text-gray-500 mt-1">Export or print order statistics</p>
+              <h3 className="text-xl font-semibold text-[var(--text-on-secondary)]">Generate Reports</h3>
+              <p className="text-sm text-[var(--text-on-secondary)] opacity-70 mt-1">Export or print order statistics</p>
             </div>
             <div className="flex gap-4">
               <button
                 onClick={generateCSV}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02]"
+                className="flex items-center gap-2 px-6 py-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02]"
               >
                 <FileDown className="h-5 w-5" />
                 Export CSV
               </button>
               <button
                 onClick={printReport}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02]"
+                className="flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02]"
               >
                 <Printer className="h-5 w-5" />
                 Print Report
@@ -583,79 +583,13 @@ const ProviderOrderManagement = () => {
           </div>
         </div>
 
-        {/* Summary Section */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-100">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-            <div>
-              <h3 className="text-xl font-semibold text-gray-800">Revenue Summary</h3>
-              <p className="text-sm text-gray-500 mt-1">Detailed breakdown of your earnings</p>
-            </div>
-            <div className="bg-blue-50 px-4 py-2 rounded-xl">
-              <p className="text-sm text-gray-500">Total Orders Processed</p>
-              <p className="text-2xl font-bold text-gray-800">{stats.total}</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border border-blue-100">
-              <p className="text-sm text-gray-600 mb-2">Average Order Value</p>
-              <p className="text-2xl font-bold text-gray-800">
-                Rs.{stats.total > 0 
-                  ? (stats.totalRevenue / stats.total).toLocaleString('en-US', {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2
-                    })
-                  : '0.00'
-                }
-              </p>
-            </div>
-            <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border border-green-100">
-              <p className="text-sm text-gray-600 mb-2">Completed Orders Revenue</p>
-              <p className="text-2xl font-bold text-green-700">
-                Rs.{(stats.totalRevenue * (stats.delivered / stats.total || 0)).toLocaleString('en-US', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
-                })}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Order Status Distribution */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-100">
-          <h3 className="text-xl font-semibold text-gray-800 mb-6">Order Status Distribution</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {[
-              { status: 'Pending', count: stats.pending, color: 'from-yellow-50 to-yellow-100', border: 'border-yellow-100', text: 'text-yellow-700' },
-              { status: 'Processing', count: stats.processing, color: 'from-blue-50 to-blue-100', border: 'border-blue-100', text: 'text-blue-700' },
-              { status: 'Shipped', count: stats.shipped, color: 'from-purple-50 to-purple-100', border: 'border-purple-100', text: 'text-purple-700' },
-              { status: 'Delivered', count: stats.delivered, color: 'from-green-50 to-green-100', border: 'border-green-100', text: 'text-green-700' }
-            ].map(({ status, count, color, border, text }) => (
-              <div key={status} className={`bg-gradient-to-br ${color} p-4 rounded-xl border ${border}`}>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-gray-600">{status}</span>
-                  <span className={`text-sm font-semibold ${text}`}>{count}</span>
-                  </div>
-                <div className="w-full bg-white/50 rounded-full h-2">
-                  <div 
-                    className={`h-2 rounded-full ${color.split(' ')[1]}`}
-                    style={{ width: `${((count / stats.total) * 100 || 0)}%` }}
-                  ></div>
-                  </div>
-                <p className="text-xs text-gray-500 mt-2">
-                  {((count / stats.total) * 100 || 0).toFixed(1)}% of total orders
-                </p>
-                </div>
-              ))}
-          </div>
-        </div>
-
         {/* Orders List Section */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
           <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
             <div className="flex justify-between items-center">
               <div>
-            <h2 className="text-2xl font-bold text-gray-800">Order List</h2>
-                <p className="text-sm text-gray-500 mt-1">Manage and track all your orders</p>
+                <h2 className="text-2xl font-bold text-[var(--text-on-secondary)]">Order List</h2>
+                <p className="text-sm text-[var(--text-on-secondary)] opacity-70 mt-1">Manage and track all your orders</p>
               </div>
               <div className="flex items-center gap-2">
                 <div className="px-3 py-1 bg-blue-50 rounded-full text-sm text-blue-600 font-medium">
@@ -669,12 +603,12 @@ const ProviderOrderManagement = () => {
             <table className="w-full">
               <thead>
                 <tr className="bg-gray-50">
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Order ID</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Customer</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Products</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Total</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-[var(--text-on-secondary)] uppercase tracking-wider">Order ID</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-[var(--text-on-secondary)] uppercase tracking-wider">Customer</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-[var(--text-on-secondary)] uppercase tracking-wider">Products</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-[var(--text-on-secondary)] uppercase tracking-wider">Total</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-[var(--text-on-secondary)] uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-[var(--text-on-secondary)] uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -685,31 +619,31 @@ const ProviderOrderManagement = () => {
                         <div className="h-8 w-8 rounded-lg bg-blue-50 flex items-center justify-center mr-3">
                           <Package className="h-4 w-4 text-blue-600" />
                         </div>
-                        <span className="text-sm font-medium text-gray-900">{order._id.slice(-6)}</span>
+                        <span className="text-sm font-medium text-[var(--text-on-secondary)]">{order._id.slice(-6)}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-gray-900">{order.pet_owner?.username || 'N/A'}</span>
-                        <span className="text-xs text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</span>
+                        <span className="text-sm font-medium text-[var(--text-on-secondary)]">{order.pet_owner?.username || 'N/A'}</span>
+                        <span className="text-xs text-[var(--text-on-secondary)] opacity-70">{new Date(order.createdAt).toLocaleDateString()}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col space-y-1">
                         {order.products?.map((item, index) => (
                           <div key={index} className="flex items-center text-sm">
-                            <span className="text-gray-900">{item.product?.name || 'Unknown'}</span>
-                            <span className="mx-2 text-gray-400">×</span>
-                            <span className="text-gray-600">{item.quantity}</span>
+                            <span className="text-[var(--text-on-secondary)]">{item.product?.name || 'Unknown'}</span>
+                            <span className="mx-2 text-[var(--text-on-secondary)] opacity-40">×</span>
+                            <span className="text-[var(--text-on-secondary)] opacity-70">{item.quantity}</span>
                           </div>
                         ))}
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center">
-                        <span className="text-sm font-semibold text-gray-900">
-                        Rs.{order.total_price?.toFixed(2) || '0.00'}
-                      </span>
+                        <span className="text-sm font-semibold text-[var(--text-on-secondary)]">
+                          Rs.{order.total_price?.toFixed(2) || '0.00'}
+                        </span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
@@ -736,16 +670,16 @@ const ProviderOrderManagement = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-3">
-                      <button
-                        onClick={() => handleViewDetails(order)}
-                          className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                        <button
+                          onClick={() => handleViewDetails(order)}
+                          className="p-2 text-[var(--text-on-secondary)] hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
                           title="View Details"
-                      >
-                        <Eye className="h-5 w-5" />
-                      </button>
+                        >
+                          <Eye className="h-5 w-5" />
+                        </button>
                         <button
                           onClick={() => handleStatusUpdate(order._id, 'Delivered')}
-                          className="p-2 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors duration-200"
+                          className="p-2 text-[var(--text-on-secondary)] hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors duration-200"
                           title="Mark as Delivered"
                         >
                           <CheckCircle className="h-5 w-5" />
@@ -763,23 +697,23 @@ const ProviderOrderManagement = () => {
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
                 <Package className="h-8 w-8 text-gray-400" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-1">No Orders Found</h3>
-              <p className="text-sm text-gray-500">There are no orders to display at the moment.</p>
+              <h3 className="text-lg font-medium text-[var(--text-on-secondary)] mb-1">No Orders Found</h3>
+              <p className="text-sm text-[var(--text-on-secondary)] opacity-70">There are no orders to display at the moment.</p>
             </div>
           )}
         </div>
       </div>
 
       {/* Order Details Modal */}
-          {selectedOrder && (
+      {selectedOrder && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl border border-gray-100">
             {/* Modal Header */}
             <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-800">Order Details</h2>
-                  <p className="text-sm text-gray-500 mt-1">Order ID: {selectedOrder._id}</p>
+                  <h2 className="text-2xl font-bold text-[var(--text-on-secondary)]">Order Details</h2>
+                  <p className="text-sm text-[var(--text-on-secondary)] opacity-70 mt-1">Order ID: {selectedOrder._id}</p>
                 </div>
                 <button
                   onClick={() => setSelectedOrder(null)}
@@ -789,8 +723,8 @@ const ProviderOrderManagement = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
-                  </div>
-                </div>
+              </div>
+            </div>
 
             <div className="overflow-y-auto max-h-[calc(90vh-8rem)]">
               <div className="p-6 space-y-6">
@@ -798,12 +732,12 @@ const ProviderOrderManagement = () => {
                 <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-sm font-medium text-gray-600">Current Status</h3>
-                      <p className="text-lg font-semibold text-gray-800 mt-1">{selectedOrder.order_status}</p>
+                      <h3 className="text-sm font-medium text-[var(--text-on-secondary)]">Current Status</h3>
+                      <p className="text-lg font-semibold text-[var(--text-on-secondary)] mt-1">{selectedOrder.order_status}</p>
                     </div>
-                  <select
-                    value={selectedOrder.order_status}
-                    onChange={(e) => handleStatusUpdate(selectedOrder._id, e.target.value)}
+                    <select
+                      value={selectedOrder.order_status}
+                      onChange={(e) => handleStatusUpdate(selectedOrder._id, e.target.value)}
                       className={`px-4 py-2 rounded-lg text-sm font-medium border-0 focus:ring-2 focus:ring-offset-2 transition-all duration-200
                         ${selectedOrder.order_status === 'Pending' 
                           ? 'bg-yellow-50 text-yellow-700 focus:ring-yellow-500' 
@@ -814,15 +748,15 @@ const ProviderOrderManagement = () => {
                           : selectedOrder.order_status === 'Delivered' 
                           ? 'bg-green-50 text-green-700 focus:ring-green-500'
                           : 'bg-red-50 text-red-700 focus:ring-red-500'}`}
-                  >
-                    <option value="Pending">Pending</option>
-                    <option value="Processing">Processing</option>
-                    <option value="Shipped">Shipped</option>
-                    <option value="Delivered">Delivered</option>
-                    <option value="Cancelled">Cancelled</option>
-                  </select>
+                    >
+                      <option value="Pending">Pending</option>
+                      <option value="Processing">Processing</option>
+                      <option value="Shipped">Shipped</option>
+                      <option value="Delivered">Delivered</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
 
                 {/* Customer Information Section */}
                 <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
@@ -832,16 +766,16 @@ const ProviderOrderManagement = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-800">Customer Information</h3>
+                    <h3 className="text-lg font-semibold text-[var(--text-on-secondary)]">Customer Information</h3>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm text-gray-500">Customer Name</p>
-                      <p className="text-base font-medium text-gray-800">{selectedOrder.pet_owner?.username || 'N/A'}</p>
+                      <p className="text-sm text-[var(--text-on-secondary)] opacity-70">Customer Name</p>
+                      <p className="text-base font-medium text-[var(--text-on-secondary)]">{selectedOrder.pet_owner?.username || 'N/A'}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Phone Number</p>
-                      <p className="text-base font-medium text-gray-800">{selectedOrder.shipping_details?.phoneNumber || 'N/A'}</p>
+                      <p className="text-sm text-[var(--text-on-secondary)] opacity-70">Phone Number</p>
+                      <p className="text-base font-medium text-[var(--text-on-secondary)]">{selectedOrder.shipping_details?.phoneNumber || 'N/A'}</p>
                     </div>
                   </div>
                 </div>
@@ -855,14 +789,14 @@ const ProviderOrderManagement = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-800">Shipping Address</h3>
+                    <h3 className="text-lg font-semibold text-[var(--text-on-secondary)]">Shipping Address</h3>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-base text-gray-800">{selectedOrder.shipping_details?.address}</p>
-                    <p className="text-base text-gray-800">
+                    <p className="text-base text-[var(--text-on-secondary)]">{selectedOrder.shipping_details?.address}</p>
+                    <p className="text-base text-[var(--text-on-secondary)]">
                       {selectedOrder.shipping_details?.city}, {selectedOrder.shipping_details?.postalCode}
                     </p>
-                    <p className="text-base text-gray-800">{selectedOrder.shipping_details?.country}</p>
+                    <p className="text-base text-[var(--text-on-secondary)]">{selectedOrder.shipping_details?.country}</p>
                   </div>
                 </div>
 
@@ -872,7 +806,7 @@ const ProviderOrderManagement = () => {
                     <div className="h-10 w-10 rounded-full bg-purple-50 flex items-center justify-center mr-3">
                       <Package className="h-5 w-5 text-purple-600" />
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-800">Order Items</h3>
+                    <h3 className="text-lg font-semibold text-[var(--text-on-secondary)]">Order Items</h3>
                   </div>
                   <div className="space-y-4">
                     {selectedOrder.products.map((item, index) => (
@@ -882,18 +816,18 @@ const ProviderOrderManagement = () => {
                             <Package className="h-5 w-5 text-gray-600" />
                           </div>
                           <div>
-                            <p className="text-sm font-medium text-gray-800">{item.product.name}</p>
-                            <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
+                            <p className="text-sm font-medium text-[var(--text-on-secondary)]">{item.product.name}</p>
+                            <p className="text-sm text-[var(--text-on-secondary)] opacity-70">Quantity: {item.quantity}</p>
                           </div>
                         </div>
-                        <p className="text-sm font-semibold text-gray-800">
+                        <p className="text-sm font-semibold text-[var(--text-on-secondary)]">
                           Rs.{(item.price * item.quantity).toFixed(2)}
                         </p>
                       </div>
                     ))}
                     <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-                      <p className="text-base font-medium text-gray-600">Total Amount</p>
-                      <p className="text-xl font-bold text-gray-800">
+                      <p className="text-base font-medium text-[var(--text-on-secondary)]">Total Amount</p>
+                      <p className="text-xl font-bold text-[var(--text-on-secondary)]">
                         Rs.{selectedOrder.total_price.toFixed(2)}
                       </p>
                     </div>
@@ -906,7 +840,7 @@ const ProviderOrderManagement = () => {
                     <div className="h-10 w-10 rounded-full bg-yellow-50 flex items-center justify-center mr-3">
                       <Clock className="h-5 w-5 text-yellow-600" />
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-800">Order Timeline</h3>
+                    <h3 className="text-lg font-semibold text-[var(--text-on-secondary)]">Order Timeline</h3>
                   </div>
                   <div className="space-y-4">
                     <div className="flex items-center">
@@ -914,8 +848,8 @@ const ProviderOrderManagement = () => {
                         <CheckCircle className="h-4 w-4 text-green-600" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-800">Order Placed</p>
-                        <p className="text-xs text-gray-500">{new Date(selectedOrder.createdAt).toLocaleString()}</p>
+                        <p className="text-sm font-medium text-[var(--text-on-secondary)]">Order Placed</p>
+                        <p className="text-xs text-[var(--text-on-secondary)] opacity-70">{new Date(selectedOrder.createdAt).toLocaleString()}</p>
                       </div>
                     </div>
                     {selectedOrder.order_status !== 'Pending' && (
@@ -924,8 +858,8 @@ const ProviderOrderManagement = () => {
                           <CheckCircle className="h-4 w-4 text-blue-600" />
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-gray-800">Order Confirmed</p>
-                          <p className="text-xs text-gray-500">{new Date(selectedOrder.updatedAt).toLocaleString()}</p>
+                          <p className="text-sm font-medium text-[var(--text-on-secondary)]">Order Confirmed</p>
+                          <p className="text-xs text-[var(--text-on-secondary)] opacity-70">{new Date(selectedOrder.updatedAt).toLocaleString()}</p>
                         </div>
                       </div>
                     )}
@@ -939,13 +873,13 @@ const ProviderOrderManagement = () => {
               <div className="flex justify-end space-x-3">
                 <button
                   onClick={() => setSelectedOrder(null)}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                  className="px-4 py-2 text-sm font-medium text-[var(--text-on-secondary)] bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--text-on-secondary)] transition-colors duration-200"
                 >
                   Close
                 </button>
                 <button
                   onClick={() => handleStatusUpdate(selectedOrder._id, 'Delivered')}
-                  className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-green-500 to-green-600 rounded-lg hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 shadow-sm hover:shadow-md"
+                  className="px-4 py-2 text-sm font-medium text-[var(--text-on-secondary)] bg-gradient-to-r from-green-500 to-green-600 rounded-lg hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                   Mark as Delivered
                 </button>

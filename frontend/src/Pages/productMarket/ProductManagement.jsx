@@ -236,7 +236,7 @@ const ProductManagement = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
-                onClick={() => navigate(-1)}
+                onClick={() => navigate('/provider-profile')}
                 className="group flex items-center gap-2 px-4 py-2 bg-[var(--color-white)] rounded-xl shadow-sm hover:shadow-md transition-all duration-300 text-[var(--text-on-secondary)] hover:text-[var(--color-primary)] border border-[var(--color-primary-light)]"
               >
                 <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" />
