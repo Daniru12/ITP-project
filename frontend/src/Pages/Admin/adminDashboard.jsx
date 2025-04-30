@@ -15,6 +15,7 @@ import {
 } from 'react-icons/fa';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import AdminProductManagement from './AdminProductManagement';
 
 // Dashboard components
 const DashboardHome = () => {
