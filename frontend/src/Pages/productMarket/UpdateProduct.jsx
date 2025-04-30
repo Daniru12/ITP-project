@@ -81,7 +81,7 @@ const UpdateProduct = () => {
 
         // If no state data, fetch from API
         const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-        const response = await axios.get(`${backendUrl}/api/products/${id}`, {
+        const response = await axios.get(`${backendUrl}/api/products/management/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -179,7 +179,7 @@ const UpdateProduct = () => {
       });
 
       toast.success('Product updated successfully');
-      navigate('/delete-product');
+      navigate('/product-management');
     } catch (error) {
       console.error('Error updating product:', error);
       if (error.response?.status === 401) {

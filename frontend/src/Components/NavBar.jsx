@@ -74,6 +74,7 @@ const NavBar = () => {
               Pet Care Services
             </Link>
 
+
             
             {isLoggedIn ? (
               <>

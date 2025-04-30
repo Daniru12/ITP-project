@@ -5,7 +5,7 @@ import { FaStar, FaEdit, FaTrash, FaCalendarAlt, FaUser, FaCut, FaBox, FaDownloa
 
 import { Link } from 'react-router-dom';
 import jsPDF from 'jspdf';
-import HamsterLoader from '../../Components/HamsterLoader';
+import HamsterLoader from '../../components/HamsterLoader';
 
 const ProviderProfile = () => {
   const [services, setServices] = useState([]);
@@ -421,13 +421,22 @@ function handleDeleteService(serviceId) {
                 <h2 className="text-xl font-bold" style={{ color: 'var(--color-accent)' }}>Products</h2>
               </div>
               <p className="text-gray-600 mb-6">Manage your product inventory and listings</p>
-              <Link 
-                to="/delete-product"
-                className="inline-flex items-center px-6 py-2.5 rounded-full text-white transition-all duration-300 hover:shadow-md"
-                style={{ backgroundColor: 'var(--color-primary)' }}
-              >
-                View Products
-              </Link>
+              <div className="flex flex-col space-y-3">
+                <Link 
+                  to="/product-management"
+                  className="inline-flex items-center px-6 py-2.5 rounded-full text-white transition-all duration-300 hover:shadow-md"
+                  style={{ backgroundColor: 'var(--color-primary)' }}
+                >
+                  View Products
+                </Link>
+                <Link 
+                  to="/provider/order-management"
+                  className="inline-flex items-center px-6 py-2.5 rounded-full text-white transition-all duration-300 hover:shadow-md"
+                  style={{ backgroundColor: 'var(--color-accent)' }}
+                >
+                  View Orders
+                </Link>
+              </div>
             </div>
 
               {/* Advertisements */}
