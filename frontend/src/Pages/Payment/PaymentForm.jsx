@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { CreditCardIcon, BanknoteIcon } from "lucide-react";
+import { CreditCardIcon, BanknoteIcon, ArrowLeftIcon } from "lucide-react"; // Import the arrow icon
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useParams, useNavigate, Link } from "react-router-dom";
@@ -110,7 +110,7 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#347486]"></div>
         <p className="mt-4 text-gray-600">Loading appointment details...</p>
       </div>
     );
@@ -119,10 +119,10 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] p-4">
-        <div className="text-red-500 text-center mb-4">{error}</div>
+        <div className="text-[#BC4626] text-center mb-4">{error}</div>
         <Link
           to="/Appointment"
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition"
+          className="bg-[#347486] hover:bg-[#2a5d6b] text-white px-4 py-2 rounded-md transition"
         >
           Back to Appointments
         </Link>
@@ -133,10 +133,10 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
   if (!appointmentDetails) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] p-4">
-        <div className="text-red-500 text-center mb-4">No appointment details found</div>
+        <div className="text-[#BC4626] text-center mb-4">No appointment details found</div>
         <Link
           to="/Appointment"
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition"
+          className="bg-[#347486] hover:bg-[#2a5d6b] text-white px-4 py-2 rounded-md transition"
         >
           Back to Appointments
         </Link>
@@ -161,12 +161,12 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
                   placeholder="Enter amount"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="w-3/4 p-3 border border-gray-300 rounded-md text-base focus:ring-blue-500 focus:border-blue-500"
+                  className="w-3/4 p-3 border border-gray-300 rounded-md text-base focus:ring-[#347486] focus:border-[#347486]"
                 />
                 <select
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value)}
-                  className="w-1/4 p-3 border border-gray-300 rounded-md text-base focus:ring-blue-500 focus:border-blue-500"
+                  className="w-1/4 p-3 border border-gray-300 rounded-md text-base focus:ring-[#347486] focus:border-[#347486]"
                 >
                   <option value="USD">USD</option>
                   <option value="LKR">LKR</option>
@@ -179,7 +179,7 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Payment Method</h3>
             <div className="space-y-3 mb-6">
               <div
-                className={`flex items-center p-3 border rounded-lg cursor-pointer ${paymentMethod === "Card" ? "border-blue-500 bg-blue-50" : "border-gray-200"}`}
+                className={`flex items-center p-3 border rounded-lg cursor-pointer ${paymentMethod === "Card" ? "border-[#347486] bg-[#347486]/10" : "border-gray-200"}`}
                 onClick={() => setPaymentMethod("Card")}
               >
                 <input
@@ -187,14 +187,14 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
                   name="paymentMethod"
                   checked={paymentMethod === "Card"}
                   onChange={() => setPaymentMethod("Card")}
-                  className="h-5 w-5 text-blue-600 mr-2"
+                  className="h-5 w-5 text-[#347486] mr-2"
                 />
-                <CreditCardIcon className="h-6 w-6 text-gray-700 mr-3" />
+                <CreditCardIcon className="h-6 w-6 text-[#BC4626] mr-3" />
                 <span className="font-medium text-base">Credit or Debit Card</span>
               </div>
 
               <div
-                className={`flex items-center p-3 border rounded-lg cursor-pointer ${paymentMethod === "Cash" ? "border-blue-500 bg-blue-50" : "border-gray-200"}`}
+                className={`flex items-center p-3 border rounded-lg cursor-pointer ${paymentMethod === "Cash" ? "border-[#347486] bg-[#347486]/10" : "border-gray-200"}`}
                 onClick={() => setPaymentMethod("Cash")}
               >
                 <input
@@ -202,9 +202,9 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
                   name="paymentMethod"
                   checked={paymentMethod === "Cash"}
                   onChange={() => setPaymentMethod("Cash")}
-                  className="h-5 w-5 text-blue-600 mr-2"
+                  className="h-5 w-5 text-[#347486] mr-2"
                 />
-                <BanknoteIcon className="h-6 w-6 text-gray-700 mr-3" />
+                <BanknoteIcon className="h-6 w-6 text-[#BC4626] mr-3" />
                 <span className="font-medium text-base">Pay with Cash</span>
               </div>
             </div>
@@ -218,7 +218,7 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
                     placeholder="1234 5678 9012 3456"
                     value={cardNumber}
                     onChange={(e) => setCardNumber(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-md text-base focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-md text-base focus:ring-[#347486] focus:border-[#347486]"
                   />
                 </div>
                 <div>
@@ -228,7 +228,7 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
                     placeholder="John Doe"
                     value={cardHolderName}
                     onChange={(e) => setCardHolderName(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-md text-base focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-md text-base focus:ring-[#347486] focus:border-[#347486]"
                   />
                 </div>
                 <div className="flex gap-4">
@@ -239,7 +239,7 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
                       placeholder="MM/YY"
                       value={expiryDate}
                       onChange={(e) => setExpiryDate(e.target.value)}
-                      className="w-full p-3 border border-gray-300 rounded-md text-base focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full p-3 border border-gray-300 rounded-md text-base focus:ring-[#347486] focus:border-[#347486]"
                     />
                   </div>
                   <div className="w-1/2">
@@ -249,7 +249,7 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
                       placeholder="CVV"
                       value={cvv}
                       onChange={(e) => setCvv(e.target.value)}
-                      className="w-full p-3 border border-gray-300 rounded-md text-base focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full p-3 border border-gray-300 rounded-md text-base focus:ring-[#347486] focus:border-[#347486]"
                     />
                   </div>
                 </div>
@@ -259,22 +259,23 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
             <button
               onClick={handlePaymentSubmit}
               disabled={loading}
-              className="w-full mt-6 bg-[#BC4626] text-white py-3 rounded-lg text-lg hover:bg-[#DFA55D] transition disabled:opacity-50"
+              className="w-full mt-6 bg-[#BC4626] text-white py-3 rounded-lg text-lg font-medium hover:bg-[#DFA55D] transition duration-300 disabled:opacity-50"
             >
               {loading ? "Processing..." : "Make Payment"}
             </button>
 
             <Link
               to="/Appointment"
-              className="block text-center mt-6 text-sm text-gray-500 hover:text-gray-700"
+              className="block text-center mt-6 text-lg text-[#347486] hover:text-[#2a5d6b] font-medium flex items-center justify-center gap-2"
             >
+              <ArrowLeftIcon className="h-5 w-5" />
               Cancel and go back
             </Link>
           </div>
 
           <div className="flex-1 space-y-6">
-            <div className="p-6 bg-gray-100 rounded-lg">
-              <h3 className="text-md font-semibold text-gray-700 mb-2">Appointment Details</h3>
+            <div className="p-6 bg-[#347486]/5 rounded-lg border border-[#347486]/20">
+              <h3 className="text-md font-semibold text-[#347486] mb-2">Appointment Details</h3>
               <p className="text-sm text-gray-600">Service: {appointmentDetails.service_id?.service_name}</p>
               <p className="text-sm text-gray-600">Package: {appointmentDetails.package_type}</p>
               <p className="text-sm text-gray-600">
@@ -285,8 +286,8 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
               </p>
             </div>
 
-            <div className="p-6 bg-gray-100 rounded-lg">
-              <h3 className="text-lg font-bold text-gray-800 mb-4">Order Summary</h3>
+            <div className="p-6 bg-[#DFA55D]/5 rounded-lg border border-[#DFA55D]/20">
+              <h3 className="text-lg font-bold text-[#BC4626] mb-4">Order Summary</h3>
               <div className="flex justify-between mb-2">
                 <span className="text-gray-700">Package Type</span>
                 <span className="text-gray-700">{appointmentDetails.package_type}</span>
@@ -297,9 +298,9 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
                   {currency} {parseFloat(amount).toFixed(2)}
                 </span>
               </div>
-              <div className="border-t pt-4 flex justify-between">
-                <span className="text-lg font-bold text-gray-800">Total</span>
-                <span className="text-lg font-bold text-gray-900">
+              <div className="border-t border-[#DFA55D]/30 pt-4 mt-4 flex justify-between">
+                <span className="text-lg font-bold text-[#BC4626]">Total</span>
+                <span className="text-lg font-bold text-[#BC4626]">
                   {currency} {parseFloat(amount).toFixed(2)}
                 </span>
               </div>
