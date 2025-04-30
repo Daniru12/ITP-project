@@ -143,17 +143,17 @@ const CreateProduct = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-accent-light)] py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Create New Product</h1>
-            <p className="text-sm text-gray-600 mt-1">Add your product details below</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-[var(--text-on-secondary)]">Create New Product</h1>
+            <p className="text-sm text-[var(--text-on-secondary)] opacity-70 mt-1">Add your product details below</p>
           </div>
           <button
             onClick={() => navigate('/product-management')}
-            className="inline-flex items-center px-4 py-2 rounded-xl bg-white shadow-sm hover:shadow-md transition-all duration-300 text-gray-600 hover:text-gray-900"
+            className="inline-flex items-center px-4 py-2 rounded-xl bg-[var(--color-white)] shadow-sm hover:shadow-md transition-all duration-300 text-[var(--text-on-secondary)] hover:text-[var(--color-primary)] border border-[var(--color-primary-light)]"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Products
@@ -164,19 +164,19 @@ const CreateProduct = () => {
           {/* Main Form Section */}
           <div className="flex-1 space-y-6">
             {/* Basic Information Card */}
-            <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
-              <div className="p-6 border-b border-gray-100">
+            <div className="bg-[var(--color-white)] rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+              <div className="p-6 border-b border-[var(--color-primary-light)]">
                 <div className="flex items-center">
-                  <div className="h-8 w-8 rounded-xl bg-blue-50 flex items-center justify-center mr-3">
-                    <Package className="h-5 w-5 text-blue-600" />
+                  <div className="h-8 w-8 rounded-xl bg-[var(--color-primary-light)] flex items-center justify-center mr-3">
+                    <Package className="h-5 w-5 text-[var(--color-primary)]" />
                   </div>
-                  <h2 className="text-lg font-semibold text-gray-900">Basic Information</h2>
+                  <h2 className="text-lg font-semibold text-[var(--text-on-secondary)]">Basic Information</h2>
                 </div>
               </div>
               
               <div className="p-6 space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
+                  <label className="block text-sm font-medium text-[var(--text-on-secondary)] mb-2">Product Name</label>
                   <input
                     type="text"
                     value={name}
@@ -185,7 +185,7 @@ const CreateProduct = () => {
                       setErrors({ ...errors, name: undefined });
                     }}
                     placeholder="Enter product name"
-                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-gray-100 focus:border-blue-500 focus:bg-white focus:ring-0 transition-all duration-300"
+                    className="w-full px-4 py-3 rounded-xl bg-[var(--color-primary-light)] border-2 border-[var(--color-primary-light)] focus:border-[var(--color-primary)] focus:bg-[var(--color-white)] focus:ring-0 transition-all duration-300"
                   />
                   {errors.name && (
                     <p className="mt-2 text-sm text-red-500 flex items-center">
@@ -196,7 +196,7 @@ const CreateProduct = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                  <label className="block text-sm font-medium text-[var(--text-on-secondary)] mb-2">Description</label>
                   <textarea
                     value={description}
                     onChange={(e) => {
@@ -205,7 +205,7 @@ const CreateProduct = () => {
                     }}
                     placeholder="Describe your product in detail..."
                     rows="4"
-                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-gray-100 focus:border-blue-500 focus:bg-white focus:ring-0 transition-all duration-300"
+                    className="w-full px-4 py-3 rounded-xl bg-[var(--color-primary-light)] border-2 border-[var(--color-primary-light)] focus:border-[var(--color-primary)] focus:bg-[var(--color-white)] focus:ring-0 transition-all duration-300"
                   />
                   {errors.description && (
                     <p className="mt-2 text-sm text-red-500 flex items-center">
@@ -218,22 +218,22 @@ const CreateProduct = () => {
             </div>
 
             {/* Pricing & Inventory Card */}
-            <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
-              <div className="p-6 border-b border-gray-100">
+            <div className="bg-[var(--color-white)] rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+              <div className="p-6 border-b border-[var(--color-primary-light)]">
                 <div className="flex items-center">
-                  <div className="h-8 w-8 rounded-xl bg-green-50 flex items-center justify-center mr-3">
-                    <DollarSign className="h-5 w-5 text-green-600" />
+                  <div className="h-8 w-8 rounded-xl bg-[var(--color-accent-light)] flex items-center justify-center mr-3">
+                    <DollarSign className="h-5 w-5 text-[var(--color-accent)]" />
                   </div>
-                  <h2 className="text-lg font-semibold text-gray-900">Pricing & Inventory</h2>
+                  <h2 className="text-lg font-semibold text-[var(--text-on-secondary)]">Pricing & Inventory</h2>
                 </div>
               </div>
 
               <div className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Price (LKR)</label>
+                    <label className="block text-sm font-medium text-[var(--text-on-secondary)] mb-2">Price (LKR)</label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">Rs.</span>
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-on-secondary)] opacity-70">Rs.</span>
                       <input
                         type="number"
                         step="0.01"
@@ -243,7 +243,7 @@ const CreateProduct = () => {
                           setErrors({ ...errors, price: undefined });
                         }}
                         placeholder="0.00"
-                        className="w-full pl-12 pr-4 py-3 rounded-xl bg-gray-50 border-2 border-gray-100 focus:border-green-500 focus:bg-white focus:ring-0 transition-all duration-300 text-lg font-semibold text-gray-900"
+                        className="w-full pl-12 pr-4 py-3 rounded-xl bg-[var(--color-primary-light)] border-2 border-[var(--color-primary-light)] focus:border-[var(--color-accent)] focus:bg-[var(--color-white)] focus:ring-0 transition-all duration-300 text-lg font-semibold text-[var(--text-on-secondary)]"
                       />
                     </div>
                     {errors.price && (
@@ -255,7 +255,7 @@ const CreateProduct = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Stock Quantity</label>
+                    <label className="block text-sm font-medium text-[var(--text-on-secondary)] mb-2">Stock Quantity</label>
                     <input
                       type="number"
                       value={quantity}
@@ -264,7 +264,7 @@ const CreateProduct = () => {
                         setErrors({ ...errors, quantity: undefined });
                       }}
                       placeholder="0"
-                      className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-gray-100 focus:border-green-500 focus:bg-white focus:ring-0 transition-all duration-300 text-lg font-semibold text-gray-900"
+                      className="w-full px-4 py-3 rounded-xl bg-[var(--color-primary-light)] border-2 border-[var(--color-primary-light)] focus:border-[var(--color-accent)] focus:bg-[var(--color-white)] focus:ring-0 transition-all duration-300 text-lg font-semibold text-[var(--text-on-secondary)]"
                     />
                     {errors.quantity && (
                       <p className="mt-2 text-sm text-red-500 flex items-center">
@@ -281,13 +281,13 @@ const CreateProduct = () => {
           {/* Sidebar */}
           <div className="lg:w-96 space-y-6">
             {/* Category Card */}
-            <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
-              <div className="p-6 border-b border-gray-100">
+            <div className="bg-[var(--color-white)] rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+              <div className="p-6 border-b border-[var(--color-primary-light)]">
                 <div className="flex items-center">
-                  <div className="h-8 w-8 rounded-xl bg-purple-50 flex items-center justify-center mr-3">
-                    <Tag className="h-5 w-5 text-purple-600" />
+                  <div className="h-8 w-8 rounded-xl bg-[var(--color-secondary-light)] flex items-center justify-center mr-3">
+                    <Tag className="h-5 w-5 text-[var(--color-secondary)]" />
                   </div>
-                  <h2 className="text-lg font-semibold text-gray-900">Category</h2>
+                  <h2 className="text-lg font-semibold text-[var(--text-on-secondary)]">Category</h2>
                 </div>
               </div>
               
@@ -299,8 +299,8 @@ const CreateProduct = () => {
                       onClick={() => setCategory(cat)}
                       className={`px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 
                         ${category === cat 
-                          ? 'bg-purple-50 text-purple-700 border-2 border-purple-200' 
-                          : 'bg-gray-50 text-gray-600 border-2 border-gray-100 hover:bg-gray-100'
+                          ? 'bg-[var(--color-secondary-light)] text-[var(--color-secondary)] border-2 border-[var(--color-secondary)]' 
+                          : 'bg-[var(--color-primary-light)] text-[var(--text-on-secondary)] border-2 border-[var(--color-primary-light)] hover:bg-[var(--color-primary)] hover:text-[var(--text-on-primary)]'
                         }`}
                     >
                       {cat.charAt(0).toUpperCase() + cat.slice(1)}
@@ -311,22 +311,22 @@ const CreateProduct = () => {
             </div>
 
             {/* Image Upload Card */}
-            <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
-              <div className="p-6 border-b border-gray-100">
+            <div className="bg-[var(--color-white)] rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+              <div className="p-6 border-b border-[var(--color-primary-light)]">
                 <div className="flex items-center">
-                  <div className="h-8 w-8 rounded-xl bg-indigo-50 flex items-center justify-center mr-3">
-                    <ImageIcon className="h-5 w-5 text-indigo-600" />
+                  <div className="h-8 w-8 rounded-xl bg-[var(--color-accent-light)] flex items-center justify-center mr-3">
+                    <ImageIcon className="h-5 w-5 text-[var(--color-accent)]" />
                   </div>
-                  <h2 className="text-lg font-semibold text-gray-900">Product Images</h2>
+                  <h2 className="text-lg font-semibold text-[var(--text-on-secondary)]">Product Images</h2>
                 </div>
               </div>
               
               <div className="p-6">
-                <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center bg-gray-50">
-                  <ImageIcon className="mx-auto h-10 w-10 text-gray-400 mb-4" />
+                <div className="border-2 border-dashed border-[var(--color-primary-light)] rounded-xl p-6 text-center bg-[var(--color-primary-light)]">
+                  <ImageIcon className="mx-auto h-10 w-10 text-[var(--text-on-secondary)] opacity-50 mb-4" />
                   <div className="space-y-3">
                     <label className="cursor-pointer block">
-                      <span className="inline-flex items-center px-4 py-2 rounded-xl bg-indigo-50 text-indigo-600 font-medium hover:bg-indigo-100 transition-colors duration-300">
+                      <span className="inline-flex items-center px-4 py-2 rounded-xl bg-[var(--color-accent-light)] text-[var(--color-accent)] font-medium hover:bg-[var(--color-accent)] hover:text-[var(--text-on-primary)] transition-colors duration-300">
                         <ImageIcon className="h-4 w-4 mr-2" />
                         Choose Files
                       </span>
@@ -338,13 +338,13 @@ const CreateProduct = () => {
                         className="hidden"
                       />
                     </label>
-                    <p className="text-sm text-gray-500">or drag and drop</p>
-                    <p className="text-xs text-gray-400">PNG, JPG or JPEG (MAX. 5 images)</p>
+                    <p className="text-sm text-[var(--text-on-secondary)] opacity-70">or drag and drop</p>
+                    <p className="text-xs text-[var(--text-on-secondary)] opacity-50">PNG, JPG or JPEG (MAX. 5 images)</p>
                   </div>
                   {images.length > 0 && (
-                    <div className="mt-4 py-2 px-3 bg-indigo-50 rounded-lg inline-flex items-center">
-                      <ImageIcon className="h-4 w-4 text-indigo-600 mr-2" />
-                      <span className="text-sm text-indigo-600 font-medium">
+                    <div className="mt-4 py-2 px-3 bg-[var(--color-accent-light)] rounded-lg inline-flex items-center">
+                      <ImageIcon className="h-4 w-4 text-[var(--color-accent)] mr-2" />
+                      <span className="text-sm text-[var(--color-accent)] font-medium">
                         {images.length} image(s) selected
                       </span>
                     </div>
@@ -354,25 +354,25 @@ const CreateProduct = () => {
             </div>
 
             {/* Action Card */}
-            <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+            <div className="bg-[var(--color-white)] rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
               <div className="p-6">
                 <label className="flex items-center space-x-3 cursor-pointer mb-6">
                   <input
                     type="checkbox"
                     checked={promoCodeApplied}
                     onChange={(e) => setPromoCodeApplied(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 rounded-lg border-gray-300 focus:ring-blue-500"
+                    className="w-4 h-4 text-[var(--color-primary)] rounded-lg border-[var(--color-primary-light)] focus:ring-[var(--color-primary)]"
                   />
-                  <span className="text-gray-700">Enable Promo Code</span>
+                  <span className="text-[var(--text-on-secondary)]">Enable Promo Code</span>
                 </label>
 
                 <button
                   onClick={handleSubmit}
                   disabled={isSubmitting}
-                  className={`w-full flex items-center justify-center px-6 py-3 rounded-xl text-white font-medium text-sm
+                  className={`w-full flex items-center justify-center px-6 py-3 rounded-xl text-[var(--text-on-primary)] font-medium text-sm
                     ${isSubmitting 
-                      ? 'bg-gray-400 cursor-not-allowed' 
-                      : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300'
+                      ? 'bg-[var(--text-on-secondary)] opacity-50 cursor-not-allowed' 
+                      : 'bg-[var(--color-primary)] hover:bg-[var(--color-accent)] shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300'
                     }`}
                 >
                   <Save className="w-4 h-4 mr-2" />

@@ -213,36 +213,36 @@ const UpdateProduct = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen bg-[var(--color-primary-light)] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--color-primary)]"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-accent-light)] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="flex items-center mb-8">
           <Link
             to="/product-management"
-            className="p-2 rounded-full bg-white shadow-sm hover:bg-gray-50 transition-colors duration-200 mr-4"
+            className="p-2 rounded-full bg-[var(--color-white)] shadow-sm hover:bg-[var(--color-primary-light)] transition-colors duration-200 mr-4"
           >
-            <ArrowLeft className="h-6 w-6 text-gray-600" />
+            <ArrowLeft className="h-6 w-6 text-[var(--text-on-secondary)]" />
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Update Product</h1>
-            <p className="text-sm text-gray-500">Make changes to your product information</p>
+            <h1 className="text-2xl font-bold text-[var(--text-on-secondary)]">Update Product</h1>
+            <p className="text-sm text-[var(--text-on-secondary)] opacity-70">Make changes to your product information</p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Main Info Card */}
-          <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="bg-[var(--color-white)] rounded-2xl shadow-lg p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Product Name */}
               <div className="space-y-2">
-                <label className="inline-flex px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-sm font-medium">
+                <label className="inline-flex px-3 py-1 rounded-full bg-[var(--color-primary-light)] text-[var(--color-primary)] text-sm font-medium">
                   <Package className="h-5 w-5 mr-2" />
                   Product Name
                 </label>
@@ -254,7 +254,7 @@ const UpdateProduct = () => {
                   className={`w-full px-4 py-3 rounded-xl border-2 focus:outline-none focus:ring-0 
                     ${errors.name 
                       ? 'border-red-200 bg-red-50 focus:border-red-500' 
-                      : 'border-gray-100 focus:border-blue-500 hover:border-gray-200'
+                      : 'border-[var(--color-primary-light)] focus:border-[var(--color-primary)] hover:border-[var(--color-primary-light)]'
                     }`}
                   placeholder="Enter product name"
                 />
@@ -268,12 +268,12 @@ const UpdateProduct = () => {
 
               {/* Price */}
               <div className="space-y-2">
-                <label className="inline-flex px-3 py-1 rounded-full bg-green-50 text-green-700 text-sm font-medium">
+                <label className="inline-flex px-3 py-1 rounded-full bg-[var(--color-accent-light)] text-[var(--color-accent)] text-sm font-medium">
                   <DollarSign className="h-5 w-5 mr-2" />
                   Price
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">Rs.</span>
+                  <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[var(--text-on-secondary)] opacity-70">Rs.</span>
                   <input
                     type="number"
                     step="0.01"
@@ -283,7 +283,7 @@ const UpdateProduct = () => {
                     className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 focus:outline-none focus:ring-0 
                       ${errors.price 
                         ? 'border-red-200 bg-red-50 focus:border-red-500' 
-                        : 'border-gray-100 focus:border-blue-500 hover:border-gray-200'
+                        : 'border-[var(--color-primary-light)] focus:border-[var(--color-accent)] hover:border-[var(--color-primary-light)]'
                       }`}
                     placeholder="0.00"
                   />
@@ -298,7 +298,7 @@ const UpdateProduct = () => {
 
               {/* Description */}
               <div className="space-y-2 md:col-span-2">
-                <label className="inline-flex px-3 py-1 rounded-full bg-purple-50 text-purple-700 text-sm font-medium">
+                <label className="inline-flex px-3 py-1 rounded-full bg-[var(--color-secondary-light)] text-[var(--color-secondary)] text-sm font-medium">
                   <FileText className="h-5 w-5 mr-2" />
                   Description
                 </label>
@@ -309,7 +309,7 @@ const UpdateProduct = () => {
                   className={`w-full px-4 py-3 rounded-xl border-2 focus:outline-none focus:ring-0 min-h-[120px]
                     ${errors.description 
                       ? 'border-red-200 bg-red-50 focus:border-red-500' 
-                      : 'border-gray-100 focus:border-blue-500 hover:border-gray-200'
+                      : 'border-[var(--color-primary-light)] focus:border-[var(--color-secondary)] hover:border-[var(--color-primary-light)]'
                     }`}
                   placeholder="Enter product description"
                 />
@@ -323,7 +323,7 @@ const UpdateProduct = () => {
 
               {/* Quantity */}
               <div className="space-y-2">
-                <label className="inline-flex px-3 py-1 rounded-full bg-yellow-50 text-yellow-700 text-sm font-medium">
+                <label className="inline-flex px-3 py-1 rounded-full bg-[var(--color-accent-light)] text-[var(--color-accent)] text-sm font-medium">
                   <Hash className="h-5 w-5 mr-2" />
                   Quantity
                 </label>
@@ -335,7 +335,7 @@ const UpdateProduct = () => {
                   className={`w-full px-4 py-3 rounded-xl border-2 focus:outline-none focus:ring-0 
                     ${errors.quantity 
                       ? 'border-red-200 bg-red-50 focus:border-red-500' 
-                      : 'border-gray-100 focus:border-blue-500 hover:border-gray-200'
+                      : 'border-[var(--color-primary-light)] focus:border-[var(--color-accent)] hover:border-[var(--color-primary-light)]'
                     }`}
                   placeholder="Enter quantity"
                 />
@@ -350,13 +350,13 @@ const UpdateProduct = () => {
           </div>
 
           {/* Images Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 space-y-6">
+          <div className="bg-[var(--color-white)] rounded-2xl shadow-lg p-6 space-y-6">
             <div className="flex items-center justify-between">
-              <label className="flex items-center text-sm font-medium text-gray-700">
-                <ImageIcon className="h-5 w-5 mr-2 text-blue-500" />
+              <label className="flex items-center text-sm font-medium text-[var(--text-on-secondary)]">
+                <ImageIcon className="h-5 w-5 mr-2 text-[var(--color-primary)]" />
                 Current Images
               </label>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-[var(--text-on-secondary)] opacity-70">
                 {formData.image?.length || 0} of 5 images
               </span>
             </div>
@@ -364,7 +364,7 @@ const UpdateProduct = () => {
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {formData.image && formData.image.length > 0 ? (
                 formData.image.map((img, index) => (
-                  <div key={index} className="group relative aspect-square rounded-xl overflow-hidden bg-white border-2 border-gray-200 hover:border-blue-500 transition-all duration-200 shadow-sm hover:shadow-md">
+                  <div key={index} className="group relative aspect-square rounded-xl overflow-hidden bg-[var(--color-white)] border-2 border-[var(--color-primary-light)] hover:border-[var(--color-primary)] transition-all duration-200 shadow-sm hover:shadow-md">
                     <img
                       src={img}
                       alt={`Product ${index + 1}`}
@@ -378,7 +378,7 @@ const UpdateProduct = () => {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                       <div className="absolute bottom-0 left-0 right-0 p-2">
                         <div className="flex items-center justify-between">
-                          <span className="text-white text-sm">Image {index + 1}</span>
+                          <span className="text-[var(--color-white)] text-sm">Image {index + 1}</span>
                           <button
                             onClick={() => {
                               const newImages = [...formData.image];
@@ -386,7 +386,7 @@ const UpdateProduct = () => {
                               setFormData(prev => ({ ...prev, image: newImages }));
                               toast.success('Image removed');
                             }}
-                            className="p-1 rounded-full bg-red-500 hover:bg-red-600 text-white transition-colors duration-200"
+                            className="p-1 rounded-full bg-red-500 hover:bg-red-600 text-[var(--color-white)] transition-colors duration-200"
                           >
                             <X className="h-4 w-4" />
                           </button>
@@ -396,10 +396,10 @@ const UpdateProduct = () => {
                   </div>
                 ))
               ) : (
-                <div className="col-span-full flex flex-col items-center justify-center p-8 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50">
-                  <ImageIcon className="h-12 w-12 text-gray-400 mb-3" />
-                  <p className="text-gray-500 text-sm text-center">No images uploaded yet</p>
-                  <p className="text-gray-400 text-xs text-center mt-1">Images will appear here once uploaded</p>
+                <div className="col-span-full flex flex-col items-center justify-center p-8 border-2 border-dashed border-[var(--color-primary-light)] rounded-xl bg-[var(--color-primary-light)]">
+                  <ImageIcon className="h-12 w-12 text-[var(--text-on-secondary)] opacity-50 mb-3" />
+                  <p className="text-[var(--text-on-secondary)] opacity-70 text-sm text-center">No images uploaded yet</p>
+                  <p className="text-[var(--text-on-secondary)] opacity-50 text-xs text-center mt-1">Images will appear here once uploaded</p>
                 </div>
               )}
             </div>
@@ -409,8 +409,8 @@ const UpdateProduct = () => {
           {newImages.length > 0 && (
             <div className="mt-6 space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium text-gray-700 flex items-center">
-                  <CheckCircle2 className="h-5 w-5 mr-2 text-green-500" />
+                <h3 className="text-sm font-medium text-[var(--text-on-secondary)] flex items-center">
+                  <CheckCircle2 className="h-5 w-5 mr-2 text-[var(--color-accent)]" />
                   New Images Preview
                 </h3>
                 <button
@@ -427,7 +427,7 @@ const UpdateProduct = () => {
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 {Array.from(newImages).map((file, index) => (
-                  <div key={index} className="relative aspect-square rounded-xl overflow-hidden bg-white border-2 border-green-200 shadow-sm">
+                  <div key={index} className="relative aspect-square rounded-xl overflow-hidden bg-[var(--color-white)] border-2 border-[var(--color-accent-light)] shadow-sm">
                     <img
                       src={URL.createObjectURL(file)}
                       alt={`New upload ${index + 1}`}
@@ -435,7 +435,7 @@ const UpdateProduct = () => {
                       onLoad={(e) => URL.revokeObjectURL(e.target.src)}
                     />
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 p-2">
-                      <p className="text-white text-sm text-center">New Image {index + 1}</p>
+                      <p className="text-[var(--color-white)] text-sm text-center">New Image {index + 1}</p>
                     </div>
                   </div>
                 ))}
@@ -449,27 +449,27 @@ const UpdateProduct = () => {
               <label 
                 className={`relative flex flex-col items-center justify-center w-full h-32 border-2 rounded-xl transition-all duration-200 ${
                   formData.image && formData.image.length >= 5 
-                    ? 'border-gray-200 bg-gray-50 cursor-not-allowed' 
-                    : 'border-blue-200 border-dashed bg-blue-50/50 cursor-pointer hover:bg-blue-50'
+                    ? 'border-[var(--color-primary-light)] bg-[var(--color-primary-light)] cursor-not-allowed' 
+                    : 'border-[var(--color-primary)] border-dashed bg-[var(--color-primary-light)] cursor-pointer hover:bg-[var(--color-primary-light)]'
                 }`}
               >
                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                   <ImageIcon className={`h-8 w-8 mb-2 ${
                     formData.image && formData.image.length >= 5 
-                      ? 'text-gray-300' 
-                      : 'text-blue-500'
+                      ? 'text-[var(--text-on-secondary)] opacity-50' 
+                      : 'text-[var(--color-primary)]'
                   }`} />
-                  <p className="mb-2 text-sm text-gray-500">
+                  <p className="mb-2 text-sm text-[var(--text-on-secondary)]">
                     {formData.image && formData.image.length >= 5 ? (
                       <span>Maximum number of images reached</span>
                     ) : (
                       <>
-                        <span className="font-semibold text-blue-600">Click to upload</span>
-                        <span className="text-gray-500"> or drag and drop</span>
+                        <span className="font-semibold text-[var(--color-primary)]">Click to upload</span>
+                        <span className="text-[var(--text-on-secondary)] opacity-70"> or drag and drop</span>
                       </>
                     )}
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-[var(--text-on-secondary)] opacity-50">
                     PNG, JPG or JPEG (MAX. {5 - (formData.image?.length || 0)} remaining)
                   </p>
                 </div>
@@ -489,13 +489,13 @@ const UpdateProduct = () => {
           <div className="flex justify-end space-x-4">
             <Link
               to="/product-management"
-              className="px-6 py-3 border-2 border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 font-medium transition-colors duration-200"
+              className="px-6 py-3 border-2 border-[var(--color-primary-light)] rounded-xl text-[var(--text-on-secondary)] hover:bg-[var(--color-primary-light)] font-medium transition-colors duration-200"
             >
               Cancel
             </Link>
             <button
               type="submit"
-              className="inline-flex items-center px-6 py-3 border-2 border-blue-500 rounded-xl font-medium text-white bg-blue-500 hover:bg-blue-600 hover:border-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+              className="inline-flex items-center px-6 py-3 border-2 border-[var(--color-primary)] rounded-xl font-medium text-[var(--text-on-primary)] bg-[var(--color-primary)] hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-primary)] transition-colors duration-200"
             >
               <Save className="h-5 w-5 mr-2" />
               Update Product

@@ -147,7 +147,7 @@ const ProductManagement = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-accent-light)] p-8">
       {/* Delete Confirmation Modal */}
       {deleteModal.isOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -157,7 +157,7 @@ const ProductManagement = () => {
           <div className="flex min-h-screen items-center justify-center p-4">
             {/* Modal panel */}
             <div 
-              className="relative transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all sm:w-full sm:max-w-lg"
+              className="relative transform overflow-hidden rounded-2xl bg-[var(--color-white)] shadow-2xl transition-all sm:w-full sm:max-w-lg"
               style={{
                 animation: 'modal-pop 0.3s ease-out forwards'
               }}
@@ -174,19 +174,19 @@ const ProductManagement = () => {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <h3 className="text-xl font-semibold text-[var(--text-on-secondary)] mb-2">
                     Delete Product?
                   </h3>
 
                   {/* Description */}
                   <div className="mt-2 space-y-2 text-center">
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-[var(--text-on-secondary)] opacity-70">
                       You are about to delete
                     </p>
-                    <p className="text-lg font-medium text-gray-900 px-4 py-2 bg-gray-50 rounded-lg inline-block">
+                    <p className="text-lg font-medium text-[var(--text-on-secondary)] px-4 py-2 bg-[var(--color-primary-light)] rounded-lg inline-block">
                       {deleteModal.productName}
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-[var(--text-on-secondary)] opacity-70">
                       This action cannot be undone and will permanently remove the product from your inventory.
                     </p>
                   </div>
@@ -197,7 +197,7 @@ const ProductManagement = () => {
                   <button
                     type="button"
                     onClick={handleDeleteCancel}
-                    className="inline-flex justify-center items-center px-6 py-3 rounded-xl text-sm font-medium text-gray-700 bg-white border-2 border-gray-200 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
+                    className="inline-flex justify-center items-center px-6 py-3 rounded-xl text-sm font-medium text-[var(--text-on-secondary)] bg-[var(--color-white)] border-2 border-[var(--color-primary-light)] hover:bg-[var(--color-primary-light)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-primary)] transition-all duration-200"
                   >
                     <XCircle className="h-4 w-4 mr-2" />
                     Cancel
@@ -205,7 +205,7 @@ const ProductManagement = () => {
                   <button
                     type="button"
                     onClick={handleDeleteConfirm}
-                    className="inline-flex justify-center items-center px-6 py-3 rounded-xl text-sm font-medium text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200 transform hover:scale-[1.02]"
+                    className="inline-flex justify-center items-center px-6 py-3 rounded-xl text-sm font-medium text-[var(--text-on-primary)] bg-[var(--color-primary)] hover:bg-[var(--color-accent)] border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-primary)] transition-all duration-200 transform hover:scale-[1.02]"
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete Product
@@ -237,14 +237,14 @@ const ProductManagement = () => {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => navigate(-1)}
-                className="group flex items-center gap-2 px-4 py-2 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 text-gray-600 hover:text-gray-900 border border-gray-100"
+                className="group flex items-center gap-2 px-4 py-2 bg-[var(--color-white)] rounded-xl shadow-sm hover:shadow-md transition-all duration-300 text-[var(--text-on-secondary)] hover:text-[var(--color-primary)] border border-[var(--color-primary-light)]"
               >
                 <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" />
                 <span className="font-medium">Back</span>
               </button>
               <div>
-                <h1 className="text-3xl font-bold text-gray-800 mb-2">Product Dashboard</h1>
-                <p className="text-gray-600">Manage your product inventory and track performance</p>
+                <h1 className="text-3xl font-bold text-[var(--text-on-secondary)] mb-2">Product Dashboard</h1>
+                <p className="text-[var(--text-on-secondary)] opacity-70">Manage your product inventory and track performance</p>
               </div>
             </div>
             
@@ -254,13 +254,13 @@ const ProductManagement = () => {
                 to="/cart" 
                 className="relative group"
               >
-                <div className="p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 group-hover:border-blue-200">
-                  <ShoppingCart className="w-7 h-7 text-gray-600 group-hover:text-blue-600 transition-colors duration-300" />
-                  <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                <div className="p-3 bg-[var(--color-white)] rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-[var(--color-primary-light)] group-hover:border-[var(--color-primary)]">
+                  <ShoppingCart className="w-7 h-7 text-[var(--text-on-secondary)] group-hover:text-[var(--color-primary)] transition-colors duration-300" />
+                  <span className="absolute -top-1 -right-1 bg-[var(--color-primary)] text-[var(--text-on-primary)] text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
                     0
                   </span>
                 </div>
-                <span className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 text-sm font-medium text-gray-600 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <span className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 text-sm font-medium text-[var(--text-on-secondary)] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   Cart
                 </span>
               </Link>
@@ -269,20 +269,20 @@ const ProductManagement = () => {
                 to="/orders" 
                 className="relative group"
               >
-                <div className="p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 group-hover:border-purple-200">
-                  <ClipboardList className="w-7 h-7 text-gray-600 group-hover:text-purple-600 transition-colors duration-300" />
-                  <span className="absolute -top-1 -right-1 bg-purple-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                <div className="p-3 bg-[var(--color-white)] rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-[var(--color-primary-light)] group-hover:border-[var(--color-primary)]">
+                  <ClipboardList className="w-7 h-7 text-[var(--text-on-secondary)] group-hover:text-[var(--color-primary)] transition-colors duration-300" />
+                  <span className="absolute -top-1 -right-1 bg-[var(--color-primary)] text-[var(--text-on-primary)] text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
                     0
                   </span>
                 </div>
-                <span className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 text-sm font-medium text-gray-600 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <span className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 text-sm font-medium text-[var(--text-on-secondary)] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   Orders
                 </span>
               </Link>
 
-              <div className="px-4 py-2 bg-white rounded-xl shadow-sm border border-gray-100">
-                <p className="text-sm text-gray-500">Total Products</p>
-                <p className="text-xl font-bold text-gray-800">{stats.totalProducts}</p>
+              <div className="px-4 py-2 bg-[var(--color-white)] rounded-xl shadow-sm border border-[var(--color-primary-light)]">
+                <p className="text-sm text-[var(--text-on-secondary)] opacity-70">Total Products</p>
+                <p className="text-xl font-bold text-[var(--text-on-secondary)]">{stats.totalProducts}</p>
               </div>
             </div>
           </div>
@@ -384,55 +384,62 @@ const ProductManagement = () => {
         </div>
 
         {/* Products List Section */}
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-          <div className="p-6 border-b border-gray-200">
+        <div className="bg-[var(--color-white)] rounded-2xl shadow-lg overflow-hidden">
+          <div className="p-6 border-b border-[var(--color-primary-light)]">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
-              <h2 className="text-2xl font-bold text-gray-800">Product Inventory</h2>
+              <h2 className="text-2xl font-bold text-[var(--text-on-secondary)]">Product Inventory</h2>
               <div className="flex items-center space-x-4">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-on-secondary)] opacity-50" />
                   <input
                     type="text"
                     placeholder="Search products..."
-                    className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="pl-10 pr-4 py-2 border border-[var(--color-primary-light)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] text-[var(--text-on-secondary)]"
                   />
                 </div>
-                <button className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50">
-                  <Filter className="h-5 w-5 text-gray-600" />
+                <button className="p-2 border border-[var(--color-primary-light)] rounded-lg hover:bg-[var(--color-primary-light)]">
+                  <Filter className="h-5 w-5 text-[var(--text-on-secondary)]" />
                 </button>
+                <Link
+                  to="/create-product"
+                  className="inline-flex items-center px-4 py-2 bg-[var(--color-primary)] text-[var(--text-on-primary)] rounded-lg hover:bg-[var(--color-accent)] transition-all duration-300 transform hover:scale-[1.02] shadow-sm hover:shadow-md"
+                >
+                  <Plus className="h-5 w-5 mr-2" />
+                  <span className="font-medium">Create Product</span>
+                </Link>
               </div>
             </div>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-[var(--color-primary-light)]">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Product</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text-on-secondary)]">Product</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text-on-secondary)]">
                     <div className="flex items-center space-x-1">
                       <span>Category</span>
                       <ArrowUpDown className="h-4 w-4" />
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text-on-secondary)]">
                     <div className="flex items-center space-x-1">
                       <span>Price</span>
                       <ArrowUpDown className="h-4 w-4" />
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text-on-secondary)]">
                     <div className="flex items-center space-x-1">
                       <span>Stock</span>
                       <ArrowUpDown className="h-4 w-4" />
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Actions</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text-on-secondary)]">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-[var(--color-primary-light)]">
                 {products.map((product) => (
-                  <tr key={product._id} className="hover:bg-gray-50 transition duration-150">
+                  <tr key={product._id} className="hover:bg-[var(--color-primary-light)] transition duration-150">
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-4">
                         <div className="h-12 w-12 flex-shrink-0">
@@ -443,18 +450,18 @@ const ProductManagement = () => {
                           />
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-gray-900">{product.name}</p>
-                          <p className="text-sm text-gray-500">{product.description.substring(0, 50)}...</p>
+                          <p className="text-sm font-medium text-[var(--text-on-secondary)]">{product.name}</p>
+                          <p className="text-sm text-[var(--text-on-secondary)] opacity-70">{product.description.substring(0, 50)}...</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                      <span className="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-[var(--color-primary-light)] text-[var(--color-primary)]">
                         {product.category}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-sm font-medium text-gray-900">
+                      <span className="text-sm font-medium text-[var(--text-on-secondary)]">
                         Rs.{product.price.toFixed(2)}
                       </span>
                     </td>
