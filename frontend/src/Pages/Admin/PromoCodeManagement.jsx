@@ -143,21 +143,21 @@ const PromoCodeManagement = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent"></div>
+      <div className="min-h-screen bg-[var(--color-primary-light)] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-4 border-[var(--color-primary)] border-t-transparent"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-accent-light)] p-8">
       {/* Delete Confirmation Modal */}
       {deleteModal.isOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-          <div className="fixed inset-0 bg-gray-900 bg-opacity-75 backdrop-blur-sm transition-opacity"></div>
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"></div>
 
           <div className="flex min-h-screen items-center justify-center p-4">
-            <div className="relative transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all sm:w-full sm:max-w-lg">
+            <div className="relative transform overflow-hidden rounded-2xl bg-[var(--color-white)] shadow-2xl transition-all sm:w-full sm:max-w-lg">
               <div className="relative p-6">
                 <div className="flex flex-col items-center text-center">
                   <div className="relative mb-4">
@@ -167,18 +167,18 @@ const PromoCodeManagement = () => {
                     </div>
                   </div>
 
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <h3 className="text-xl font-semibold text-[var(--text-on-secondary)] mb-2">
                     Delete Promo Code?
                   </h3>
 
                   <div className="mt-2 space-y-2 text-center">
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-[var(--text-on-secondary)] opacity-70">
                       You are about to delete
                     </p>
-                    <p className="text-lg font-medium text-gray-900 px-4 py-2 bg-gray-50 rounded-lg inline-block">
+                    <p className="text-lg font-medium text-[var(--text-on-secondary)] px-4 py-2 bg-[var(--color-primary-light)] rounded-lg inline-block">
                       {deleteModal.promoCode}
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-[var(--text-on-secondary)] opacity-70">
                       This action cannot be undone.
                     </p>
                   </div>
@@ -188,7 +188,7 @@ const PromoCodeManagement = () => {
                   <button
                     type="button"
                     onClick={() => setDeleteModal({ isOpen: false, promoId: null, promoCode: '' })}
-                    className="inline-flex justify-center items-center px-6 py-3 rounded-xl text-sm font-medium text-gray-700 bg-white border-2 border-gray-200 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
+                    className="inline-flex justify-center items-center px-6 py-3 rounded-xl text-sm font-medium text-[var(--text-on-secondary)] bg-[var(--color-white)] border-2 border-[var(--color-primary-light)] hover:bg-[var(--color-primary-light)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-primary)] transition-all duration-200"
                   >
                     <XCircle className="h-4 w-4 mr-2" />
                     Cancel
@@ -215,19 +215,19 @@ const PromoCodeManagement = () => {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => window.history.back()}
-                className="group flex items-center gap-2 px-4 py-2 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 text-gray-600 hover:text-gray-900 border border-gray-100"
+                className="group flex items-center gap-2 px-4 py-2 bg-[var(--color-white)] rounded-xl shadow-sm hover:shadow-md transition-all duration-300 text-[var(--text-on-secondary)] hover:text-[var(--color-primary)] border border-[var(--color-primary-light)]"
               >
                 <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" />
                 <span className="font-medium">Back</span>
               </button>
               <div>
-                <h1 className="text-3xl font-bold text-gray-800 mb-2">Promo Code Management</h1>
-                <p className="text-gray-600">Create and manage promotional codes for your store</p>
+                <h1 className="text-3xl font-bold text-[var(--text-on-secondary)] mb-2">Promo Code Management</h1>
+                <p className="text-[var(--text-on-secondary)] opacity-70">Create and manage promotional codes for your store</p>
               </div>
             </div>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transform hover:scale-[1.02] transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="flex items-center gap-2 px-6 py-3 bg-[var(--color-primary)] text-white rounded-xl hover:bg-[var(--color-primary-dark)] transform hover:scale-[1.02] transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               <Plus className="h-5 w-5" />
               Create Promo Code
@@ -315,21 +315,21 @@ const PromoCodeManagement = () => {
         </div>
 
         {/* Promo Codes List */}
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-          <div className="p-6 border-b border-gray-200">
+        <div className="bg-[var(--color-white)] rounded-2xl shadow-lg overflow-hidden">
+          <div className="p-6 border-b border-[var(--color-primary-light)]">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
-              <h2 className="text-2xl font-bold text-gray-800">Promo Codes</h2>
+              <h2 className="text-2xl font-bold text-[var(--text-on-secondary)]">Promo Codes</h2>
               <div className="flex items-center space-x-4">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-on-secondary)] opacity-40" />
                   <input
                     type="text"
                     placeholder="Search promo codes..."
-                    className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="pl-10 pr-4 py-2 border border-[var(--color-primary-light)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] text-[var(--text-on-secondary)]"
                   />
                 </div>
-                <button className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50">
-                  <Filter className="h-5 w-5 text-gray-600" />
+                <button className="p-2 border border-[var(--color-primary-light)] rounded-lg hover:bg-[var(--color-primary-light)]">
+                  <Filter className="h-5 w-5 text-[var(--text-on-secondary)]" />
                 </button>
               </div>
             </div>
@@ -337,31 +337,31 @@ const PromoCodeManagement = () => {
 
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-[var(--color-primary-light)]">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Code</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text-on-secondary)]">Code</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text-on-secondary)]">
                     <div className="flex items-center space-x-1">
                       <span>Discount</span>
                       <ArrowUpDown className="h-4 w-4" />
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Valid Period</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Usage</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Min Purchase</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Status</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Actions</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text-on-secondary)]">Valid Period</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text-on-secondary)]">Usage</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text-on-secondary)]">Min Purchase</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text-on-secondary)]">Status</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text-on-secondary)]">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-[var(--color-primary-light)]">
                 {promoCodes.map((promo) => (
-                  <tr key={promo._id} className="hover:bg-gray-50 transition duration-150">
+                  <tr key={promo._id} className="hover:bg-[var(--color-primary-light)] transition duration-150">
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-blue-50 rounded-lg">
-                          <Tag className="h-5 w-5 text-blue-600" />
+                        <div className="p-2 bg-[var(--color-primary-light)] rounded-lg">
+                          <Tag className="h-5 w-5 text-[var(--color-primary)]" />
                         </div>
-                        <span className="font-medium text-gray-900">{promo.code}</span>
+                        <span className="font-medium text-[var(--text-on-secondary)]">{promo.code}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
@@ -371,24 +371,24 @@ const PromoCodeManagement = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-2">
-                        <Calendar className="h-4 w-4 text-gray-400" />
-                        <span className="text-sm text-gray-600">
+                        <Calendar className="h-4 w-4 text-[var(--text-on-secondary)] opacity-40" />
+                        <span className="text-sm text-[var(--text-on-secondary)]">
                           {new Date(promo.startDate).toLocaleDateString()} - {new Date(promo.endDate).toLocaleDateString()}
                         </span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-2">
-                        <Users className="h-4 w-4 text-gray-400" />
-                        <span className="text-sm text-gray-600">
+                        <Users className="h-4 w-4 text-[var(--text-on-secondary)] opacity-40" />
+                        <span className="text-sm text-[var(--text-on-secondary)]">
                           {promo.currentUses}/{promo.maxUses || '∞'}
                         </span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-2">
-                        <DollarSign className="h-4 w-4 text-gray-400" />
-                        <span className="text-sm text-gray-600">
+                        <DollarSign className="h-4 w-4 text-[var(--text-on-secondary)] opacity-40" />
+                        <span className="text-sm text-[var(--text-on-secondary)]">
                           Rs.{promo.minPurchaseAmount}
                         </span>
                       </div>
@@ -417,7 +417,7 @@ const PromoCodeManagement = () => {
                             });
                             setIsModalOpen(true);
                           }}
-                          className="text-blue-600 hover:text-blue-900 transition duration-150"
+                          className="text-[var(--text-on-secondary)] hover:text-[var(--color-primary)] transition duration-150"
                           title="Edit Promo Code"
                         >
                           <Edit className="h-5 w-5" />
@@ -442,18 +442,18 @@ const PromoCodeManagement = () => {
       {/* Create/Edit Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-          <div className="fixed inset-0 bg-gray-900 bg-opacity-75 backdrop-blur-sm transition-opacity"></div>
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"></div>
 
           <div className="flex min-h-screen items-center justify-center p-4">
-            <div className="relative transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all sm:w-full sm:max-w-lg">
+            <div className="relative transform overflow-hidden rounded-2xl bg-[var(--color-white)] shadow-2xl transition-all sm:w-full sm:max-w-lg">
               {/* Modal Header */}
-              <div className="relative p-6 border-b border-gray-100">
+              <div className="relative p-6 border-b border-[var(--color-primary-light)]">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-blue-50 rounded-lg">
-                      <Tag className="h-6 w-6 text-blue-600" />
+                    <div className="p-2 bg-[var(--color-primary-light)] rounded-lg">
+                      <Tag className="h-6 w-6 text-[var(--color-primary)]" />
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-900">
+                    <h2 className="text-2xl font-bold text-[var(--text-on-secondary)]">
                       {editingId ? 'Edit Promo Code' : 'Create Promo Code'}
                     </h2>
                   </div>
@@ -470,12 +470,12 @@ const PromoCodeManagement = () => {
                         minPurchaseAmount: ''
                       });
                     }}
-                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                    className="p-2 hover:bg-[var(--color-primary-light)] rounded-lg transition-colors duration-200"
                   >
-                    <XCircle className="h-5 w-5 text-gray-400" />
+                    <XCircle className="h-5 w-5 text-[var(--text-on-secondary)] opacity-40" />
                   </button>
                 </div>
-                <p className="mt-2 text-sm text-gray-500">
+                <p className="mt-2 text-sm text-[var(--text-on-secondary)] opacity-70">
                   {editingId ? 'Update your existing promo code details' : 'Create a new promotional code for your store'}
                 </p>
               </div>
@@ -629,7 +629,7 @@ const PromoCodeManagement = () => {
                     </button>
                     <button
                       type="submit"
-                      className="px-6 py-3 text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl hover:from-blue-600 hover:to-blue-700 transform hover:scale-[1.02] transition-all duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl"
+                      className="px-6 py-3 text-white bg-[var(--color-primary)] rounded-xl hover:bg-[var(--color-primary-dark)] transform hover:scale-[1.02] transition-all duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl"
                     >
                       {editingId ? (
                         <>
