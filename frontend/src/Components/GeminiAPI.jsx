@@ -1,6 +1,29 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+// Intent mapping for predefined responses
+const intents = {
+  greeting: ["hi", "hello", "hey", "good morning", "good evening"],
+  farewell: ["bye", "goodbye", "see you", "later"],
+  help: ["help", "assist", "support", "services", "features"],
+  booking: ["book", "schedule", "appointment", "grooming", "boarding"],
+  product: ["product", "inventory", "buy", "shop", "items"],
+  review: ["review", "rate", "feedback", "rating"],
+  advertisement: ["advertisement", "ad", "promotion", "business"],
+  default: ["what", "how", "why"], // Add more patterns for default responses
+};
+
+const getIntent = (userMessage) => {
+  for (const intent in intents) {
+    for (const keyword of intents[intent]) {
+      if (userMessage.toLowerCase().includes(keyword)) {
+        return intent;
+      }
+    }
+  }
+  return "default";
+};
+
 const Chatbot = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -19,26 +42,13 @@ const Chatbot = () => {
     setLoading(true);
 
     try {
-      // Send user message to the API and get the response
-      const response = await axios.post(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyA1gukbQGocXkfvSghrfVobQR4E54iysgE",
-        {
-          contents: [
-            {
-              parts: [
-                { text: message },
-              ],
-            },
-          ],
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const botResponse = response.data.candidates[0].content.parts[0].text;
+      // Determine the intent of the user's message
+      const intent = getIntent(message);
+      
+      // Get bot response based on intent
+      const botResponse = generateBotResponse(intent);
+      
+      // Add bot response to chat
       setMessages((prevMessages) => [
         ...prevMessages,
         { sender: "bot", text: botResponse },
@@ -51,6 +61,30 @@ const Chatbot = () => {
       ]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Function to generate bot response based on intent
+  const generateBotResponse = (intent) => {
+    switch (intent) {
+      case "greeting":
+        return "Hello! How can I help you today? I can assist with booking services, browsing products, and more!";
+      case "farewell":
+        return "Goodbye! Have a great day, and feel free to return anytime for pet care needs!";
+      case "help":
+        return "Here are the features I can assist with: Booking services, viewing products, reading reviews, and more!";
+      case "booking":
+        return "I can help you book grooming, training, or boarding services. Would you like to schedule an appointment?";
+      case "product":
+        return "You can browse a variety of pet products here, including toys, food, grooming supplies, and more! Let me know if you'd like to shop.";
+      case "review":
+        return "I can help you view and leave reviews for pet care services. Would you like to see recent reviews?";
+      case "advertisement":
+        return "We also offer advertising options for pet businesses. You can create ads and track their performance right here.";
+      case "default":
+        return "Sorry, I didn't quite get that. Could you please clarify your request?";
+      default:
+        return "Sorry, I couldn't process your request.";
     }
   };
 
