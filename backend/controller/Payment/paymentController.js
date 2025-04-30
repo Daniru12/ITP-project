@@ -2,10 +2,17 @@ import Payment from "../../models/Payment/payment.js";
 import Appointment from "../../models/BookingScheduling/Appointment.js";
 import bcrypt from "bcryptjs";
 
-
+// Create payment
 export const createPayment = async (req, res) => {
   try {
-    const { appointment_id, amount, currency, payment_method, card_details } = req.body;
+    const {
+      appointment_id,
+      amount,
+      currency,
+      payment_method,
+      card_details,
+      phone_number, // added
+    } = req.body;
 
     // Validate appointment
     const appointment = await Appointment.findById(appointment_id);
@@ -13,18 +20,17 @@ export const createPayment = async (req, res) => {
       return res.status(404).json({ message: "Appointment not found" });
     }
 
-    // Use the authenticated user's ID directly
+    // Use the authenticated user's ID
     const owner_id = req.user._id;
-
-    // // Validate that the authenticated user is the owner of the appointment
-    // if (!appointment.user_id.equals(owner_id)) {
-    //   return res.status(403).json({ message: "You are not authorized to pay for this appointment" });
-    // }
 
     // Validate card details if payment method is "Card"
     if (
       payment_method === "Card" &&
-      (!card_details || !card_details.card_number || !card_details.card_holder_name || !card_details.expiration_date || !card_details.cvv)
+      (!card_details ||
+        !card_details.card_number ||
+        !card_details.card_holder_name ||
+        !card_details.expiration_date ||
+        !card_details.cvv)
     ) {
       return res.status(400).json({ message: "Card details are required for card payments" });
     }
@@ -34,32 +40,32 @@ export const createPayment = async (req, res) => {
     if (payment_method === "Card" && card_details) {
       const salt = await bcrypt.genSalt(10);
       const hashedCVV = await bcrypt.hash(card_details.cvv, salt);
-      
+
       hashedCardDetails = {
         ...card_details,
-        cvv: hashedCVV
+        cvv: hashedCVV,
       };
     }
 
     // Create new payment
     const newPayment = new Payment({
       appointment_id,
-      owner_id, // Set owner_id from the authenticated user
+      owner_id,
       amount,
       currency: currency || "USD",
       payment_method,
       card_details: hashedCardDetails,
+      phone_number, // stored
     });
 
     // Save payment
     await newPayment.save();
     res.status(201).json({ message: "Payment created successfully", payment: newPayment });
   } catch (error) {
-    console.error(error); // Log error for debugging
+    console.error(error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-
 
 // Get payment by ID
 export const getPaymentById = async (req, res) => {
@@ -84,7 +90,7 @@ export const getAllPayments = async (req, res) => {
   }
 };
 
-// Update payment status
+// Update payment
 export const updatePayment = async (req, res) => {
   try {
     const updatedPayment = await Payment.findByIdAndUpdate(req.params.id, req.body, { new: true });

@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { Download, FileText, CreditCard, DollarSign, CircleDollarSign, PieChart, MessageSquare } from 'lucide-react';
+import { Download, FileText, CreditCard, DollarSign, CircleDollarSign, PieChart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const PaymentReviewPage = () => {
   const [payments, setPayments] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [notificationStatus, setNotificationStatus] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,14 +43,6 @@ const PaymentReviewPage = () => {
           : [];
 
         setPayments(paymentsArray);
-        
-        // Initialize notification status for each payment
-        const initialStatus = {};
-        paymentsArray.forEach(payment => {
-          initialStatus[payment._id] = payment.notification_sent || false;
-        });
-        setNotificationStatus(initialStatus);
-        
         setError(null);
       } catch (err) {
         console.error('Error fetching payments:', err);
@@ -67,89 +58,6 @@ const PaymentReviewPage = () => {
 
     fetchPayments();
   }, []);
-
-  // Function to send WhatsApp notification
-  const sendWhatsAppNotification = async (payment) => {
-    try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
-      const token = localStorage.getItem('token');
-      
-      if (!payment.user_phone && !payment.appointment_id?.user_id?.phone) {
-        throw new Error('No phone number available for this payment');
-      }
-      
-      const phoneNumber = payment.user_phone || payment.appointment_id?.user_id?.phone;
-      const amount = payment.amount || 0;
-      const receiptId = payment._id?.slice(-6) || 'N/A';
-      const packageType = payment.package_type || payment.appointment_id?.package_type || 'N/A';
-      
-      // Prepare the message content
-      const message = `Thank you for your payment of $${amount.toFixed(2)} for ${packageType}. Your receipt ID is ${receiptId}. If you have any questions, please contact our support team.`;
-      
-      // Send the notification request to your backend
-      const response = await axios.post(
-        `${backendUrl}/api/notifications/whatsapp`, 
-        {
-          phoneNumber: phoneNumber,
-          message: message,
-          paymentId: payment._id
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
-      
-      // Update the notification status for this payment
-      setNotificationStatus(prev => ({
-        ...prev,
-        [payment._id]: true
-      }));
-      
-      return response.data;
-    } catch (error) {
-      console.error('Error sending WhatsApp notification:', error);
-      throw error;
-    }
-  };
-
-  // Function to handle sending notification with UI feedback
-  const handleSendNotification = async (payment) => {
-    try {
-      await sendWhatsAppNotification(payment);
-      alert(`WhatsApp notification sent successfully to customer for payment ID: ${payment._id?.slice(-6)}`);
-    } catch (error) {
-      alert(`Failed to send WhatsApp notification: ${error.message}`);
-    }
-  };
-
-  // Function to send notifications to all users who haven't received one
-  const sendBulkNotifications = async () => {
-    if (!confirm('Send WhatsApp notifications to all customers with unsent payment receipts?')) {
-      return;
-    }
-    
-    const unnotifiedPayments = payments.filter(payment => !notificationStatus[payment._id]);
-    
-    if (unnotifiedPayments.length === 0) {
-      alert('All customers have already been notified.');
-      return;
-    }
-    
-    let successCount = 0;
-    let failCount = 0;
-    
-    for (const payment of unnotifiedPayments) {
-      try {
-        await sendWhatsAppNotification(payment);
-        successCount++;
-      } catch (error) {
-        console.error(`Failed to send notification for payment ${payment._id}:`, error);
-        failCount++;
-      }
-    }
-    
-    alert(`Notifications sent: ${successCount} successful, ${failCount} failed.`);
-  };
 
   // Calculate statistics
   const totalRevenue = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
@@ -216,7 +124,6 @@ const PaymentReviewPage = () => {
   };
 
   const generateFullPaymentsPDF = () => {
-    // Existing PDF generation code...
     const doc = new jsPDF();
 
     doc.setFillColor(188, 70, 38);  // #BC4626 - Terracotta Red
@@ -260,13 +167,12 @@ const PaymentReviewPage = () => {
         ? '**** ' + p.card_details.card_number.slice(-4)
         : '—',
       p.createdAt ? new Date(p.createdAt).toLocaleDateString() : 'N/A',
-      p.status || 'Completed',
-      notificationStatus[p._id] ? 'Sent' : 'Not Sent'
+      p.status || 'Completed'
     ]);
 
     autoTable(doc, {
       startY: tableStartY,
-      head: [['ID', 'Appointment', 'Package', 'Amount', 'Method', 'Card', 'Date', 'Status', 'Notification']],
+      head: [['ID', 'Appointment', 'Package', 'Amount', 'Method', 'Card', 'Date', 'Status']],
       body: tableData,
       theme: 'striped',
       headStyles: { fillColor: [223, 165, 93] },  // #DFA55D - Sandy Gold
@@ -323,14 +229,14 @@ const PaymentReviewPage = () => {
           </div>
 
           {/* Stats Section */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="bg-white p-6 rounded-lg shadow border-l-4 border-[#BC4626] flex items-start">
               <div className="bg-[#BC4626]/10 p-3 rounded-lg mr-4">
                 <CircleDollarSign size={24} className="text-[#BC4626]" />
               </div>
               <div>
                 <h2 className="text-xl font-semibold mb-2 text-[#347486]">Total Revenue</h2>
-                <p className="text-2xl font-bold text-[#BC4626]">${totalRevenue.toFixed(2)}</p>
+                <p className="text-2xl font-bold text-[#BC4626]">RS.{totalRevenue.toFixed(2)}</p>
                 <p className="text-gray-600">{payments.length} total transactions</p>
               </div>
             </div>
@@ -356,56 +262,6 @@ const PaymentReviewPage = () => {
                 <p className="text-gray-600">{cashPercentage}% of total</p>
               </div>
             </div>
-            
-            <div className="bg-white p-6 rounded-lg shadow border-l-4 border-green-500 flex items-start">
-              <div className="bg-green-500/10 p-3 rounded-lg mr-4">
-                <MessageSquare size={24} className="text-green-500" />
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold mb-2 text-[#347486]">WhatsApp Notifications</h2>
-                <p className="text-2xl font-bold text-green-500">
-                  {Object.values(notificationStatus).filter(Boolean).length}
-                </p>
-                <p className="text-gray-600">
-                  {payments.length > 0 
-                    ? `${((Object.values(notificationStatus).filter(Boolean).length / payments.length) * 100).toFixed(1)}% sent` 
-                    : '0% sent'}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* WhatsApp Notification Control Panel */}
-          <div className="bg-white rounded-lg shadow overflow-hidden mb-8 border border-green-500">
-            <div className="px-6 py-4 border-b bg-green-600 text-white flex items-center justify-between">
-              <div className="flex items-center">
-                <MessageSquare className="mr-2" size={20} />
-                <h2 className="text-xl font-semibold">WhatsApp Notification Center</h2>
-              </div>
-              <div className="text-sm bg-white/20 px-3 py-1 rounded-full">
-                {Object.values(notificationStatus).filter(Boolean).length} sent / {payments.length} total
-              </div>
-            </div>
-            <div className="p-6">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                <div>
-                  <h3 className="font-semibold mb-2">Automatic Payment Notifications</h3>
-                  <p className="text-gray-600 text-sm mb-4">Send payment receipts directly to customers via WhatsApp</p>
-                </div>
-                <button
-                  onClick={sendBulkNotifications}
-                  disabled={payments.length === 0 || Object.values(notificationStatus).filter(Boolean).length === payments.length}
-                  className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${
-                    payments.length === 0 || Object.values(notificationStatus).filter(Boolean).length === payments.length
-                      ? 'bg-gray-400 cursor-not-allowed'
-                      : 'bg-green-600 hover:bg-green-700'
-                  } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mt-4 md:mt-0`}
-                >
-                  <MessageSquare className="h-4 w-4 mr-2" />
-                  Send All Unsent Notifications
-                </button>
-              </div>
-            </div>
           </div>
 
           <div className="bg-white rounded-lg shadow overflow-hidden mb-8 border border-[#DFA55D]">
@@ -424,7 +280,6 @@ const PaymentReviewPage = () => {
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-[#BC4626] uppercase tracking-wider">ID</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-[#BC4626] uppercase tracking-wider">Appointment</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-[#BC4626] uppercase tracking-wider">Phone</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-[#BC4626] uppercase tracking-wider">Amount</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-[#BC4626] uppercase tracking-wider">Method</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-[#BC4626] uppercase tracking-wider">Card</th>
@@ -435,7 +290,7 @@ const PaymentReviewPage = () => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {payments.length === 0 ? (
                     <tr>
-                      <td colSpan="8" className="px-6 py-12 text-center">
+                      <td colSpan="7" className="px-6 py-12 text-center">
                         <div className="flex flex-col items-center">
                           <img src="/api/placeholder/80/80" alt="No data" className="mb-4 opacity-50" />
                           <p className="text-gray-500">No payment records found</p>
@@ -448,9 +303,6 @@ const PaymentReviewPage = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-mono">{payment._id?.slice(-6)}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-mono">
                           {payment.appointment_id?._id?.slice(-6) || 'N/A'}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm">
-                          {payment.user_phone || payment.appointment_id?.user_id?.phone || 'N/A'}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#BC4626]">
                           ${(payment.amount || 0).toFixed(2)}
@@ -476,27 +328,13 @@ const PaymentReviewPage = () => {
                           {payment.createdAt ? new Date(payment.createdAt).toLocaleDateString() : 'N/A'}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm">
-                          <div className="flex space-x-2">
-                            <button
-                              onClick={() => generatePDFReceipt(payment)}
-                              className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-[#347486] hover:bg-[#347486]/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#347486]"
-                            >
-                              <FileText className="h-3 w-3 mr-1" />
-                              Receipt
-                            </button>
-                            <button
-                              onClick={() => handleSendNotification(payment)}
-                              disabled={notificationStatus[payment._id]}
-                              className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded shadow-sm text-white ${
-                                notificationStatus[payment._id]
-                                  ? 'bg-gray-400 cursor-not-allowed'
-                                  : 'bg-green-600 hover:bg-green-700'
-                              } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500`}
-                            >
-                              <MessageSquare className="h-3 w-3 mr-1" />
-                              {notificationStatus[payment._id] ? 'Sent' : 'Notify'}
-                            </button>
-                          </div>
+                          <button
+                            onClick={() => generatePDFReceipt(payment)}
+                            className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-[#347486] hover:bg-[#347486]/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#347486]"
+                          >
+                            <FileText className="h-3 w-3 mr-1" />
+                            Receipt
+                          </button>
                         </td>
                       </tr>
                     ))
@@ -506,19 +344,7 @@ const PaymentReviewPage = () => {
             </div>
           </div>
 
-          <div className="flex justify-end space-x-4">
-            <button
-              onClick={sendBulkNotifications}
-              disabled={payments.length === 0 || Object.values(notificationStatus).filter(Boolean).length === payments.length}
-              className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${
-                payments.length === 0 || Object.values(notificationStatus).filter(Boolean).length === payments.length
-                  ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-green-600 hover:bg-green-700'
-              } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500`}
-            >
-              <MessageSquare className="h-4 w-4 mr-2" />
-              Send All WhatsApp Notifications
-            </button>
+          <div className="flex justify-end">
             <button
               onClick={generateFullPaymentsPDF}
               disabled={payments.length === 0}
@@ -545,8 +371,7 @@ const PaymentReviewPage = () => {
             <div className="flex items-center">
               <CreditCard size={16} className="text-[#DFA55D] mr-1" />
               <DollarSign size={16} className="text-[#347486] mr-1" />
-              <CircleDollarSign size={16} className="text-[#BC4626] mr-1" />
-              <MessageSquare size={16} className="text-green-600" />
+              <CircleDollarSign size={16} className="text-[#BC4626]" />
             </div>
           </div>
         </div>
