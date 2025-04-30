@@ -61,7 +61,6 @@ const CreateReview = () => {
 
       setTimeout(() => {
         navigate(`/service-overview/${serviceId}`);
-
       }, 2000);
     } catch (err) {
       console.error("Review submission error:", err);
@@ -71,7 +70,6 @@ const CreateReview = () => {
     }
   };
 
-  // CSS styles for star rating display
   const starStyles = {
     container: {
       display: "flex",
@@ -79,14 +77,13 @@ const CreateReview = () => {
       marginBottom: "1rem",
     },
     star: {
-      color: "#DFA55D", // Sandy Gold color for stars
+      color: "#DFA55D",
       fontSize: "2rem",
       cursor: "pointer",
       transition: "all 0.2s ease",
     },
   };
 
-  // Function to render star rating UI
   const renderStarRating = () => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -107,15 +104,31 @@ const CreateReview = () => {
   };
 
   return (
-    <div
+    <div 
       className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center"
       style={{
-        backgroundColor: "#F9F6F2", // Light cream background
-        backgroundImage:
-          'url("data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' viewBox=\'0 0 20 20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%23BC4626\' fill-opacity=\'0.05\' fill-rule=\'evenodd\'%3E%3Ccircle cx=\'3\' cy=\'3\' r=\'3\'/%3E%3Ccircle cx=\'13\' cy=\'13\' r=\'3\'/%3E%3C/g%3E%3C/svg%3E")',
+        position: 'relative',
+        backgroundImage: 'url("https://images.pexels.com/photos/2559941/pexels-photo-2559941.jpeg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
       }}
     >
-      <div className="w-full max-w-xl">
+      {/* Blur overlay */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
+          backgroundColor: 'rgba(255, 255, 255, 0.7)',
+          zIndex: 0,
+        }}
+      />
+
+      <div className="w-full max-w-xl" style={{ position: 'relative', zIndex: 1 }}>
         <div
           className="bg-white shadow-xl rounded-xl overflow-hidden"
           style={{

@@ -54,6 +54,7 @@ import FaqAdmin from './Pages/Admin/FaqAnswers'
 import FaqAdminTable from './Pages/FAQ/AdminfaqCategory'
 import AllReviews from './Pages/Review/reviewdisplay'
 import ServiceReviews from './Components/ServiceReviews';
+import ServiceReviewsList from './Components/ServiceReviewsList';
 import DisplayServices from './Pages/Home/displayServices'
 import ServiceOverview from './Pages/Home/serviceOverview'
 import AddBoarding from './Pages/Providers/addBoarding'
@@ -166,6 +167,7 @@ const AppContent = () => {
           
           <Route path='/reviewdisplay' element={<AllReviews/>}/>
           <Route path="/services/reviews/:serviceId" element={<ServiceReviews />} />
+          <Route path="/services/reviewlist/:serviceId" element={<ServiceReviewsList />} />
           <Route path="/average/:serviceId" element={<AverageRating />} />
           <Route path='/adminList' element={<FaqAdminTable/>}/>
           <Route path='/ownerOrders' element={<VeiwOwnerOerders/>}/>
