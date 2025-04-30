@@ -190,16 +190,24 @@ export const ProductDetail = () => {
                       <StarIcon
                         key={i}
                         className={`w-5 h-5 ${
-                          i < (product.rating || 0)
+                          i < Math.floor(4.5)
+                            ? 'text-[var(--color-secondary)]'
+                            : i < 4.5
                             ? 'text-[var(--color-secondary)]'
                             : 'text-[var(--text-on-secondary)] opacity-20'
                         }`}
-                        fill={i < (product.rating || 0) ? 'currentColor' : 'none'}
+                        fill={i < Math.floor(4.5) ? 'currentColor' : i < 4.5 ? 'url(#half)' : 'none'}
                       />
                     ))}
+                    <defs>
+                      <linearGradient id="half">
+                        <stop offset="50%" stopColor="currentColor" />
+                        <stop offset="50%" stopColor="transparent" />
+                      </linearGradient>
+                    </defs>
                   </div>
                   <span className="text-sm text-[var(--text-on-secondary)] opacity-70">
-                    ({product.rating || 0} rating)
+                    (4.5 rating)
                   </span>
                 </div>
 

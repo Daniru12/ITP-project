@@ -5,6 +5,7 @@ import { FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { FiX } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import HamsterLoader from '../../components/HamsterLoader';
+import { Star } from 'lucide-react';
 
 // Default placeholder image URL
 const defaultPetImage = "https://img.freepik.com/free-vector/cute-dog-cat-friend-cartoon_138676-2432.jpg";
@@ -41,6 +42,28 @@ const PetDetailsModal = ({ pet, onClose }) => {
             <div>
               <h3 className="text-xl font-bold text-[#333333] mb-4">Pet Information</h3>
               <div className="space-y-3">
+                <div className="flex items-center mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`w-4 h-4 ${
+                        i < Math.floor(4.5)
+                          ? 'text-yellow-400'
+                          : i < 4.5
+                          ? 'text-yellow-400'
+                          : 'text-gray-300'
+                      }`}
+                      fill={i < Math.floor(4.5) ? 'currentColor' : i < 4.5 ? 'url(#half)' : 'none'}
+                    />
+                  ))}
+                  <defs>
+                    <linearGradient id="half">
+                      <stop offset="50%" stopColor="currentColor" />
+                      <stop offset="50%" stopColor="transparent" />
+                    </linearGradient>
+                  </defs>
+                  <span className="ml-2 text-sm text-gray-600">(4.5)</span>
+                </div>
                 <p className="text-base text-gray-600"><span className="font-medium text-[#333333]">Species:</span> {pet.species}</p>
                 <p className="text-base text-gray-600"><span className="font-medium text-[#333333]">Breed:</span> {pet.breed}</p>
                 <p className="text-base text-gray-600"><span className="font-medium text-[#333333]">Age:</span> {pet.age}</p>

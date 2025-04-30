@@ -586,11 +586,11 @@ const ProviderOrderManagement = () => {
         {/* Orders List Section */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
           <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
-            <div className="flex justify-between items-center">
-              <div>
+          <div className="flex justify-between items-center">
+            <div>
                 <h2 className="text-2xl font-bold text-[var(--text-on-secondary)]">Order List</h2>
                 <p className="text-sm text-[var(--text-on-secondary)] opacity-70 mt-1">Manage and track all your orders</p>
-              </div>
+            </div>
               <div className="flex items-center gap-2">
                 <div className="px-3 py-1 bg-blue-50 rounded-full text-sm text-blue-600 font-medium">
                   Total: {orders.length}
@@ -642,8 +642,8 @@ const ProviderOrderManagement = () => {
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         <span className="text-sm font-semibold text-[var(--text-on-secondary)]">
-                          Rs.{order.total_price?.toFixed(2) || '0.00'}
-                        </span>
+                        Rs.{order.total_price?.toFixed(2) || '0.00'}
+                      </span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
@@ -670,13 +670,13 @@ const ProviderOrderManagement = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-3">
-                        <button
-                          onClick={() => handleViewDetails(order)}
+                      <button
+                        onClick={() => handleViewDetails(order)}
                           className="p-2 text-[var(--text-on-secondary)] hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
                           title="View Details"
-                        >
-                          <Eye className="h-5 w-5" />
-                        </button>
+                      >
+                        <Eye className="h-5 w-5" />
+                      </button>
                         <button
                           onClick={() => handleStatusUpdate(order._id, 'Delivered')}
                           className="p-2 text-[var(--text-on-secondary)] hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors duration-200"
@@ -705,7 +705,7 @@ const ProviderOrderManagement = () => {
       </div>
 
       {/* Order Details Modal */}
-      {selectedOrder && (
+          {selectedOrder && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl border border-gray-100">
             {/* Modal Header */}
@@ -723,8 +723,8 @@ const ProviderOrderManagement = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
-              </div>
-            </div>
+                  </div>
+                </div>
 
             <div className="overflow-y-auto max-h-[calc(90vh-8rem)]">
               <div className="p-6 space-y-6">
@@ -735,9 +735,9 @@ const ProviderOrderManagement = () => {
                       <h3 className="text-sm font-medium text-[var(--text-on-secondary)]">Current Status</h3>
                       <p className="text-lg font-semibold text-[var(--text-on-secondary)] mt-1">{selectedOrder.order_status}</p>
                     </div>
-                    <select
-                      value={selectedOrder.order_status}
-                      onChange={(e) => handleStatusUpdate(selectedOrder._id, e.target.value)}
+                  <select
+                    value={selectedOrder.order_status}
+                    onChange={(e) => handleStatusUpdate(selectedOrder._id, e.target.value)}
                       className={`px-4 py-2 rounded-lg text-sm font-medium border-0 focus:ring-2 focus:ring-offset-2 transition-all duration-200
                         ${selectedOrder.order_status === 'Pending' 
                           ? 'bg-yellow-50 text-yellow-700 focus:ring-yellow-500' 
@@ -748,15 +748,15 @@ const ProviderOrderManagement = () => {
                           : selectedOrder.order_status === 'Delivered' 
                           ? 'bg-green-50 text-green-700 focus:ring-green-500'
                           : 'bg-red-50 text-red-700 focus:ring-red-500'}`}
-                    >
-                      <option value="Pending">Pending</option>
-                      <option value="Processing">Processing</option>
-                      <option value="Shipped">Shipped</option>
-                      <option value="Delivered">Delivered</option>
-                      <option value="Cancelled">Cancelled</option>
-                    </select>
-                  </div>
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
                 </div>
+              </div>
 
                 {/* Customer Information Section */}
                 <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">

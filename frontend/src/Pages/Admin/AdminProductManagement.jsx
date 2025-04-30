@@ -39,7 +39,6 @@ const AdminProductManagement = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [stats, setStats] = useState({
     totalProducts: 0,
-    totalValue: 0,
     categories: {},
     lowStock: 0
   });
@@ -80,13 +79,11 @@ const AdminProductManagement = () => {
   const calculateStats = (products) => {
     const stats = {
       totalProducts: products.length,
-      totalValue: 0,
       categories: {},
       lowStock: 0
     };
 
     products.forEach(product => {
-      stats.totalValue += product.price * product.quantity;
       stats.categories[product.category] = (stats.categories[product.category] || 0) + 1;
       if (product.quantity < 10) stats.lowStock++;
     });
@@ -151,7 +148,7 @@ const AdminProductManagement = () => {
         </div>
 
         {/* Stats Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {/* Total Products Card */}
           <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 border border-blue-100">
             <div className="flex items-center justify-between mb-4">
@@ -171,29 +168,6 @@ const AdminProductManagement = () => {
               <div className="flex items-center text-sm text-gray-600">
                 <TrendingUp className="h-4 w-4 mr-1 text-blue-600" />
                 <span>All active products</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Total Value Card */}
-          <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 border border-green-100">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-white rounded-xl shadow-sm">
-                <DollarSign className="h-8 w-8 text-green-600" />
-              </div>
-              <div className="text-green-600 bg-white px-3 py-1 rounded-full text-sm font-medium shadow-sm">
-                Value
-              </div>
-            </div>
-            <h3 className="text-gray-600 text-sm font-medium mb-1">Total Value</h3>
-            <div className="flex items-baseline">
-              <p className="text-4xl font-bold text-gray-800">Rs.{stats.totalValue.toFixed(2)}</p>
-              <p className="ml-2 text-sm text-green-600 font-medium">In Stock</p>
-            </div>
-            <div className="mt-4 pt-4 border-t border-green-100">
-              <div className="flex items-center text-sm text-gray-600">
-                <BarChart2 className="h-4 w-4 mr-1 text-green-600" />
-                <span>Total inventory value</span>
               </div>
             </div>
           </div>

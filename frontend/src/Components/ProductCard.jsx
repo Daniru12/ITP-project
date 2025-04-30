@@ -50,7 +50,7 @@ export const ProductCard = ({ product }) => {
 
   if (!product) return null;
 
-  const rating = typeof product.rating === 'number' ? product.rating : 0
+  const rating = 4.5; // Hardcoded rating
   const price = typeof product.price === 'number' ? product.price : 0.0
 
   return (
@@ -82,10 +82,22 @@ export const ProductCard = ({ product }) => {
               {[...Array(5)].map((_, i) => (
                 <StarIcon
                   key={i}
-                  className={`w-4 h-4 transition-colors duration-300 ${i < rating ? 'text-[var(--color-secondary)]' : 'text-[var(--text-on-secondary)] opacity-30'}`}
-                  fill={i < rating ? 'currentColor' : 'none'}
+                  className={`w-4 h-4 transition-colors duration-300 ${
+                    i < Math.floor(rating)
+                      ? 'text-[var(--color-secondary)]'
+                      : i < rating
+                      ? 'text-[var(--color-secondary)]'
+                      : 'text-[var(--text-on-secondary)] opacity-30'
+                  }`}
+                  fill={i < Math.floor(rating) ? 'currentColor' : i < rating ? 'url(#half)' : 'none'}
                 />
               ))}
+              <defs>
+                <linearGradient id="half">
+                  <stop offset="50%" stopColor="currentColor" />
+                  <stop offset="50%" stopColor="transparent" />
+                </linearGradient>
+              </defs>
             </div>
             <span className="text-xs text-[var(--text-on-secondary)] opacity-70 ml-1">
               ({rating.toFixed(1)})

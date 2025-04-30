@@ -120,24 +120,24 @@ const PromoCodeManagement = () => {
   };
 
   const handleDeleteConfirm = async () => {
-    try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL;
-      const token = localStorage.getItem('token');
-      
-      await axios.delete(
+      try {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        const token = localStorage.getItem('token');
+        
+        await axios.delete(
         `${backendUrl}/api/promocodes/${deleteModal.promoId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
-        }
-      );
+        );
 
-      toast.success('Promo code deleted successfully');
+        toast.success('Promo code deleted successfully');
       setDeleteModal({ isOpen: false, promoId: null, promoCode: '' });
-      fetchPromoCodes();
-    } catch (error) {
-      toast.error('Failed to delete promo code');
+        fetchPromoCodes();
+      } catch (error) {
+        toast.error('Failed to delete promo code');
     }
   };
 
@@ -225,14 +225,14 @@ const PromoCodeManagement = () => {
                 <p className="text-[var(--text-on-secondary)] opacity-70">Create and manage promotional codes for your store</p>
               </div>
             </div>
-            <button
-              onClick={() => setIsModalOpen(true)}
+          <button
+            onClick={() => setIsModalOpen(true)}
               className="flex items-center gap-2 px-6 py-3 bg-[var(--color-primary)] text-white rounded-xl hover:bg-[var(--color-primary-dark)] transform hover:scale-[1.02] transition-all duration-200 shadow-lg hover:shadow-xl"
-            >
-              <Plus className="h-5 w-5" />
-              Create Promo Code
-            </button>
-          </div>
+          >
+            <Plus className="h-5 w-5" />
+            Create Promo Code
+          </button>
+        </div>
         </div>
 
         {/* Stats Section */}
@@ -381,7 +381,7 @@ const PromoCodeManagement = () => {
                       <div className="flex items-center space-x-2">
                         <Users className="h-4 w-4 text-[var(--text-on-secondary)] opacity-40" />
                         <span className="text-sm text-[var(--text-on-secondary)]">
-                          {promo.currentUses}/{promo.maxUses || '∞'}
+                      {promo.currentUses}/{promo.maxUses || '∞'}
                         </span>
                       </div>
                     </td>
@@ -389,7 +389,7 @@ const PromoCodeManagement = () => {
                       <div className="flex items-center space-x-2">
                         <DollarSign className="h-4 w-4 text-[var(--text-on-secondary)] opacity-40" />
                         <span className="text-sm text-[var(--text-on-secondary)]">
-                          Rs.{promo.minPurchaseAmount}
+                      Rs.{promo.minPurchaseAmount}
                         </span>
                       </div>
                     </td>
@@ -454,8 +454,8 @@ const PromoCodeManagement = () => {
                       <Tag className="h-6 w-6 text-[var(--color-primary)]" />
                     </div>
                     <h2 className="text-2xl font-bold text-[var(--text-on-secondary)]">
-                      {editingId ? 'Edit Promo Code' : 'Create Promo Code'}
-                    </h2>
+              {editingId ? 'Edit Promo Code' : 'Create Promo Code'}
+            </h2>
                   </div>
                   <button
                     onClick={() => {
@@ -490,21 +490,21 @@ const PromoCodeManagement = () => {
                       <span>Promo Code</span>
                     </label>
                     <div className="relative">
-                      <input
-                        type="text"
-                        value={formData.code}
-                        onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                <input
+                  type="text"
+                  value={formData.code}
+                  onChange={(e) => setFormData({ ...formData, code: e.target.value })}
                         className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                         placeholder="Enter promo code"
-                        required
-                      />
+                  required
+                />
                       <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                         <div className="h-5 w-5 text-gray-400">
                           <Tag className="h-5 w-5" />
                         </div>
                       </div>
                     </div>
-                  </div>
+              </div>
 
                   {/* Discount Input */}
                   <div className="space-y-2">
@@ -513,21 +513,21 @@ const PromoCodeManagement = () => {
                       <span>Discount Percentage</span>
                     </label>
                     <div className="relative">
-                      <input
-                        type="number"
-                        value={formData.discount}
-                        onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
+                <input
+                  type="number"
+                  value={formData.discount}
+                  onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
                         className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
                         placeholder="Enter discount percentage"
-                        required
-                        min="0"
-                        max="100"
-                      />
+                  required
+                  min="0"
+                  max="100"
+                />
                       <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                         <span className="text-gray-400">%</span>
                       </div>
                     </div>
-                  </div>
+              </div>
 
                   {/* Date Range */}
                   <div className="grid grid-cols-2 gap-4">
@@ -537,14 +537,14 @@ const PromoCodeManagement = () => {
                         <span>Start Date</span>
                       </label>
                       <div className="relative">
-                        <input
-                          type="date"
-                          value={formData.startDate}
-                          onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                <input
+                  type="date"
+                  value={formData.startDate}
+                  onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
                           className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
-                          required
-                        />
-                      </div>
+                  required
+                />
+              </div>
                     </div>
                     <div className="space-y-2">
                       <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
@@ -552,14 +552,14 @@ const PromoCodeManagement = () => {
                         <span>End Date</span>
                       </label>
                       <div className="relative">
-                        <input
-                          type="date"
-                          value={formData.endDate}
-                          onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                <input
+                  type="date"
+                  value={formData.endDate}
+                  onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
                           className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
-                          required
-                        />
-                      </div>
+                  required
+                />
+              </div>
                     </div>
                   </div>
 
@@ -570,65 +570,65 @@ const PromoCodeManagement = () => {
                       <span>Maximum Uses (Optional)</span>
                     </label>
                     <div className="relative">
-                      <input
-                        type="number"
-                        value={formData.maxUses}
-                        onChange={(e) => setFormData({ ...formData, maxUses: e.target.value })}
+                <input
+                  type="number"
+                  value={formData.maxUses}
+                  onChange={(e) => setFormData({ ...formData, maxUses: e.target.value })}
                         className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200"
                         placeholder="Enter maximum number of uses"
-                        min="0"
-                      />
+                  min="0"
+                />
                       <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                         <Users className="h-5 w-5 text-gray-400" />
                       </div>
                     </div>
-                  </div>
+              </div>
 
                   {/* Minimum Purchase */}
                   <div className="space-y-2">
                     <label className="flex items-center space-x-2 text-sm font-medium text-gray-700">
                       <DollarSign className="h-4 w-4 text-red-500" />
                       <span>Minimum Purchase Amount</span>
-                    </label>
+                </label>
                     <div className="relative">
-                      <input
-                        type="number"
-                        value={formData.minPurchaseAmount}
-                        onChange={(e) => setFormData({ ...formData, minPurchaseAmount: e.target.value })}
+                <input
+                  type="number"
+                  value={formData.minPurchaseAmount}
+                  onChange={(e) => setFormData({ ...formData, minPurchaseAmount: e.target.value })}
                         className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all duration-200"
                         placeholder="Enter minimum purchase amount"
-                        min="0"
-                        required
-                      />
+                  min="0"
+                  required
+                />
                       <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                         <span className="text-gray-400">Rs.</span>
                       </div>
                     </div>
-                  </div>
+              </div>
 
                   {/* Action Buttons */}
                   <div className="flex justify-end gap-4 pt-4 border-t border-gray-100">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsModalOpen(false);
-                        setEditingId(null);
-                        setFormData({
-                          code: '',
-                          discount: '',
-                          startDate: '',
-                          endDate: '',
-                          maxUses: '',
-                          minPurchaseAmount: ''
-                        });
-                      }}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    setEditingId(null);
+                    setFormData({
+                      code: '',
+                      discount: '',
+                      startDate: '',
+                      endDate: '',
+                      maxUses: '',
+                      minPurchaseAmount: ''
+                    });
+                  }}
                       className="px-6 py-3 text-gray-700 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-200 flex items-center space-x-2"
-                    >
+                >
                       <XCircle className="h-4 w-4" />
                       <span>Cancel</span>
-                    </button>
-                    <button
-                      type="submit"
+                </button>
+                <button
+                  type="submit"
                       className="px-6 py-3 text-white bg-[var(--color-primary)] rounded-xl hover:bg-[var(--color-primary-dark)] transform hover:scale-[1.02] transition-all duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl"
                     >
                       {editingId ? (
@@ -642,9 +642,9 @@ const PromoCodeManagement = () => {
                           <span>Create Promo Code</span>
                         </>
                       )}
-                    </button>
-                  </div>
-                </form>
+                </button>
+              </div>
+            </form>
               </div>
             </div>
           </div>
