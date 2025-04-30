@@ -286,7 +286,7 @@ const PaymentReviewPage = () => {
         </div>
         <div className="hidden md:block">
           <img 
-            src="/api/placeholder/180/60" 
+            src="https://i.postimg.cc/6qNSPZcz/4d03dcbf-fba9-43c7-a30d-18a0f1bc8cd2.png" 
             alt="Payment Logo" 
             className="h-12 rounded-md" 
           />

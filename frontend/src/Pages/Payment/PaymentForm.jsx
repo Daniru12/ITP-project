@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { CreditCardIcon, BanknoteIcon, ArrowLeftIcon } from "lucide-react"; // Import the arrow icon
+import { CreditCardIcon, BanknoteIcon, ArrowLeftIcon } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useParams, useNavigate, Link } from "react-router-dom";
@@ -12,6 +12,7 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
   const [expiryDate, setExpiryDate] = useState("");
   const [cvv, setCvv] = useState("");
   const [cardHolderName, setCardHolderName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(""); // ✅ New state
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState("USD");
   const [loading, setLoading] = useState(true);
@@ -37,17 +38,13 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
           `${backendUrl}/api/appointments/user/${id}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        if (!response.data) {
-          throw new Error("No appointment data received");
-        }
-        setAppointmentDetails(response.data);
+        if (!response.data) throw new Error("No appointment data received");
 
-        // Get the selected package price
+        setAppointmentDetails(response.data);
         const selectedPackage = response.data.package_type;
         const packagePrices = response.data.service_id?.package_prices || {};
         const packagePrice = packagePrices[selectedPackage] || 0;
         setAmount(packagePrice.toString());
-
         setError(null);
       } catch (err) {
         const errorMessage = err.response?.data?.message || "Could not find appointment details";
@@ -65,38 +62,37 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
     setLoading(true);
     setError(null);
     try {
-      if (!id || !appointmentDetails) {
-        throw new Error("Invalid or missing appointment details");
-      }
+      if (!id || !appointmentDetails) throw new Error("Invalid or missing appointment details");
       if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
         throw new Error("Please enter a valid amount");
       }
       const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("Please login to make a payment");
-      }
+      if (!token) throw new Error("Please login to make a payment");
+
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
       const paymentData = {
         appointment_id: id,
         amount: parseFloat(amount),
         currency,
         payment_method: paymentMethod,
-        card_details: paymentMethod === "Card" ? {
-          card_number: cardNumber.replace(/\s/g, ""),
-          card_holder_name: cardHolderName,
-          expiration_date: expiryDate,
-          cvv,
-        } : undefined
+        phone_number: phoneNumber, // ✅ Send phone number
+        card_details:
+          paymentMethod === "Card"
+            ? {
+                card_number: cardNumber.replace(/\s/g, ""),
+                card_holder_name: cardHolderName,
+                expiration_date: expiryDate,
+                cvv,
+              }
+            : undefined,
       };
-      const response = await axios.post(
-        `${backendUrl}/api/payment/create`,
-        paymentData,
-        { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
-      );
+
+      const response = await axios.post(`${backendUrl}/api/payment/create`, paymentData, {
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      });
+
       toast.success("Payment successful!");
-      if (onPaymentSuccess) {
-        onPaymentSuccess();
-      }
+      if (onPaymentSuccess) onPaymentSuccess();
       navigate("/payments");
     } catch (err) {
       const errorMessage = err.response?.data?.message || err.message || "An error occurred during payment";
@@ -120,10 +116,7 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] p-4">
         <div className="text-[#BC4626] text-center mb-4">{error}</div>
-        <Link
-          to="/Appointment"
-          className="bg-[#347486] hover:bg-[#2a5d6b] text-white px-4 py-2 rounded-md transition"
-        >
+        <Link to="/Appointment" className="bg-[#347486] hover:bg-[#2a5d6b] text-white px-4 py-2 rounded-md transition">
           Back to Appointments
         </Link>
       </div>
@@ -134,10 +127,7 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] p-4">
         <div className="text-[#BC4626] text-center mb-4">No appointment details found</div>
-        <Link
-          to="/Appointment"
-          className="bg-[#347486] hover:bg-[#2a5d6b] text-white px-4 py-2 rounded-md transition"
-        >
+        <Link to="/Appointment" className="bg-[#347486] hover:bg-[#2a5d6b] text-white px-4 py-2 rounded-md transition">
           Back to Appointments
         </Link>
       </div>
@@ -176,10 +166,25 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
               </div>
             </div>
 
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                WhatsApp Phone Number
+              </label>
+              <input
+                type="tel"
+                placeholder="+1 234 567 8901"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-md text-base focus:ring-[#347486] focus:border-[#347486]"
+              />
+            </div>
+
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Payment Method</h3>
             <div className="space-y-3 mb-6">
               <div
-                className={`flex items-center p-3 border rounded-lg cursor-pointer ${paymentMethod === "Card" ? "border-[#347486] bg-[#347486]/10" : "border-gray-200"}`}
+                className={`flex items-center p-3 border rounded-lg cursor-pointer ${
+                  paymentMethod === "Card" ? "border-[#347486] bg-[#347486]/10" : "border-gray-200"
+                }`}
                 onClick={() => setPaymentMethod("Card")}
               >
                 <input
@@ -194,7 +199,9 @@ const PaymentCreate = ({ onPaymentSuccess }) => {
               </div>
 
               <div
-                className={`flex items-center p-3 border rounded-lg cursor-pointer ${paymentMethod === "Cash" ? "border-[#347486] bg-[#347486]/10" : "border-gray-200"}`}
+                className={`flex items-center p-3 border rounded-lg cursor-pointer ${
+                  paymentMethod === "Cash" ? "border-[#347486] bg-[#347486]/10" : "border-gray-200"
+                }`}
                 onClick={() => setPaymentMethod("Cash")}
               >
                 <input
