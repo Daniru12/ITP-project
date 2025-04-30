@@ -2,7 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import { Package, Edit2, Trash2, Eye, DollarSign, Tag, ShoppingBag, TrendingUp, AlertTriangle, Plus } from 'lucide-react';
+import { 
+  Package, 
+  Edit2, 
+  Trash2, 
+  Eye, 
+  DollarSign, 
+  Tag, 
+  ShoppingBag, 
+  TrendingUp, 
+  AlertTriangle, 
+  Plus,
+  Search,
+  Filter,
+  ArrowUpDown,
+  MoreVertical,
+  CheckCircle2,
+  XCircle,
+  AlertOctagon
+} from 'lucide-react';
 
 const ProductManagement = () => {
   const [products, setProducts] = useState([]);
@@ -13,6 +31,11 @@ const ProductManagement = () => {
     lowStock: 0
   });
   const [loading, setLoading] = useState(true);
+  const [deleteModal, setDeleteModal] = useState({
+    isOpen: false,
+    productId: null,
+    productName: ''
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -82,22 +105,33 @@ const ProductManagement = () => {
     setStats(stats);
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this product?')) return;
+  const handleDeleteClick = (product) => {
+    setDeleteModal({
+      isOpen: true,
+      productId: product._id,
+      productName: product.name
+    });
+  };
 
+  const handleDeleteConfirm = async () => {
     try {
       const token = localStorage.getItem('token');
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
-      await axios.delete(`${backendUrl}/api/products/delete/${id}`, {
+      await axios.delete(`${backendUrl}/api/products/delete/${deleteModal.productId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       
       toast.success('Product deleted successfully');
       fetchProducts(); // Refresh the list
+      setDeleteModal({ isOpen: false, productId: null, productName: '' });
     } catch (error) {
       console.error('Error deleting product:', error);
       toast.error('Failed to delete product');
     }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteModal({ isOpen: false, productId: null, productName: '' });
   };
 
   if (loading) {
@@ -110,11 +144,104 @@ const ProductManagement = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-8">
+      {/* Delete Confirmation Modal */}
+      {deleteModal.isOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+          {/* Background overlay */}
+          <div className="fixed inset-0 bg-gray-900 bg-opacity-75 backdrop-blur-sm transition-opacity"></div>
+
+          <div className="flex min-h-screen items-center justify-center p-4">
+            {/* Modal panel */}
+            <div 
+              className="relative transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all sm:w-full sm:max-w-lg"
+              style={{
+                animation: 'modal-pop 0.3s ease-out forwards'
+              }}
+            >
+              {/* Modal content */}
+              <div className="relative p-6">
+                <div className="flex flex-col items-center text-center">
+                  {/* Warning Icon with pulse effect */}
+                  <div className="relative mb-4">
+                    <div className="absolute -inset-1 rounded-full bg-red-100 animate-pulse"></div>
+                    <div className="relative h-16 w-16 rounded-full bg-red-100 flex items-center justify-center">
+                      <AlertOctagon className="h-8 w-8 text-red-600" />
+                    </div>
+                  </div>
+
+                  {/* Title */}
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    Delete Product?
+                  </h3>
+
+                  {/* Description */}
+                  <div className="mt-2 space-y-2 text-center">
+                    <p className="text-sm text-gray-500">
+                      You are about to delete
+                    </p>
+                    <p className="text-lg font-medium text-gray-900 px-4 py-2 bg-gray-50 rounded-lg inline-block">
+                      {deleteModal.productName}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      This action cannot be undone and will permanently remove the product from your inventory.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="mt-8 flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-3 sm:space-y-0 space-y-3 space-y-reverse">
+                  <button
+                    type="button"
+                    onClick={handleDeleteCancel}
+                    className="inline-flex justify-center items-center px-6 py-3 rounded-xl text-sm font-medium text-gray-700 bg-white border-2 border-gray-200 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
+                  >
+                    <XCircle className="h-4 w-4 mr-2" />
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleDeleteConfirm}
+                    className="inline-flex justify-center items-center px-6 py-3 rounded-xl text-sm font-medium text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200 transform hover:scale-[1.02]"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete Product
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style jsx>{`
+        @keyframes modal-pop {
+          0% {
+            opacity: 0;
+            transform: scale(0.95) translateY(10px);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+          }
+        }
+      `}</style>
+
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Product Dashboard</h1>
-          <p className="text-gray-600">Manage your product inventory and track performance</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-800 mb-2">Product Dashboard</h1>
+              <p className="text-gray-600">Manage your product inventory and track performance</p>
+            </div>
+            <Link
+              to="/create-product"
+              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-lg hover:shadow-xl"
+            >
+              <Plus className="h-5 w-5 mr-2" />
+              Add New Product
+            </Link>
+          </div>
         </div>
 
         {/* Stats Section */}
@@ -182,15 +309,23 @@ const ProductManagement = () => {
 
         {/* Products List Section */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-          <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-gray-800">Product Inventory</h2>
-            <Link
-              to="/create-product"
-              className="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-300 flex items-center space-x-2 shadow-lg hover:shadow-xl"
-            >
-              <Plus className="h-5 w-5" />
-              <span>Add Product</span>
-            </Link>
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+              <h2 className="text-2xl font-bold text-gray-800">Product Inventory</h2>
+              <div className="flex items-center space-x-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search products..."
+                    className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <button className="p-2 border border-gray-200 rounded-lg hover:bg-gray-50">
+                  <Filter className="h-5 w-5 text-gray-600" />
+                </button>
+              </div>
+            </div>
           </div>
 
           <div className="overflow-x-auto">
@@ -198,9 +333,24 @@ const ProductManagement = () => {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Product</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Category</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Price</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Stock</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                    <div className="flex items-center space-x-1">
+                      <span>Category</span>
+                      <ArrowUpDown className="h-4 w-4" />
+                    </div>
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                    <div className="flex items-center space-x-1">
+                      <span>Price</span>
+                      <ArrowUpDown className="h-4 w-4" />
+                    </div>
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                    <div className="flex items-center space-x-1">
+                      <span>Stock</span>
+                      <ArrowUpDown className="h-4 w-4" />
+                    </div>
+                  </th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Actions</th>
                 </tr>
               </thead>
@@ -242,24 +392,30 @@ const ProductManagement = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex space-x-4">
+                      <div className="flex items-center space-x-4">
                         <Link 
                           to={`/product/${product._id}`}
                           className="text-blue-600 hover:text-blue-900 transition duration-150"
+                          title="View Details"
                         >
                           <Eye className="h-5 w-5" />
                         </Link>
                         <Link 
                           to={`/update-product/${product._id}`}
                           className="text-yellow-600 hover:text-yellow-900 transition duration-150"
+                          title="Edit Product"
                         >
                           <Edit2 className="h-5 w-5" />
                         </Link>
                         <button 
-                          onClick={() => handleDelete(product._id)}
+                          onClick={() => handleDeleteClick(product)}
                           className="text-red-600 hover:text-red-900 transition duration-150"
+                          title="Delete Product"
                         >
                           <Trash2 className="h-5 w-5" />
+                        </button>
+                        <button className="text-gray-400 hover:text-gray-600 transition duration-150">
+                          <MoreVertical className="h-5 w-5" />
                         </button>
                       </div>
                     </td>

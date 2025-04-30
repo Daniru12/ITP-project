@@ -153,63 +153,263 @@ const ProviderOrderManagement = () => {
         <head>
           <title>Orders Report - ${new Date().toLocaleDateString()}</title>
           <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            th { background-color: #f4f4f4; }
-            .header { margin-bottom: 30px; }
-            .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 30px; }
-            .stat-card { background-color: #f8f8f8; padding: 15px; border-radius: 8px; }
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+            
+            * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+              font-family: 'Inter', sans-serif;
+            }
+
+            body {
+              padding: 40px;
+              color: #1f2937;
+              background: #f9fafb;
+            }
+
+            .report-container {
+              max-width: 1200px;
+              margin: 0 auto;
+              background: white;
+              padding: 40px;
+              border-radius: 16px;
+              box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            }
+
+            .header {
+              text-align: center;
+              margin-bottom: 40px;
+              padding-bottom: 20px;
+              border-bottom: 2px solid #e5e7eb;
+            }
+
+            .header h1 {
+              font-size: 28px;
+              font-weight: 700;
+              color: #111827;
+              margin-bottom: 8px;
+            }
+
+            .header p {
+              color: #6b7280;
+              font-size: 14px;
+            }
+
+            .stats-grid {
+              display: grid;
+              grid-template-columns: repeat(2, 1fr);
+              gap: 24px;
+              margin-bottom: 40px;
+            }
+
+            .stat-card {
+              background: #f8fafc;
+              padding: 24px;
+              border-radius: 12px;
+              border: 1px solid #e5e7eb;
+            }
+
+            .stat-card h3 {
+              font-size: 16px;
+              font-weight: 600;
+              color: #374151;
+              margin-bottom: 16px;
+            }
+
+            .stat-item {
+              display: flex;
+              justify-content: space-between;
+              padding: 8px 0;
+              border-bottom: 1px solid #e5e7eb;
+            }
+
+            .stat-item:last-child {
+              border-bottom: none;
+            }
+
+            .stat-label {
+              color: #6b7280;
+              font-size: 14px;
+            }
+
+            .stat-value {
+              font-weight: 600;
+              color: #111827;
+            }
+
+            .orders-table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-top: 32px;
+            }
+
+            .orders-table th {
+              background: #f3f4f6;
+              padding: 12px 16px;
+              text-align: left;
+              font-weight: 600;
+              font-size: 14px;
+              color: #374151;
+              border-bottom: 2px solid #e5e7eb;
+            }
+
+            .orders-table td {
+              padding: 12px 16px;
+              border-bottom: 1px solid #e5e7eb;
+              font-size: 14px;
+            }
+
+            .orders-table tr:last-child td {
+              border-bottom: none;
+            }
+
+            .status-badge {
+              display: inline-block;
+              padding: 4px 8px;
+              border-radius: 6px;
+              font-size: 12px;
+              font-weight: 500;
+            }
+
+            .status-pending { background: #fef3c7; color: #92400e; }
+            .status-processing { background: #dbeafe; color: #1e40af; }
+            .status-shipped { background: #e0e7ff; color: #3730a3; }
+            .status-delivered { background: #dcfce7; color: #166534; }
+
+            .footer {
+              margin-top: 40px;
+              padding-top: 20px;
+              border-top: 2px solid #e5e7eb;
+              text-align: center;
+              color: #6b7280;
+              font-size: 14px;
+            }
+
+            @media print {
+              body {
+                background: white;
+                padding: 0;
+              }
+              
+              .report-container {
+                box-shadow: none;
+                padding: 20px;
+              }
+
+              .stat-card {
+                break-inside: avoid;
+              }
+
+              .orders-table {
+                break-inside: auto;
+              }
+
+              .orders-table tr {
+                break-inside: avoid;
+              }
+            }
           </style>
         </head>
         <body>
-          <div class="header">
-            <h1>Orders Report</h1>
-            <p>Generated on: ${new Date().toLocaleString()}</p>
-          </div>
-
-          <div class="stats-grid">
-            <div class="stat-card">
-              <h3>Order Statistics</h3>
-              <p>Total Orders: ${stats.total}</p>
-              <p>Pending Orders: ${stats.pending}</p>
-              <p>Processing Orders: ${stats.processing}</p>
-              <p>Shipped Orders: ${stats.shipped}</p>
-              <p>Delivered Orders: ${stats.delivered}</p>
+          <div class="report-container">
+            <div class="header">
+              <h1>Orders Report</h1>
+              <p>Generated on: ${new Date().toLocaleString()}</p>
             </div>
-            <div class="stat-card">
-              <h3>Revenue Statistics</h3>
-              <p>Total Revenue: Rs.${stats.totalRevenue.toFixed(2)}</p>
-              <p>Average Order Value: Rs.${stats.total > 0 ? (stats.totalRevenue / stats.total).toFixed(2) : '0.00'}</p>
-              <p>Completed Orders Revenue: Rs.${(stats.totalRevenue * (stats.delivered / stats.total || 0)).toFixed(2)}</p>
-            </div>
-          </div>
 
-          <table>
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Customer</th>
-                <th>Products</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${orders.map(order => `
+            <div class="stats-grid">
+              <div class="stat-card">
+                <h3>Order Statistics</h3>
+                <div class="stat-item">
+                  <span class="stat-label">Total Orders</span>
+                  <span class="stat-value">${stats.total}</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Pending Orders</span>
+                  <span class="stat-value">${stats.pending}</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Processing Orders</span>
+                  <span class="stat-value">${stats.processing}</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Shipped Orders</span>
+                  <span class="stat-value">${stats.shipped}</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Delivered Orders</span>
+                  <span class="stat-value">${stats.delivered}</span>
+                </div>
+              </div>
+
+              <div class="stat-card">
+                <h3>Revenue Statistics</h3>
+                <div class="stat-item">
+                  <span class="stat-label">Total Revenue</span>
+                  <span class="stat-value">Rs.${stats.totalRevenue.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                  })}</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Average Order Value</span>
+                  <span class="stat-value">Rs.${stats.total > 0 
+                    ? (stats.totalRevenue / stats.total).toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      })
+                    : '0.00'}</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Completed Orders Revenue</span>
+                  <span class="stat-value">Rs.${(stats.totalRevenue * (stats.delivered / stats.total || 0)).toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                  })}</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Completion Rate</span>
+                  <span class="stat-value">${((stats.delivered / stats.total) * 100 || 0).toFixed(1)}%</span>
+                </div>
+              </div>
+            </div>
+
+            <table class="orders-table">
+              <thead>
                 <tr>
-                  <td>${order._id}</td>
-                  <td>${order.pet_owner?.username || 'N/A'}</td>
-                  <td>${order.products?.map(item => 
-                    `${item.product?.name}(${item.quantity})`).join('; ')}</td>
-                  <td>Rs.${order.total_price?.toFixed(2)}</td>
-                  <td>${order.order_status}</td>
-                  <td>${new Date(order.createdAt).toLocaleDateString()}</td>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Products</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Date</th>
                 </tr>
-              `).join('')}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                ${orders.map(order => `
+                  <tr>
+                    <td>${order._id}</td>
+                    <td>${order.pet_owner?.username || 'N/A'}</td>
+                    <td>${order.products?.map(item => 
+                      `${item.product?.name}(${item.quantity})`).join('; ')}</td>
+                    <td>Rs.${order.total_price?.toFixed(2)}</td>
+                    <td>
+                      <span class="status-badge status-${order.order_status.toLowerCase()}">
+                        ${order.order_status}
+                      </span>
+                    </td>
+                    <td>${new Date(order.createdAt).toLocaleDateString()}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+
+            <div class="footer">
+              <p>This report was automatically generated by the Pet Store Management System</p>
+              <p>© ${new Date().getFullYear()} Pet Store. All rights reserved.</p>
+            </div>
+          </div>
         </body>
       </html>
     `;
@@ -241,91 +441,120 @@ const ProviderOrderManagement = () => {
         {/* Stats Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* Total Orders Card */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 border border-blue-100">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-blue-100 rounded-full">
+              <div className="p-3 bg-white rounded-xl shadow-sm">
                 <Package className="h-8 w-8 text-blue-600" />
               </div>
-              <TrendingUp className="h-6 w-6 text-blue-500" />
+              <div className="text-blue-600 bg-white px-3 py-1 rounded-full text-sm font-medium shadow-sm">
+                Total
+              </div>
             </div>
-            <h3 className="text-gray-500 text-sm font-medium">Total Orders</h3>
-            <div className="flex items-baseline mt-2">
-              <p className="text-3xl font-bold text-gray-800">{stats.total}</p>
-              <p className="ml-2 text-sm text-green-500">Orders</p>
+            <h3 className="text-gray-600 text-sm font-medium mb-1">Total Orders</h3>
+            <div className="flex items-baseline">
+              <p className="text-4xl font-bold text-gray-800">{stats.total}</p>
+              <p className="ml-2 text-sm text-blue-600 font-medium">Orders</p>
+            </div>
+            <div className="mt-4 pt-4 border-t border-blue-100">
+              <div className="flex items-center text-sm text-gray-600">
+                <TrendingUp className="h-4 w-4 mr-1 text-blue-600" />
+                <span>All time orders</span>
+              </div>
             </div>
           </div>
 
           {/* Pending Orders Card */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+          <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 border border-yellow-100">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-yellow-100 rounded-full">
+              <div className="p-3 bg-white rounded-xl shadow-sm">
                 <Clock className="h-8 w-8 text-yellow-600" />
               </div>
-              <TrendingUp className="h-6 w-6 text-yellow-500" />
+              <div className="text-yellow-600 bg-white px-3 py-1 rounded-full text-sm font-medium shadow-sm">
+                Pending
+              </div>
             </div>
-            <h3 className="text-gray-500 text-sm font-medium">Pending Orders</h3>
-            <div className="flex items-baseline mt-2">
-              <p className="text-3xl font-bold text-gray-800">{stats.pending}</p>
-              <p className="ml-2 text-sm text-yellow-500">Need Action</p>
+            <h3 className="text-gray-600 text-sm font-medium mb-1">Pending Orders</h3>
+            <div className="flex items-baseline">
+              <p className="text-4xl font-bold text-gray-800">{stats.pending}</p>
+              <p className="ml-2 text-sm text-yellow-600 font-medium">Need Action</p>
+            </div>
+            <div className="mt-4 pt-4 border-t border-yellow-100">
+              <div className="flex items-center text-sm text-gray-600">
+                <AlertTriangle className="h-4 w-4 mr-1 text-yellow-600" />
+                <span>Requires attention</span>
+              </div>
             </div>
           </div>
 
           {/* Processing Orders Card */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+          <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 border border-purple-100">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-purple-100 rounded-full">
+              <div className="p-3 bg-white rounded-xl shadow-sm">
                 <Truck className="h-8 w-8 text-purple-600" />
               </div>
-              <div className="text-purple-500 text-sm font-medium">Active</div>
+              <div className="text-purple-600 bg-white px-3 py-1 rounded-full text-sm font-medium shadow-sm">
+                Active
+              </div>
             </div>
-            <h3 className="text-gray-500 text-sm font-medium">Processing</h3>
-            <div className="flex items-baseline mt-2">
-              <p className="text-3xl font-bold text-gray-800">{stats.processing}</p>
-              <p className="ml-2 text-sm text-purple-500">In Progress</p>
+            <h3 className="text-gray-600 text-sm font-medium mb-1">Processing</h3>
+            <div className="flex items-baseline">
+              <p className="text-4xl font-bold text-gray-800">{stats.processing}</p>
+              <p className="ml-2 text-sm text-purple-600 font-medium">In Progress</p>
+            </div>
+            <div className="mt-4 pt-4 border-t border-purple-100">
+              <div className="flex items-center text-sm text-gray-600">
+                <TrendingUp className="h-4 w-4 mr-1 text-purple-600" />
+                <span>Currently processing</span>
+              </div>
             </div>
           </div>
 
           {/* Total Revenue Card */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+          <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 border border-green-100">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-green-100 rounded-full">
+              <div className="p-3 bg-white rounded-xl shadow-sm">
                 <DollarSign className="h-8 w-8 text-green-600" />
               </div>
-              <TrendingUp className="h-6 w-6 text-green-500" />
+              <div className="text-green-600 bg-white px-3 py-1 rounded-full text-sm font-medium shadow-sm">
+                Revenue
+              </div>
             </div>
-            <h3 className="text-gray-500 text-sm font-medium">Total Revenue</h3>
-            <div className="flex flex-col mt-2">
+            <h3 className="text-gray-600 text-sm font-medium mb-1">Total Revenue</h3>
+            <div className="flex flex-col">
               <p className="text-3xl font-bold text-gray-800">
                 Rs.{stats.totalRevenue.toLocaleString('en-US', {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2
                 })}
               </p>
-              <div className="flex items-center mt-1">
-                <p className="text-sm text-green-500">From Your Products</p>
+              <div className="mt-4 pt-4 border-t border-green-100">
+                <div className="flex items-center text-sm text-gray-600">
+                  <TrendingUp className="h-4 w-4 mr-1 text-green-600" />
+                  <span>Total earnings</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Report Generation Section */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-          <div className="flex justify-between items-center">
+        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-100">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <h3 className="text-lg font-semibold text-gray-800">Generate Reports</h3>
-              <p className="text-sm text-gray-500">Export or print order statistics</p>
+              <h3 className="text-xl font-semibold text-gray-800">Generate Reports</h3>
+              <p className="text-sm text-gray-500 mt-1">Export or print order statistics</p>
             </div>
             <div className="flex gap-4">
               <button
                 onClick={generateCSV}
-                className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02]"
               >
                 <FileDown className="h-5 w-5" />
                 Export CSV
               </button>
               <button
                 onClick={printReport}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02]"
               >
                 <Printer className="h-5 w-5" />
                 Print Report
@@ -335,21 +564,21 @@ const ProviderOrderManagement = () => {
         </div>
 
         {/* Summary Section */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-          <div className="flex justify-between items-center">
+        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-100">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
             <div>
-              <h3 className="text-lg font-semibold text-gray-800">Revenue Summary</h3>
-              <p className="text-sm text-gray-500">Detailed breakdown of your earnings</p>
+              <h3 className="text-xl font-semibold text-gray-800">Revenue Summary</h3>
+              <p className="text-sm text-gray-500 mt-1">Detailed breakdown of your earnings</p>
             </div>
-            <div className="text-right">
+            <div className="bg-blue-50 px-4 py-2 rounded-xl">
               <p className="text-sm text-gray-500">Total Orders Processed</p>
               <p className="text-2xl font-bold text-gray-800">{stats.total}</p>
             </div>
           </div>
-          <div className="mt-4 grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm text-gray-500">Average Order Value</p>
-              <p className="text-xl font-semibold text-gray-800">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border border-blue-100">
+              <p className="text-sm text-gray-600 mb-2">Average Order Value</p>
+              <p className="text-2xl font-bold text-gray-800">
                 Rs.{stats.total > 0 
                   ? (stats.totalRevenue / stats.total).toLocaleString('en-US', {
                       minimumFractionDigits: 2,
@@ -359,9 +588,9 @@ const ProviderOrderManagement = () => {
                 }
               </p>
             </div>
-            <div>
-              <p className="text-sm text-gray-500">Completed Orders Revenue</p>
-              <p className="text-xl font-semibold text-green-600">
+            <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border border-green-100">
+              <p className="text-sm text-gray-600 mb-2">Completed Orders Revenue</p>
+              <p className="text-2xl font-bold text-green-700">
                 Rs.{(stats.totalRevenue * (stats.delivered / stats.total || 0)).toLocaleString('en-US', {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2
@@ -372,83 +601,111 @@ const ProviderOrderManagement = () => {
         </div>
 
         {/* Order Status Distribution */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Order Status Distribution</h3>
-            <div className="space-y-4">
-              {[
-                { status: 'Pending', count: stats.pending, color: 'bg-yellow-100' },
-                { status: 'Processing', count: stats.processing, color: 'bg-blue-100' },
-                { status: 'Shipped', count: stats.shipped, color: 'bg-purple-100' },
-                { status: 'Delivered', count: stats.delivered, color: 'bg-green-100' }
-              ].map(({ status, count, color }) => (
-                <div key={status} className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className={`w-3 h-3 rounded-full ${color} mr-2`}></div>
-                    <span className="text-sm text-gray-600">{status}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <span className="text-sm font-medium text-gray-800">{count}</span>
-                    <span className="text-xs text-gray-500 ml-1">
-                      ({((count / stats.total) * 100 || 0).toFixed(1)}%)
-                    </span>
-                  </div>
+        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-100">
+          <h3 className="text-xl font-semibold text-gray-800 mb-6">Order Status Distribution</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { status: 'Pending', count: stats.pending, color: 'from-yellow-50 to-yellow-100', border: 'border-yellow-100', text: 'text-yellow-700' },
+              { status: 'Processing', count: stats.processing, color: 'from-blue-50 to-blue-100', border: 'border-blue-100', text: 'text-blue-700' },
+              { status: 'Shipped', count: stats.shipped, color: 'from-purple-50 to-purple-100', border: 'border-purple-100', text: 'text-purple-700' },
+              { status: 'Delivered', count: stats.delivered, color: 'from-green-50 to-green-100', border: 'border-green-100', text: 'text-green-700' }
+            ].map(({ status, count, color, border, text }) => (
+              <div key={status} className={`bg-gradient-to-br ${color} p-4 rounded-xl border ${border}`}>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-gray-600">{status}</span>
+                  <span className={`text-sm font-semibold ${text}`}>{count}</span>
                 </div>
-              ))}
-            </div>
+                <div className="w-full bg-white/50 rounded-full h-2">
+                  <div 
+                    className={`h-2 rounded-full ${color.split(' ')[1]}`}
+                    style={{ width: `${((count / stats.total) * 100 || 0)}%` }}
+                  ></div>
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  {((count / stats.total) * 100 || 0).toFixed(1)}% of total orders
+                </p>
+              </div>
+            ))}
           </div>
         </div>
 
         {/* Orders List Section */}
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-          <div className="p-6 border-b border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-800">Order List</h2>
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+          <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
+            <div className="flex justify-between items-center">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800">Order List</h2>
+                <p className="text-sm text-gray-500 mt-1">Manage and track all your orders</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="px-3 py-1 bg-blue-50 rounded-full text-sm text-blue-600 font-medium">
+                  Total: {orders.length}
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Order ID</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Customer</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Products</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Total</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Status</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Actions</th>
+              <thead>
+                <tr className="bg-gray-50">
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Order ID</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Customer</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Products</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Total</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-100">
                 {orders.map((order) => (
-                  <tr key={order._id} className="hover:bg-gray-50 transition duration-150">
-                    <td className="px-6 py-4 text-sm text-gray-900">{order._id}</td>
+                  <tr key={order._id} className="hover:bg-gray-50 transition-colors duration-150">
                     <td className="px-6 py-4">
-                      <div className="text-sm">
-                        <p className="font-medium text-gray-900">{order.pet_owner?.username || 'N/A'}</p>
-                        <p className="text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</p>
+                      <div className="flex items-center">
+                        <div className="h-8 w-8 rounded-lg bg-blue-50 flex items-center justify-center mr-3">
+                          <Package className="h-4 w-4 text-blue-600" />
+                        </div>
+                        <span className="text-sm font-medium text-gray-900">{order._id.slice(-6)}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm text-gray-900">
-                        {order.products?.map(item => 
-                          `${item.product?.name || 'Unknown'} (${item.quantity})`
-                        ).join(', ') || 'No products'}
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium text-gray-900">{order.pet_owner?.username || 'N/A'}</span>
+                        <span className="text-xs text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-sm font-medium text-gray-900">
-                        Rs.{order.total_price?.toFixed(2) || '0.00'}
-                      </span>
+                      <div className="flex flex-col space-y-1">
+                        {order.products?.map((item, index) => (
+                          <div key={index} className="flex items-center text-sm">
+                            <span className="text-gray-900">{item.product?.name || 'Unknown'}</span>
+                            <span className="mx-2 text-gray-400">×</span>
+                            <span className="text-gray-600">{item.quantity}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center">
+                        <span className="text-sm font-semibold text-gray-900">
+                          Rs.{order.total_price?.toFixed(2) || '0.00'}
+                        </span>
+                      </div>
                     </td>
                     <td className="px-6 py-4">
                       <select
                         value={order.order_status}
                         onChange={(e) => handleStatusUpdate(order._id, e.target.value)}
-                        className={`px-3 py-1 rounded-full text-sm font-semibold border-0
-                          ${order.order_status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                            order.order_status === 'Processing' ? 'bg-blue-100 text-blue-800' :
-                            order.order_status === 'Shipped' ? 'bg-purple-100 text-purple-800' :
-                            order.order_status === 'Delivered' ? 'bg-green-100 text-green-800' :
-                            'bg-red-100 text-red-800'}`}
+                        className={`px-3 py-1.5 rounded-lg text-sm font-medium border-0 focus:ring-2 focus:ring-offset-2 transition-all duration-200
+                          ${order.order_status === 'Pending' 
+                            ? 'bg-yellow-50 text-yellow-700 focus:ring-yellow-500' 
+                            : order.order_status === 'Processing' 
+                            ? 'bg-blue-50 text-blue-700 focus:ring-blue-500'
+                            : order.order_status === 'Shipped' 
+                            ? 'bg-purple-50 text-purple-700 focus:ring-purple-500'
+                            : order.order_status === 'Delivered' 
+                            ? 'bg-green-50 text-green-700 focus:ring-green-500'
+                            : 'bg-red-50 text-red-700 focus:ring-red-500'}`}
                       >
                         <option value="Pending">Pending</option>
                         <option value="Processing">Processing</option>
@@ -458,79 +715,219 @@ const ProviderOrderManagement = () => {
                       </select>
                     </td>
                     <td className="px-6 py-4">
-                      <button
-                        onClick={() => handleViewDetails(order)}
-                        className="text-blue-600 hover:text-blue-900 transition duration-150"
-                      >
-                        <Eye className="h-5 w-5" />
-                      </button>
+                      <div className="flex items-center space-x-3">
+                        <button
+                          onClick={() => handleViewDetails(order)}
+                          className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                          title="View Details"
+                        >
+                          <Eye className="h-5 w-5" />
+                        </button>
+                        <button
+                          onClick={() => handleStatusUpdate(order._id, 'Delivered')}
+                          className="p-2 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors duration-200"
+                          title="Mark as Delivered"
+                        >
+                          <CheckCircle className="h-5 w-5" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+
+          {orders.length === 0 && (
+            <div className="text-center py-12">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
+                <Package className="h-8 w-8 text-gray-400" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-1">No Orders Found</h3>
+              <p className="text-sm text-gray-500">There are no orders to display at the moment.</p>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Order Details Modal */}
-          {selectedOrder && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <h2 className="text-2xl font-bold mb-4">Order Details</h2>
-              <div className="space-y-4">
+      {selectedOrder && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl border border-gray-100">
+            {/* Modal Header */}
+            <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
+              <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-semibold">Customer Information</h3>
-                  <p>{selectedOrder.pet_owner?.username}</p>
-                  <p>{selectedOrder.shipping_details?.phoneNumber}</p>
+                  <h2 className="text-2xl font-bold text-gray-800">Order Details</h2>
+                  <p className="text-sm text-gray-500 mt-1">Order ID: {selectedOrder._id}</p>
                 </div>
-                <div>
-                  <h3 className="font-semibold">Shipping Address</h3>
-                  <p>{selectedOrder.shipping_details?.address}</p>
-                  <p>{selectedOrder.shipping_details?.city}, {selectedOrder.shipping_details?.postalCode}</p>
-                  <p>{selectedOrder.shipping_details?.country}</p>
-                </div>
-                <div>
-                  <h3 className="font-semibold">Products</h3>
-                  <div className="mt-2">
-                    {selectedOrder.products.map((item, index) => (
-                      <div key={index} className="flex justify-between py-2 border-b">
-                        <span>{item.product.name} x {item.quantity}</span>
-                        <span>Rs.{(item.price * item.quantity).toFixed(2)}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-4 text-right">
-                    <p className="font-bold">Total: Rs.{selectedOrder.total_price.toFixed(2)}</p>
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <h3 className="font-semibold mb-2">Order Status</h3>
-                  <select
-                    value={selectedOrder.order_status}
-                    onChange={(e) => handleStatusUpdate(selectedOrder._id, e.target.value)}
-                    className={`px-4 py-2 rounded-lg text-sm font-semibold border
-                      ${selectedOrder.order_status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                        selectedOrder.order_status === 'Processing' ? 'bg-blue-100 text-blue-800' :
-                        selectedOrder.order_status === 'Shipped' ? 'bg-purple-100 text-purple-800' :
-                        selectedOrder.order_status === 'Delivered' ? 'bg-green-100 text-green-800' :
-                        'bg-red-100 text-red-800'}`}
-                  >
-                    <option value="Pending">Pending</option>
-                    <option value="Processing">Processing</option>
-                    <option value="Shipped">Shipped</option>
-                    <option value="Delivered">Delivered</option>
-                    <option value="Cancelled">Cancelled</option>
-                  </select>
-                </div>
-              </div>
-              <div className="mt-6 flex justify-end">
                 <button
                   onClick={() => setSelectedOrder(null)}
-                  className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition duration-150"
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                >
+                  <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div className="overflow-y-auto max-h-[calc(90vh-8rem)]">
+              <div className="p-6 space-y-6">
+                {/* Order Status Section */}
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-600">Current Status</h3>
+                      <p className="text-lg font-semibold text-gray-800 mt-1">{selectedOrder.order_status}</p>
+                    </div>
+                    <select
+                      value={selectedOrder.order_status}
+                      onChange={(e) => handleStatusUpdate(selectedOrder._id, e.target.value)}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium border-0 focus:ring-2 focus:ring-offset-2 transition-all duration-200
+                        ${selectedOrder.order_status === 'Pending' 
+                          ? 'bg-yellow-50 text-yellow-700 focus:ring-yellow-500' 
+                          : selectedOrder.order_status === 'Processing' 
+                          ? 'bg-blue-50 text-blue-700 focus:ring-blue-500'
+                          : selectedOrder.order_status === 'Shipped' 
+                          ? 'bg-purple-50 text-purple-700 focus:ring-purple-500'
+                          : selectedOrder.order_status === 'Delivered' 
+                          ? 'bg-green-50 text-green-700 focus:ring-green-500'
+                          : 'bg-red-50 text-red-700 focus:ring-red-500'}`}
+                    >
+                      <option value="Pending">Pending</option>
+                      <option value="Processing">Processing</option>
+                      <option value="Shipped">Shipped</option>
+                      <option value="Delivered">Delivered</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Customer Information Section */}
+                <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center mr-3">
+                      <svg className="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-800">Customer Information</h3>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-gray-500">Customer Name</p>
+                      <p className="text-base font-medium text-gray-800">{selectedOrder.pet_owner?.username || 'N/A'}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Phone Number</p>
+                      <p className="text-base font-medium text-gray-800">{selectedOrder.shipping_details?.phoneNumber || 'N/A'}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Shipping Address Section */}
+                <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    <div className="h-10 w-10 rounded-full bg-green-50 flex items-center justify-center mr-3">
+                      <svg className="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-800">Shipping Address</h3>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-base text-gray-800">{selectedOrder.shipping_details?.address}</p>
+                    <p className="text-base text-gray-800">
+                      {selectedOrder.shipping_details?.city}, {selectedOrder.shipping_details?.postalCode}
+                    </p>
+                    <p className="text-base text-gray-800">{selectedOrder.shipping_details?.country}</p>
+                  </div>
+                </div>
+
+                {/* Products Section */}
+                <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    <div className="h-10 w-10 rounded-full bg-purple-50 flex items-center justify-center mr-3">
+                      <Package className="h-5 w-5 text-purple-600" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-800">Order Items</h3>
+                  </div>
+                  <div className="space-y-4">
+                    {selectedOrder.products.map((item, index) => (
+                      <div key={index} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
+                        <div className="flex items-center">
+                          <div className="h-10 w-10 rounded-lg bg-gray-50 flex items-center justify-center mr-3">
+                            <Package className="h-5 w-5 text-gray-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-gray-800">{item.product.name}</p>
+                            <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
+                          </div>
+                        </div>
+                        <p className="text-sm font-semibold text-gray-800">
+                          Rs.{(item.price * item.quantity).toFixed(2)}
+                        </p>
+                      </div>
+                    ))}
+                    <div className="flex justify-between items-center pt-4 border-t border-gray-100">
+                      <p className="text-base font-medium text-gray-600">Total Amount</p>
+                      <p className="text-xl font-bold text-gray-800">
+                        Rs.{selectedOrder.total_price.toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Order Timeline */}
+                <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    <div className="h-10 w-10 rounded-full bg-yellow-50 flex items-center justify-center mr-3">
+                      <Clock className="h-5 w-5 text-yellow-600" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-800">Order Timeline</h3>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="flex items-center">
+                      <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-800">Order Placed</p>
+                        <p className="text-xs text-gray-500">{new Date(selectedOrder.createdAt).toLocaleString()}</p>
+                      </div>
+                    </div>
+                    {selectedOrder.order_status !== 'Pending' && (
+                      <div className="flex items-center">
+                        <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                          <CheckCircle className="h-4 w-4 text-blue-600" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-gray-800">Order Confirmed</p>
+                          <p className="text-xs text-gray-500">{new Date(selectedOrder.updatedAt).toLocaleString()}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-6 border-t border-gray-100 bg-gray-50">
+              <div className="flex justify-end space-x-3">
+                <button
+                  onClick={() => setSelectedOrder(null)}
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
                 >
                   Close
+                </button>
+                <button
+                  onClick={() => handleStatusUpdate(selectedOrder._id, 'Delivered')}
+                  className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-green-500 to-green-600 rounded-lg hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 shadow-sm hover:shadow-md"
+                >
+                  Mark as Delivered
                 </button>
               </div>
             </div>

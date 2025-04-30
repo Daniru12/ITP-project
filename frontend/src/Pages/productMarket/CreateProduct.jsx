@@ -143,36 +143,40 @@ const CreateProduct = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">Create New Product</h1>
-            <p className="text-gray-600">Bring your product to life</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Create New Product</h1>
+            <p className="text-sm text-gray-600 mt-1">Add your product details below</p>
           </div>
           <button
             onClick={() => navigate('/product-management')}
-            className="flex items-center bg-white px-4 py-2 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
+            className="inline-flex items-center px-4 py-2 rounded-xl bg-white shadow-sm hover:shadow-md transition-all duration-300 text-gray-600 hover:text-gray-900"
           >
-            <ArrowLeft className="w-4 h-4 mr-2 text-blue-600" />
-            <span className="text-blue-600">Back to Products</span>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Products
           </button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content Section */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Basic Info Card */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <div className="flex items-center mb-6">
-                <Package className="w-6 h-6 text-blue-600 mr-3" />
-                <h2 className="text-xl font-semibold text-gray-800">Basic Information</h2>
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Main Form Section */}
+          <div className="flex-1 space-y-6">
+            {/* Basic Information Card */}
+            <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+              <div className="p-6 border-b border-gray-100">
+                <div className="flex items-center">
+                  <div className="h-8 w-8 rounded-xl bg-blue-50 flex items-center justify-center mr-3">
+                    <Package className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">Basic Information</h2>
+                </div>
               </div>
               
-              <div className="space-y-6">
-                {/* Product Name Input */}
-                <div className="bg-gray-50 p-4 rounded-xl transition-all duration-300 hover:bg-gray-100">
+              <div className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
                   <input
                     type="text"
                     value={name}
@@ -180,148 +184,184 @@ const CreateProduct = () => {
                       setName(e.target.value);
                       setErrors({ ...errors, name: undefined });
                     }}
-                    placeholder="Product Name"
-                    className="w-full bg-transparent border-none text-lg font-medium focus:ring-0 placeholder-gray-400"
+                    placeholder="Enter product name"
+                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-gray-100 focus:border-blue-500 focus:bg-white focus:ring-0 transition-all duration-300"
                   />
                   {errors.name && (
-                    <p className="text-sm text-red-500 mt-2">{errors.name}</p>
+                    <p className="mt-2 text-sm text-red-500 flex items-center">
+                      <span className="h-1 w-1 rounded-full bg-red-500 mr-2"></span>
+                      {errors.name}
+                    </p>
                   )}
                 </div>
 
-                {/* Description Input */}
-                <div className="bg-gray-50 p-4 rounded-xl transition-all duration-300 hover:bg-gray-100">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
                   <textarea
                     value={description}
                     onChange={(e) => {
                       setDescription(e.target.value);
                       setErrors({ ...errors, description: undefined });
                     }}
-                    placeholder="Describe your product..."
+                    placeholder="Describe your product in detail..."
                     rows="4"
-                    className="w-full bg-transparent border-none text-base focus:ring-0 placeholder-gray-400"
+                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-gray-100 focus:border-blue-500 focus:bg-white focus:ring-0 transition-all duration-300"
                   />
                   {errors.description && (
-                    <p className="text-sm text-red-500 mt-2">{errors.description}</p>
+                    <p className="mt-2 text-sm text-red-500 flex items-center">
+                      <span className="h-1 w-1 rounded-full bg-red-500 mr-2"></span>
+                      {errors.description}
+                    </p>
                   )}
                 </div>
               </div>
             </div>
 
             {/* Pricing & Inventory Card */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <div className="flex items-center mb-6">
-                <DollarSign className="w-6 h-6 text-green-600 mr-3" />
-                <h2 className="text-xl font-semibold text-gray-800">Pricing & Inventory</h2>
+            <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+              <div className="p-6 border-b border-gray-100">
+                <div className="flex items-center">
+                  <div className="h-8 w-8 rounded-xl bg-green-50 flex items-center justify-center mr-3">
+                    <DollarSign className="h-5 w-5 text-green-600" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">Pricing & Inventory</h2>
+                </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-6">
-                {/* Price Input */}
-                <div className="bg-gray-50 p-4 rounded-xl transition-all duration-300 hover:bg-gray-100">
-                  <label className="text-sm text-gray-500 block mb-1">Price (LKR)</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    value={price}
-                    onChange={(e) => {
-                      setPrice(e.target.value);
-                      setErrors({ ...errors, price: undefined });
-                    }}
-                    className="w-full bg-transparent border-none text-2xl font-bold focus:ring-0 text-green-600"
-                    placeholder="0.00"
-                  />
-                  {errors.price && (
-                    <p className="text-sm text-red-500 mt-2">{errors.price}</p>
-                  )}
-                </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Price (LKR)</label>
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">Rs.</span>
+                      <input
+                        type="number"
+                        step="0.01"
+                        value={price}
+                        onChange={(e) => {
+                          setPrice(e.target.value);
+                          setErrors({ ...errors, price: undefined });
+                        }}
+                        placeholder="0.00"
+                        className="w-full pl-12 pr-4 py-3 rounded-xl bg-gray-50 border-2 border-gray-100 focus:border-green-500 focus:bg-white focus:ring-0 transition-all duration-300 text-lg font-semibold text-gray-900"
+                      />
+                    </div>
+                    {errors.price && (
+                      <p className="mt-2 text-sm text-red-500 flex items-center">
+                        <span className="h-1 w-1 rounded-full bg-red-500 mr-2"></span>
+                        {errors.price}
+                      </p>
+                    )}
+                  </div>
 
-                {/* Quantity Input */}
-                <div className="bg-gray-50 p-4 rounded-xl transition-all duration-300 hover:bg-gray-100">
-                  <label className="text-sm text-gray-500 block mb-1">Stock Quantity</label>
-                  <input
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => {
-                      setQuantity(e.target.value);
-                      setErrors({ ...errors, quantity: undefined });
-                    }}
-                    className="w-full bg-transparent border-none text-2xl font-bold focus:ring-0"
-                    placeholder="0"
-                  />
-                  {errors.quantity && (
-                    <p className="text-sm text-red-500 mt-2">{errors.quantity}</p>
-                  )}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Stock Quantity</label>
+                    <input
+                      type="number"
+                      value={quantity}
+                      onChange={(e) => {
+                        setQuantity(e.target.value);
+                        setErrors({ ...errors, quantity: undefined });
+                      }}
+                      placeholder="0"
+                      className="w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-gray-100 focus:border-green-500 focus:bg-white focus:ring-0 transition-all duration-300 text-lg font-semibold text-gray-900"
+                    />
+                    {errors.quantity && (
+                      <p className="mt-2 text-sm text-red-500 flex items-center">
+                        <span className="h-1 w-1 rounded-full bg-red-500 mr-2"></span>
+                        {errors.quantity}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Sidebar Section */}
-          <div className="space-y-6">
+          {/* Sidebar */}
+          <div className="lg:w-96 space-y-6">
             {/* Category Card */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <div className="flex items-center mb-6">
-                <Tag className="w-6 h-6 text-purple-600 mr-3" />
-                <h2 className="text-xl font-semibold text-gray-800">Category</h2>
+            <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+              <div className="p-6 border-b border-gray-100">
+                <div className="flex items-center">
+                  <div className="h-8 w-8 rounded-xl bg-purple-50 flex items-center justify-center mr-3">
+                    <Tag className="h-5 w-5 text-purple-600" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">Category</h2>
+                </div>
               </div>
               
-              <div className="space-y-3">
-                {['all', 'toys', 'food', 'beds', 'grooming', 'health'].map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setCategory(cat)}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-300 
-                      ${category === cat 
-                        ? 'bg-blue-50 text-blue-600 font-medium' 
-                        : 'hover:bg-gray-50'}`}
-                  >
-                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                  </button>
-                ))}
+              <div className="p-4">
+                <div className="grid grid-cols-2 gap-2">
+                  {['all', 'toys', 'food', 'beds', 'grooming', 'health'].map((cat) => (
+                    <button
+                      key={cat}
+                      onClick={() => setCategory(cat)}
+                      className={`px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 
+                        ${category === cat 
+                          ? 'bg-purple-50 text-purple-700 border-2 border-purple-200' 
+                          : 'bg-gray-50 text-gray-600 border-2 border-gray-100 hover:bg-gray-100'
+                        }`}
+                    >
+                      {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
             {/* Image Upload Card */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <div className="flex items-center mb-6">
-                <ImageIcon className="w-6 h-6 text-indigo-600 mr-3" />
-                <h2 className="text-xl font-semibold text-gray-800">Product Images</h2>
+            <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+              <div className="p-6 border-b border-gray-100">
+                <div className="flex items-center">
+                  <div className="h-8 w-8 rounded-xl bg-indigo-50 flex items-center justify-center mr-3">
+                    <ImageIcon className="h-5 w-5 text-indigo-600" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">Product Images</h2>
+                </div>
               </div>
               
-              <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
-                <ImageIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                <div className="space-y-2">
-                  <label className="cursor-pointer">
-                    <span className="bg-blue-50 text-blue-600 px-4 py-2 rounded-full hover:bg-blue-100 transition-colors duration-300">
-                      Choose Files
-                    </span>
-                    <input
-                      type="file"
-                      multiple
-                      accept="image/*"
-                      onChange={handleImagesChange}
-                      className="hidden"
-                    />
-                  </label>
-                  <p className="text-sm text-gray-500">or drag and drop</p>
-                  <p className="text-xs text-gray-400">Maximum 5 images</p>
+              <div className="p-6">
+                <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center bg-gray-50">
+                  <ImageIcon className="mx-auto h-10 w-10 text-gray-400 mb-4" />
+                  <div className="space-y-3">
+                    <label className="cursor-pointer block">
+                      <span className="inline-flex items-center px-4 py-2 rounded-xl bg-indigo-50 text-indigo-600 font-medium hover:bg-indigo-100 transition-colors duration-300">
+                        <ImageIcon className="h-4 w-4 mr-2" />
+                        Choose Files
+                      </span>
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handleImagesChange}
+                        className="hidden"
+                      />
+                    </label>
+                    <p className="text-sm text-gray-500">or drag and drop</p>
+                    <p className="text-xs text-gray-400">PNG, JPG or JPEG (MAX. 5 images)</p>
+                  </div>
+                  {images.length > 0 && (
+                    <div className="mt-4 py-2 px-3 bg-indigo-50 rounded-lg inline-flex items-center">
+                      <ImageIcon className="h-4 w-4 text-indigo-600 mr-2" />
+                      <span className="text-sm text-indigo-600 font-medium">
+                        {images.length} image(s) selected
+                      </span>
+                    </div>
+                  )}
                 </div>
-                {images.length > 0 && (
-                  <p className="mt-4 text-sm text-blue-600 font-medium">
-                    {images.length} image(s) selected
-                  </p>
-                )}
               </div>
             </div>
 
             {/* Action Card */}
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <div className="space-y-4">
-                <label className="flex items-center space-x-3 cursor-pointer">
+            <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
+              <div className="p-6">
+                <label className="flex items-center space-x-3 cursor-pointer mb-6">
                   <input
                     type="checkbox"
                     checked={promoCodeApplied}
                     onChange={(e) => setPromoCodeApplied(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                    className="w-4 h-4 text-blue-600 rounded-lg border-gray-300 focus:ring-blue-500"
                   />
                   <span className="text-gray-700">Enable Promo Code</span>
                 </label>
@@ -329,13 +369,13 @@ const CreateProduct = () => {
                 <button
                   onClick={handleSubmit}
                   disabled={isSubmitting}
-                  className={`w-full flex items-center justify-center px-6 py-3 rounded-xl text-white font-semibold
+                  className={`w-full flex items-center justify-center px-6 py-3 rounded-xl text-white font-medium text-sm
                     ${isSubmitting 
                       ? 'bg-gray-400 cursor-not-allowed' 
-                      : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-300'
+                      : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300'
                     }`}
                 >
-                  <Save className="w-5 h-5 mr-2" />
+                  <Save className="w-4 h-4 mr-2" />
                   {isSubmitting ? 'Creating...' : 'Publish Product'}
                 </button>
               </div>
