@@ -116,14 +116,14 @@ const AdminProductManagement = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent"></div>
+      <div className="min-h-screen bg-[var(--color-primary-light)] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-4 border-[var(--color-primary)] border-t-transparent"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-accent-light)] p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="mb-8">
@@ -131,20 +131,20 @@ const AdminProductManagement = () => {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => window.history.back()}
-                className="group flex items-center gap-2 px-4 py-2 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 text-gray-600 hover:text-gray-900 border border-gray-100"
+                className="group flex items-center gap-2 px-4 py-2 bg-[var(--color-white)] rounded-xl shadow-sm hover:shadow-md transition-all duration-300 text-[var(--text-on-secondary)] hover:text-[var(--color-primary)] border border-[var(--color-primary-light)]"
               >
                 <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" />
                 <span className="font-medium">Back</span>
               </button>
               <div>
-                <h1 className="text-3xl font-bold text-gray-800 mb-2">Product Management</h1>
-                <p className="text-gray-600">Manage and monitor all products in your store</p>
+                <h1 className="text-3xl font-bold text-[var(--text-on-secondary)] mb-2">Product Management</h1>
+                <p className="text-[var(--text-on-secondary)] opacity-70">Manage and monitor all products in your store</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="px-4 py-2 bg-white rounded-xl shadow-sm border border-gray-100">
-                <p className="text-sm text-gray-500">Total Products</p>
-                <p className="text-xl font-bold text-gray-800">{stats.totalProducts}</p>
+              <div className="px-4 py-2 bg-[var(--color-white)] rounded-xl shadow-sm border border-[var(--color-primary-light)]">
+                <p className="text-sm text-[var(--text-on-secondary)] opacity-70">Total Products</p>
+                <p className="text-xl font-bold text-[var(--text-on-secondary)]">{stats.totalProducts}</p>
               </div>
             </div>
           </div>
@@ -246,69 +246,69 @@ const AdminProductManagement = () => {
         </div>
 
         {/* Search and Filter Section */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+        <div className="bg-[var(--color-white)] rounded-2xl shadow-lg p-6 mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
             <div className="relative flex-1 max-w-xl">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-on-secondary)] opacity-40" />
               <input
                 type="text"
                 placeholder="Search products by name, description, or category..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                className="w-full pl-10 pr-4 py-3 border border-[var(--color-primary-light)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] transition-all duration-200 text-[var(--text-on-secondary)]"
               />
             </div>
             <div className="flex items-center space-x-4">
-              <button className="p-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-200">
-                <Filter className="h-5 w-5 text-gray-600" />
+              <button className="p-3 border border-[var(--color-primary-light)] rounded-xl hover:bg-[var(--color-primary-light)] transition-all duration-200">
+                <Filter className="h-5 w-5 text-[var(--text-on-secondary)]" />
               </button>
-              <button className="p-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-200">
-                <ArrowUpDown className="h-5 w-5 text-gray-600" />
+              <button className="p-3 border border-[var(--color-primary-light)] rounded-xl hover:bg-[var(--color-primary-light)] transition-all duration-200">
+                <ArrowUpDown className="h-5 w-5 text-[var(--text-on-secondary)]" />
               </button>
             </div>
           </div>
         </div>
 
         {/* Products List Section */}
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-          <div className="p-6 border-b border-gray-200">
+        <div className="bg-[var(--color-white)] rounded-2xl shadow-lg overflow-hidden">
+          <div className="p-6 border-b border-[var(--color-primary-light)]">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-gray-800">Product Inventory</h2>
+              <h2 className="text-xl font-bold text-[var(--text-on-secondary)]">Product Inventory</h2>
               <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-500">Showing {filteredProducts.length} products</span>
+                <span className="text-sm text-[var(--text-on-secondary)] opacity-70">Showing {filteredProducts.length} products</span>
               </div>
             </div>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-[var(--color-primary-light)]">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Product</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text-on-secondary)]">Product</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text-on-secondary)]">
                     <div className="flex items-center space-x-1">
                       <span>Category</span>
                       <ArrowUpDown className="h-4 w-4" />
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text-on-secondary)]">
                     <div className="flex items-center space-x-1">
                       <span>Price</span>
                       <ArrowUpDown className="h-4 w-4" />
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text-on-secondary)]">
                     <div className="flex items-center space-x-1">
                       <span>Stock</span>
                       <ArrowUpDown className="h-4 w-4" />
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Actions</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--text-on-secondary)]">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-[var(--color-primary-light)]">
                 {filteredProducts.map((product) => (
-                  <tr key={product._id} className="hover:bg-gray-50 transition duration-150">
+                  <tr key={product._id} className="hover:bg-[var(--color-primary-light)] transition duration-150">
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-4">
                         <div className="h-12 w-12 flex-shrink-0">
@@ -319,18 +319,18 @@ const AdminProductManagement = () => {
                           />
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-gray-900">{product.name}</p>
-                          <p className="text-sm text-gray-500">{product.description.substring(0, 50)}...</p>
+                          <p className="text-sm font-medium text-[var(--text-on-secondary)]">{product.name}</p>
+                          <p className="text-sm text-[var(--text-on-secondary)] opacity-70">{product.description.substring(0, 50)}...</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                      <span className="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-[var(--color-primary-light)] text-[var(--color-primary)]">
                         {product.category}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-sm font-medium text-gray-900">
+                      <span className="text-sm font-medium text-[var(--text-on-secondary)]">
                         Rs.{product.price.toFixed(2)}
                       </span>
                     </td>
@@ -347,12 +347,12 @@ const AdminProductManagement = () => {
                       <div className="flex items-center space-x-4">
                         <button 
                           onClick={() => handleViewDetails(product)}
-                          className="text-blue-600 hover:text-blue-900 transition duration-150"
+                          className="text-[var(--text-on-secondary)] hover:text-[var(--color-primary)] transition duration-150"
                           title="View Details"
                         >
                           <Eye className="h-5 w-5" />
                         </button>
-                        <button className="text-gray-400 hover:text-gray-600 transition duration-150">
+                        <button className="text-[var(--text-on-secondary)] opacity-40 hover:opacity-100 transition duration-150">
                           <MoreVertical className="h-5 w-5" />
                         </button>
                       </div>
@@ -367,23 +367,23 @@ const AdminProductManagement = () => {
         {/* Product Details Modal */}
         {showModal && selectedProduct && (
           <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            <div className="fixed inset-0 bg-gray-900 bg-opacity-75 backdrop-blur-sm transition-opacity"></div>
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"></div>
 
             <div className="flex min-h-screen items-center justify-center p-4">
-              <div className="relative transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all sm:w-full sm:max-w-4xl">
+              <div className="relative transform overflow-hidden rounded-2xl bg-[var(--color-white)] shadow-2xl transition-all sm:w-full sm:max-w-4xl">
                 <div className="relative p-6">
                   <div className="flex justify-between items-start mb-6">
                     <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-blue-50 rounded-lg">
-                        <Package className="h-6 w-6 text-blue-600" />
+                      <div className="p-2 bg-[var(--color-primary-light)] rounded-lg">
+                        <Package className="h-6 w-6 text-[var(--color-primary)]" />
                       </div>
-                      <h2 className="text-2xl font-bold text-gray-900">Product Details</h2>
+                      <h2 className="text-2xl font-bold text-[var(--text-on-secondary)]">Product Details</h2>
                     </div>
                     <button 
                       onClick={closeModal}
-                      className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                      className="p-2 hover:bg-[var(--color-primary-light)] rounded-lg transition-colors duration-200"
                     >
-                      <X className="h-5 w-5 text-gray-400" />
+                      <X className="h-5 w-5 text-[var(--text-on-secondary)] opacity-40" />
                     </button>
                   </div>
 
