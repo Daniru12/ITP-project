@@ -156,7 +156,7 @@ const AdvertisingManagement = () => {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <h2 className="text-4xl font-bold text-[#333333] mb-4 md:mb-0">Advertisement Management</h2>
         <button 
-          onClick={() => navigate('/AddAdvertisementForm')}
+          onClick={() => navigate('/admin/Form')}
           className="flex items-center bg-[#BC4626] text-white px-6 py-3 rounded-lg hover:bg-[#a33d21] shadow-md transition-all text-lg"
         >
           <FiPlusCircle className="mr-2" />

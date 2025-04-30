@@ -2,12 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import {
-  FaEdit,
   FaTrash,
   FaSearch,
   FaChevronDown,
-  FaCheckCircle,
-  FaTimesCircle,
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
@@ -59,30 +56,9 @@ const AdReviewComponent = () => {
   }, []);
 
   const handleDelete = async (adId) => {
-    if (window.confirm('Are you sure you want to delete this advertisement?')) {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setError('No token found. Please log in.');
-        return;
-      }
+    const confirmDelete = window.confirm('Are you sure you want to delete this advertisement?');
+    if (!confirmDelete) return;
 
-      try {
-        await axios.delete(`${apiUrl}/api/advertisement/delete/${adId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setAdDetails(adDetails.filter((ad) => ad._id !== adId));
-        setStatusMessage('Advertisement deleted successfully.');
-      } catch (err) {
-        setError('Failed to delete the advertisement.');
-      }
-    }
-  };
-
-  const handleEdit = (adId) => {
-    navigate(`/update-ad/${adId}`);
-  };
-
-  const handleApproval = async (adId, newStatus) => {
     const token = localStorage.getItem('token');
     if (!token) {
       setError('No token found. Please log in.');
@@ -90,20 +66,22 @@ const AdReviewComponent = () => {
     }
 
     try {
-      await axios.put(
-        `${apiUrl}/api/advertisement/update-status/${adId}`,
-        { status: newStatus },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setAdDetails((prevAds) =>
-        prevAds.map((ad) =>
-          ad._id === adId ? { ...ad, status: newStatus } : ad
-        )
-      );
-      setStatusMessage(`Advertisement ${newStatus.toLowerCase()} successfully.`);
+      const response = await axios.delete(`${apiUrl}/api/advertisement/delete/${adId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.status === 200 || response.status === 204) {
+        setAdDetails((prevAds) => prevAds.filter((ad) => ad._id !== adId));
+        setStatusMessage('Advertisement deleted successfully.');
+      } else {
+        setError(`Failed to delete the advertisement. Server responded with status: ${response.status}`);
+      }
     } catch (err) {
-      console.error('Error updating status:', err);
-      setError('Failed to update ad status.');
+      if (err.response) {
+        setError(`Failed to delete the advertisement. Error: ${err.response.data.message || err.message}`);
+      } else {
+        setError('Failed to delete the advertisement. An unknown error occurred.');
+      }
     }
   };
 
@@ -114,16 +92,13 @@ const AdReviewComponent = () => {
     return titleMatches && categoryMatches;
   });
 
-  const formatDate = (dateStr) => {
-    return new Date(dateStr).toLocaleDateString();
-  };
+  const formatDate = (dateStr) => new Date(dateStr).toLocaleDateString();
 
   if (loading) return <div className="text-center py-4 text-lg text-blue-600">Loading...</div>;
   if (error) return <div className="text-red-500 text-center py-4 text-lg">{error}</div>;
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      {/* Back to Profile Button */}
       <button
         onClick={() => navigate('/provider-profile')}
         className="mb-4 px-6 py-2 bg-[#347486] text-white rounded-full hover:bg-[#285e6d] transition-colors"
@@ -131,7 +106,7 @@ const AdReviewComponent = () => {
         &larr; Back to Dashboard
       </button>
 
-      <h2 className="text-4xl font-bold mb-8 text-center text-[#347486]">Advertisements</h2>
+      <h2 className="text-4xl font-bold mb-8 text-center text-[#347486]">All Advertisements</h2>
 
       {statusMessage && (
         <div className="text-green-600 text-center mb-4">{statusMessage}</div>
@@ -179,46 +154,24 @@ const AdReviewComponent = () => {
             >
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-2xl font-semibold text-gray-800">{ad.title}</h3>
-                <div className="flex space-x-4">
-                  <button onClick={() => handleEdit(ad._id)} className="text-green-700 hover:text-green-900 text-2xl">
-                    <FaEdit />
-                  </button>
-                  <button onClick={() => handleDelete(ad._id)} className="text-red-700 hover:text-red-900 text-2xl">
-                    <FaTrash />
-                  </button>
-                </div>
+                <button
+                  onClick={() => handleDelete(ad._id)}
+                  className="text-red-700 hover:text-red-900 text-2xl"
+                >
+                  <FaTrash />
+                </button>
               </div>
 
-              {/* Status */}
+              {/* Status Badge */}
               <div className="mb-3">
-                {ad.status === 'Approved' ? (
+                {ad.status === 'approved' ? (
                   <span className="px-4 py-2 rounded-full bg-green-100 text-green-800 text-sm font-semibold">Approved</span>
-                ) : ad.status === 'Rejected' ? (
+                ) : ad.status === 'rejected' ? (
                   <span className="px-4 py-2 rounded-full bg-red-100 text-red-800 text-sm font-semibold">Rejected</span>
                 ) : (
                   <span className="px-4 py-2 rounded-full bg-yellow-100 text-yellow-800 text-sm font-semibold">Pending</span>
                 )}
               </div>
-
-              {/* Approval Buttons */}
-              {ad.status === 'Pending' && (
-                <div className="flex space-x-4 mb-4">
-                  <button
-                    onClick={() => handleApproval(ad._id, 'Approved')}
-                    className="flex items-center space-x-2 px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600"
-                  >
-                    <FaCheckCircle />
-                    <span>Approve</span>
-                  </button>
-                  <button
-                    onClick={() => handleApproval(ad._id, 'Rejected')}
-                    className="flex items-center space-x-2 px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600"
-                  >
-                    <FaTimesCircle />
-                    <span>Reject</span>
-                  </button>
-                </div>
-              )}
 
               <p className="mb-3 text-lg text-gray-600">{ad.description}</p>
               <div className="mb-2 text-lg text-gray-700">

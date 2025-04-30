@@ -18,6 +18,7 @@ import RegisterPet from './Pages/PetOwner/registerPet'
 import CreateFaq from './Pages/FAQ/faq'
 import PetBookPage from './Pages/PetOwner/PetBookPage'
 import AdvertisingManagement from './Pages/Admin/advertiseManagement'
+import Form from './Pages/Admin/form'
 
 
 import PaymentPage from './Pages/Payment/PaymentPage'
@@ -27,7 +28,7 @@ import AppointmentSummary from './Pages/Payment/OrderSummary'
 
 import AddAdvertisementForm from './Pages/Providers/AddAdvertisementForm'
 import AdReviewComponent from './Pages/Providers/AdReviewComponent'
-import UpdateAdvertisementForm from './Pages/Advertisement/UpdateAdvertisementForm'
+import UpdateAdvertisementForm from './Pages/Admin/UpdateAdvertisementForm'
 
 
 import UpdateUser from './Pages/Admin/UpdateUser'
@@ -105,6 +106,7 @@ const AppContent = () => {
             <Route path="Services" element={<ServiceManagement />} />
             <Route path="AllPets" element={<PetsManagement />} />
             <Route path="AdvertisingManagement" element={<AdvertisingManagement />} />
+            <Route path="Form" element={<Form />} />
           </Route>
 
           <Route path='/register' element={<RegisterPage />} />
