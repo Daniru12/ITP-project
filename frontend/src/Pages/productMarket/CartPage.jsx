@@ -164,8 +164,8 @@ const CartPage = () => {
                     <div>
                       <p className="text-sm text-[var(--text-on-secondary)] opacity-70">Total Amount</p>
                       <p className="text-lg font-bold text-[var(--text-on-secondary)]">
-                        Rs.{cart.items.reduce((total, item) => 
-                          total + (item.product.price * item.quantity), 0).toFixed(2)}
+                        Rs.{cart?.items?.reduce((total, item) => 
+                          total + ((item?.product?.price || 0) * (item?.quantity || 0)), 0).toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -194,11 +194,11 @@ const CartPage = () => {
                       >
                         <div className="relative">
                           <img 
-                            src={item.product.image?.[0] || 'placeholder-url'} 
-                            alt={item.product.name}
+                            src={item?.product?.image?.[0] || 'placeholder-url'} 
+                            alt={item?.product?.name || 'Product'}
                             className="w-24 h-24 object-cover rounded-xl shadow-sm"
                           />
-                          {item.product.quantity < 5 && (
+                          {item?.product?.quantity < 5 && (
                             <div className="absolute -top-2 -right-2 bg-[var(--color-accent)] text-[var(--text-on-accent)] 
                               text-xs px-2 py-1 rounded-full flex items-center space-x-1">
                               <AlertCircle className="w-3 h-3" />
@@ -208,19 +208,23 @@ const CartPage = () => {
                         </div>
                         
                         <div className="ml-6 flex-1">
-                          <h3 className="text-lg font-semibold text-[var(--text-on-secondary)]">{item.product.name}</h3>
+                          <h3 className="text-lg font-semibold text-[var(--text-on-secondary)]">
+                            {item?.product?.name || 'Unnamed Product'}
+                          </h3>
                           <div className="flex items-center mt-2 space-x-6">
                             <div className="flex items-center space-x-1">
                               <button 
-                                onClick={() => handleUpdateQuantity(item.product._id, item.quantity - 1)}
+                                onClick={() => handleUpdateQuantity(item?.product?._id, item?.quantity - 1)}
                                 className="p-1.5 rounded-lg hover:bg-[var(--color-primary-light)] text-[var(--text-on-secondary)] 
                                   hover:text-[var(--color-primary)] transition-colors"
                               >
                                 <MinusIcon className="w-4 h-4" />
                               </button>
-                              <span className="w-8 text-center font-medium text-[var(--text-on-secondary)]">{item.quantity}</span>
+                              <span className="w-8 text-center font-medium text-[var(--text-on-secondary)]">
+                                {item?.quantity || 0}
+                              </span>
                               <button 
-                                onClick={() => handleUpdateQuantity(item.product._id, item.quantity + 1)}
+                                onClick={() => handleUpdateQuantity(item?.product?._id, item?.quantity + 1)}
                                 className="p-1.5 rounded-lg hover:bg-[var(--color-primary-light)] text-[var(--text-on-secondary)] 
                                   hover:text-[var(--color-primary)] transition-colors"
                               >
@@ -228,7 +232,7 @@ const CartPage = () => {
                               </button>
                             </div>
                             <p className="text-lg font-semibold text-[var(--color-primary)]">
-                              Rs.{(item.product.price * item.quantity).toFixed(2)}
+                              Rs.{((item?.product?.price || 0) * (item?.quantity || 0)).toFixed(2)}
                             </p>
                           </div>
                         </div>
@@ -248,8 +252,8 @@ const CartPage = () => {
                   <div className="flex justify-between items-center text-lg font-semibold mb-4">
                     <span className="text-[var(--text-on-secondary)]">Total Amount:</span>
                     <span className="text-[var(--color-primary)]">
-                      Rs.{cart.items.reduce((total, item) => 
-                        total + (item.product.price * item.quantity), 0).toFixed(2)}
+                      Rs.{cart?.items?.reduce((total, item) => 
+                        total + ((item?.product?.price || 0) * (item?.quantity || 0)), 0).toFixed(2)}
                     </span>
                   </div>
                   <Link
