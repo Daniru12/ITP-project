@@ -19,7 +19,9 @@ import {
   MoreVertical,
   CheckCircle2,
   XCircle,
-  AlertOctagon
+  AlertOctagon,
+  ArrowLeft,
+  Clock
 } from 'lucide-react';
 
 const ProductManagement = () => {
@@ -227,82 +229,122 @@ const ProductManagement = () => {
       `}</style>
 
       <div className="max-w-7xl mx-auto">
-        {/* Header Section */}
+        {/* Header Section with Back Button */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">Product Dashboard</h1>
-              <p className="text-gray-600">Manage your product inventory and track performance</p>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => navigate(-1)}
+                className="group flex items-center gap-2 px-4 py-2 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 text-gray-600 hover:text-gray-900 border border-gray-100"
+              >
+                <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" />
+                <span className="font-medium">Back</span>
+              </button>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-800 mb-2">Product Dashboard</h1>
+                <p className="text-gray-600">Manage your product inventory and track performance</p>
+              </div>
             </div>
-            <Link
-              to="/create-product"
-              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-lg hover:shadow-xl"
-            >
-              <Plus className="h-5 w-5 mr-2" />
-              Add New Product
-            </Link>
+            <div className="flex items-center gap-3">
+              <div className="px-4 py-2 bg-white rounded-xl shadow-sm border border-gray-100">
+                <p className="text-sm text-gray-500">Total Products</p>
+                <p className="text-xl font-bold text-gray-800">{stats.totalProducts}</p>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Stats Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* Total Products Card */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 border border-blue-100">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-blue-100 rounded-full">
+              <div className="p-3 bg-white rounded-xl shadow-sm">
                 <Package className="h-8 w-8 text-blue-600" />
               </div>
-              <TrendingUp className="h-6 w-6 text-blue-500" />
+              <div className="text-blue-600 bg-white px-3 py-1 rounded-full text-sm font-medium shadow-sm">
+                Total
+              </div>
             </div>
-            <h3 className="text-gray-500 text-sm font-medium">Total Products</h3>
-            <div className="flex items-baseline mt-2">
-              <p className="text-3xl font-bold text-gray-800">{stats.totalProducts}</p>
-              <p className="ml-2 text-sm text-green-500">Active Items</p>
+            <h3 className="text-gray-600 text-sm font-medium mb-1">Total Products</h3>
+            <div className="flex items-baseline">
+              <p className="text-4xl font-bold text-gray-800">{stats.totalProducts}</p>
+              <p className="ml-2 text-sm text-blue-600 font-medium">Items</p>
+            </div>
+            <div className="mt-4 pt-4 border-t border-blue-100">
+              <div className="flex items-center text-sm text-gray-600">
+                <TrendingUp className="h-4 w-4 mr-1 text-blue-600" />
+                <span>All active products</span>
+              </div>
             </div>
           </div>
 
           {/* Total Value Card */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+          <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 border border-green-100">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-green-100 rounded-full">
+              <div className="p-3 bg-white rounded-xl shadow-sm">
                 <DollarSign className="h-8 w-8 text-green-600" />
               </div>
-              <TrendingUp className="h-6 w-6 text-green-500" />
+              <div className="text-green-600 bg-white px-3 py-1 rounded-full text-sm font-medium shadow-sm">
+                Value
+              </div>
             </div>
-            <h3 className="text-gray-500 text-sm font-medium">Total Value</h3>
-            <div className="flex items-baseline mt-2">
-              <p className="text-3xl font-bold text-gray-800">Rs.{stats.totalValue.toFixed(2)}</p>
-              <p className="ml-2 text-sm text-green-500">In Stock</p>
+            <h3 className="text-gray-600 text-sm font-medium mb-1">Total Value</h3>
+            <div className="flex items-baseline">
+              <p className="text-4xl font-bold text-gray-800">Rs.{stats.totalValue.toFixed(2)}</p>
+              <p className="ml-2 text-sm text-green-600 font-medium">In Stock</p>
+            </div>
+            <div className="mt-4 pt-4 border-t border-green-100">
+              <div className="flex items-center text-sm text-gray-600">
+                <TrendingUp className="h-4 w-4 mr-1 text-green-600" />
+                <span>Total inventory value</span>
+              </div>
             </div>
           </div>
 
           {/* Categories Card */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+          <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 border border-purple-100">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-purple-100 rounded-full">
+              <div className="p-3 bg-white rounded-xl shadow-sm">
                 <Tag className="h-8 w-8 text-purple-600" />
               </div>
-              <div className="text-purple-500 text-sm font-medium">Active</div>
+              <div className="text-purple-600 bg-white px-3 py-1 rounded-full text-sm font-medium shadow-sm">
+                Categories
+              </div>
             </div>
-            <h3 className="text-gray-500 text-sm font-medium">Categories</h3>
-            <div className="flex items-baseline mt-2">
-              <p className="text-3xl font-bold text-gray-800">{Object.keys(stats.categories).length}</p>
-              <p className="ml-2 text-sm text-purple-500">Types</p>
+            <h3 className="text-gray-600 text-sm font-medium mb-1">Categories</h3>
+            <div className="flex items-baseline">
+              <p className="text-4xl font-bold text-gray-800">{Object.keys(stats.categories).length}</p>
+              <p className="ml-2 text-sm text-purple-600 font-medium">Types</p>
+            </div>
+            <div className="mt-4 pt-4 border-t border-purple-100">
+              <div className="flex items-center text-sm text-gray-600">
+                <Tag className="h-4 w-4 mr-1 text-purple-600" />
+                <span>Product categories</span>
+              </div>
             </div>
           </div>
 
           {/* Low Stock Card */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+          <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-2xl shadow-lg p-6 transform hover:scale-105 transition-all duration-300 border border-yellow-100">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-red-100 rounded-full">
-                <AlertTriangle className="h-8 w-8 text-red-600" />
+              <div className="p-3 bg-white rounded-xl shadow-sm">
+                <AlertTriangle className="h-8 w-8 text-yellow-600" />
               </div>
-              <div className="text-red-500 text-sm font-medium">Alert</div>
+              <div className="text-yellow-600 bg-white px-3 py-1 rounded-full text-sm font-medium shadow-sm">
+                Alert
+              </div>
             </div>
-            <h3 className="text-gray-500 text-sm font-medium">Low Stock Items</h3>
-            <div className="flex items-baseline mt-2">
-              <p className="text-3xl font-bold text-gray-800">{stats.lowStock}</p>
-              <p className="ml-2 text-sm text-red-500">Need Attention</p>
+            <h3 className="text-gray-600 text-sm font-medium mb-1">Low Stock Items</h3>
+            <div className="flex items-baseline">
+              <p className="text-4xl font-bold text-gray-800">{stats.lowStock}</p>
+              <p className="ml-2 text-sm text-yellow-600 font-medium">Need Attention</p>
+            </div>
+            <div className="mt-4 pt-4 border-t border-yellow-100">
+              <div className="flex items-center text-sm text-gray-600">
+                <Clock className="h-4 w-4 mr-1 text-yellow-600" />
+                <span>Requires restock</span>
+              </div>
             </div>
           </div>
         </div>

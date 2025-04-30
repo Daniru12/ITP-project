@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import { Package, TrendingUp, Clock, DollarSign, Truck, CheckCircle, Eye, AlertTriangle, FileDown, Printer } from 'lucide-react';
+import { Package, TrendingUp, Clock, DollarSign, Truck, CheckCircle, Eye, AlertTriangle, FileDown, Printer, ArrowLeft } from 'lucide-react';
 
 const ProviderOrderManagement = () => {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [stats, setStats] = useState({
     total: 0,
@@ -432,10 +433,29 @@ const ProviderOrderManagement = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header Section */}
+        {/* Header Section with Back Button */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Order Management</h1>
-          <p className="text-gray-600">Track and manage your customer orders</p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => navigate(-1)}
+                className="group flex items-center gap-2 px-4 py-2 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 text-gray-600 hover:text-gray-900 border border-gray-100"
+              >
+                <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" />
+                <span className="font-medium">Back</span>
+              </button>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-800 mb-2">Order Management</h1>
+                <p className="text-gray-600">Track and manage your customer orders</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="px-4 py-2 bg-white rounded-xl shadow-sm border border-gray-100">
+                <p className="text-sm text-gray-500">Total Orders</p>
+                <p className="text-xl font-bold text-gray-800">{stats.total}</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Stats Section */}
