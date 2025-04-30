@@ -47,11 +47,11 @@ export const HeroSection = () => {
             className="lg:w-1/2 lg:pr-10"
             variants={itemVariants}
           >
-            <div className="space-y-4">
-              <h1 className="text-5xl md:text-6xl font-bold text-gray-800 leading-tight">
+            <div className="space-y-6">
+              <h1 className="text-5xl md:text-6xl font-bold text-gray-800 mb-0">
                 The Smart Way to
               </h1>
-              <div className="h-20">
+              <div className="h-9 mt-0">
                 <RotatingText
                   texts={['Care for Pets', 'Groom Your Pet', 'Train Your Pet', 'Board Your Pet']}
                   mainClassName="text-5xl md:text-6xl font-bold leading-tight"
@@ -66,7 +66,7 @@ export const HeroSection = () => {
                   elementLevelClassName="text-[#BC4626] bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent"
                 />
               </div>
-              <h1 className="text-5xl md:text-6xl font-bold text-gray-800 leading-tight">
+              <h1 className="text-5xl md:text-6xl font-bold text-gray-800 leading-tight ">
                 Your Furry Friends
               </h1>
             </div>
