@@ -317,7 +317,7 @@ const UserAppointments = () => {
               You haven't booked any pet appointments yet.
             </p>
             <Link
-              to="/appointments/create"
+              to="/display-services"
               className="text-white py-3 px-8 rounded-md transition duration-150 inline-block"
               style={{ backgroundColor: "#BC4626" }}
             >
@@ -426,7 +426,7 @@ const UserAppointments = () => {
                               Discount:
                             </span>
                             <span className="text-sm font-medium text-green-600">
-                              -Rs. {appt.discount_applied}
+                              -. {appt.discount_applied}%
                             </span>
                           </div>
                         )}
@@ -443,8 +443,8 @@ const UserAppointments = () => {
                             style={{ color: "#BC4626" }}
                           >
                             Rs.{" "}
-                            {(appt.service_id?.packages?.[appt.package_type]
-                              ?.price || 0) - (appt.discount_applied || 0)}
+                            {(appt.service_id?.packages?.[appt.package_type]?.price || 0) - ((appt.discount_applied || 0) / 100) * (appt.service_id?.packages?.[appt.package_type]?.price || 0)}
+
                           </span>
                         </div>
                       </div>
