@@ -115,12 +115,12 @@ export const Footer = () => {
             </h3>
             <ul className="mt-4 space-y-2">
               <li>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">
-                  Contact Us
+                <a href="faqAll" className="text-gray-400 hover:text-white transition-colors duration-300">
+                  Q & A
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">
+                <a href="/faqList" className="text-gray-400 hover:text-white transition-colors duration-300">
                   Help Center
                 </a>
               </li>
