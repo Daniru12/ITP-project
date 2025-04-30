@@ -1,7 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { FaStar, FaEdit, FaTrash, FaCalendarAlt, FaUser, FaCut, FaBox, FaDownload, FaBullhorn } from 'react-icons/fa';
+import { 
+  FaStar, 
+  FaEdit, 
+  FaTrash, 
+  FaCalendarAlt, 
+  FaUser, 
+  FaCut, 
+  FaBox, 
+  FaDownload, 
+  FaBullhorn,
+  FaEnvelope,
+  FaPaw,
+  FaPhone,
+  FaPlus
+} from 'react-icons/fa';
 
 import { Link } from 'react-router-dom';
 import jsPDF from 'jspdf';
@@ -248,12 +262,12 @@ const ProviderProfile = () => {
       })
       .replace(/\//g, "-");
     doc.save(`pet-care-analysis-${dateStr}.pdf`);
+    
+    toast.success('Report downloaded successfully');
   };
 
   if (loading) {
-    return (
-      <HamsterLoader />
-    );
+    return <HamsterLoader />;
   }
 
   if (error) {
@@ -268,255 +282,285 @@ const ProviderProfile = () => {
     );
   }
 
-function handleDeleteService(serviceId) {
-  // Show confirmation dialog before deleting
-  if (window.confirm('Are you sure you want to delete this service? This action cannot be undone.')) {
-    try {
-      const token = localStorage.getItem('token');
-      const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  function handleDeleteService(serviceId) {
+    // Show confirmation dialog before deleting
+    if (window.confirm('Are you sure you want to delete this service? This action cannot be undone.')) {
+      try {
+        const token = localStorage.getItem('token');
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-      axios.delete(`${backendUrl}/api/users/service/${serviceId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+        axios.delete(`${backendUrl}/api/users/service/${serviceId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
 
-      toast.success('Service deleted successfully');
-      setServices(services.filter(service => service._id !== serviceId));
-      window.location.reload();
-    } catch (error) {
-      console.error('Error deleting service:', error);
-      toast.error('Failed to delete service');
+        toast.success('Service deleted successfully');
+        setServices(services.filter(service => service._id !== serviceId));
+        window.location.reload();
+      } catch (error) {
+        console.error('Error deleting service:', error);
+        toast.error('Failed to delete service');
+      }
     }
   }
-}
 
   return (
-    <div className="max-w-7xl mx-auto p-8 bg-gradient-to-br from-gray-50 to-white">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Profile Card */}
-        <div className="lg:col-span-4">
-          <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
-            <div className="text-center mb-8">
-              <div className="relative inline-block">
+    <div className="min-h-screen bg-gray-50">
+      {/* Header Section with Profile Info */}
+      <div className="bg-white shadow-sm">
+        <div className="max-w-6xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center md:items-start md:justify-between">
+            <div className="flex items-center mb-4 md:mb-0">
+              <div className="relative">
                 {providerInfo?.profile_picture ? (
                   <img
                     src={providerInfo.profile_picture}
                     alt="Profile"
-                    className="w-36 h-36 rounded-full mx-auto mb-6 object-cover ring-4 ring-offset-4"
+                    className="w-20 h-20 rounded-full object-cover ring-4 ring-offset-2"
                     style={{ borderColor: 'var(--color-accent)' }}
                   />
                 ) : (
-                  <div className="w-36 h-36 rounded-full mx-auto mb-6 bg-gray-100 flex items-center justify-center">
-                    <FaUser className="w-16 h-16 text-gray-400" />
+                  <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center ring-4 ring-offset-2" style={{ borderColor: 'var(--color-accent)' }}>
+                    <FaUser className="w-8 h-8 text-gray-400" />
                   </div>
                 )}
               </div>
-              <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-accent)' }}>{providerInfo?.full_name || "Service Provider"}</h1>
-              <p className="text-gray-500">Professional Provider</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="grid grid-cols-12 gap-8">
-          {/* Sidebar */}
-          <div className="col-span-12 md:col-span-4 space-y-6">
-            
-            {/* Profile card */}
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-              <div className="flex flex-col space-y-4 p-6">
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 rounded-lg" style={{ backgroundColor: 'var(--color-primary)', opacity: 0.1 }}>
-                    <FaEnvelope className="w-5 h-5" style={{ color: 'var(--color-primary)' }} />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500 mb-1">Email</p>
-                    <p className="font-medium text-gray-900 break-all text-sm">{providerInfo?.email}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500 mb-1">Phone</p>
-                    <p className="font-medium text-gray-900">{providerInfo?.phone_number}</p>
-                  </div>
-                </div>
+              <div className="ml-4">
+                <h1 className="text-2xl font-bold" style={{ color: 'var(--color-accent)' }}>
+                  {providerInfo?.full_name || "Service Provider"}
+                </h1>
+                <p className="text-gray-500">Professional Provider</p>
               </div>
-
+            </div>
+            
+            <div className="flex space-x-2">
               <Link 
                 to="/edit-profile" 
-                className="block text-center px-6 py-2.5 rounded-full text-white transition-all duration-300 hover:shadow-md"
-                style={{ backgroundColor: 'var(--color-primary)' }}
+                className="flex items-center px-4 py-2 rounded-lg border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 transition-all"
               >
+                <FaEdit className="w-4 h-4 mr-2" />
                 Edit Profile
               </Link>
-
+              
               <button
                 onClick={generateServiceReport}
-                className="w-full flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-white transition-all duration-300 hover:shadow-md"
+                className="flex items-center px-4 py-2 rounded-lg text-white transition-all"
                 style={{ backgroundColor: 'var(--color-primary)' }}
               >
-                <FaDownload className="w-4 h-4" />
-                Download Service Report
+                <FaDownload className="w-4 h-4 mr-2" />
+                Download Report
               </button>
             </div>
           </div>
         </div>
-
-        {/* Main Content Area */}
-        <div className="lg:col-span-8 space-y-8">
-          {/* Services Section */}
-          <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
-            <div className="flex justify-between items-center mb-8">
-              <div className="flex items-center">
-                <FaCut className="w-6 h-6 mr-3" style={{ color: 'var(--color-accent)' }} />
-                <h2 className="text-2xl font-bold" style={{ color: 'var(--color-accent)' }}>My Services</h2>
-              </div>
-              <Link 
-                to="/add-service"
-                className="px-6 py-2.5 rounded-full text-white transition-all duration-300 hover:shadow-md"
-                style={{ backgroundColor: 'var(--color-primary)' }}
-              >
-                Add New Service
-              </Link>
-            </div>
-
-            <div className="flex justify-between items-center mb-8">
-              <div className="flex items-center">
-                <FaCut className="w-6 h-6 mr-3" style={{ color: 'var(--color-accent)' }} />
-                <h2 className="text-2xl font-bold" style={{ color: 'var(--color-accent)' }}>My Advertisement</h2>
-              </div>
-              <Link 
-                to="/AddAdvertisementForm"
-                className="px-6 py-2.5 rounded-full text-white transition-all duration-300 hover:shadow-md"
-                style={{ backgroundColor: 'var(--color-primary)' }}
-              >
-                Add New Advertisement
-              </Link>
-            </div>
-
-            {services.length === 0 ? (
-              <div className="text-center py-12">
-                <FaCut className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                <p className="text-gray-500 text-lg">No services added yet</p>
-                <p className="text-sm text-gray-400 mt-2">Start by adding your first service!</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {services.map((service) => (
-                  <div key={service._id} className="bg-gray-50 rounded-xl p-6 transition-all duration-300 hover:shadow-md">
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-xl font-semibold" style={{ color: 'var(--color-primary)' }}>{service.service_name}</h3>
-                      <span className="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full capitalize">
-                        {service.service_category.replace('_', ' ')}
-                      </span>
+      </div>
+      
+      {/* Main Content */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden sticky top-6">
+              {/* Contact Info */}
+              <div className="p-5 border-b border-gray-100">
+                <h3 className="text-lg font-medium mb-4" style={{ color: 'var(--color-accent)' }}>Contact Info</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center">
+                    <div className="p-2 rounded-lg mr-3" style={{ backgroundColor: 'var(--color-primary)', opacity: 0.1 }}>
+                      <FaEnvelope className="w-4 h-4" style={{ color: 'var(--color-primary)' }} />
                     </div>
-                    
-                    <p className="text-gray-600 mb-4 text-sm">{service.description}</p>
-                    
-                    <div className="space-y-3 mb-4">
-                      {service.packages && Object.entries(service.packages).map(([tier, details]) => (
-                        <div key={tier} className="flex justify-between items-center bg-white rounded-lg p-3">
-                          <div>
-                            <span className="capitalize font-medium text-sm">{tier}</span>
-                            <p className="text-xs text-gray-500">{details.duration} mins</p>
-                          </div>
-                          <span className="font-semibold text-sm">{formatPrice(details.price)}</span>
-                        </div>
-                      ))}
-                    </div>
-                    
-                    <div className="flex justify-between items-center pt-4 border-t border-gray-200">
-                      <span className={`px-3 py-1 rounded-full text-xs ${
-                        service.is_available 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-red-100 text-red-800'
-                      }`}>
-                        {service.is_available ? 'Available' : 'Unavailable'}
-                      </span>
-                      <div className="flex space-x-3">
-                        <Link 
-                          to={`/update-service/${service._id}`} 
-                          className="text-gray-400 hover:text-blue-500 transition-colors"
-                        >
-                          <FaEdit className="w-5 h-5" />
-                        </Link>
-                        <button 
-                          onClick={() => handleDeleteService(service._id)}
-                          className="text-gray-400 hover:text-red-500 transition-colors"
-                        >
-                          <FaTrash className="w-5 h-5" />
-                        </button>
-                      </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Email</p>
+                      <p className="font-medium text-gray-900 break-all text-sm">{providerInfo?.email}</p>
                     </div>
                   </div>
-                ))}
+                  
+                  <div className="flex items-center">
+                    <div className="p-2 rounded-lg mr-3" style={{ backgroundColor: 'var(--color-primary)', opacity: 0.1 }}>
+                      <FaPhone className="w-4 h-4" style={{ color: 'var(--color-primary)' }} />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Phone</p>
+                      <p className="font-medium text-gray-900 text-sm">{providerInfo?.phone_number}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-            )}
-          </div>
-
-          {/* Quick Actions Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Appointments Card */}
-            <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
-              <div className="flex items-center mb-6">
-                <FaCalendarAlt className="w-6 h-6 mr-3" style={{ color: 'var(--color-accent)' }} />
-                <h2 className="text-xl font-bold" style={{ color: 'var(--color-accent)' }}>Appointments</h2>
+              
+              {/* Quick Actions */}
+              <div className="p-5">
+                <h3 className="text-lg font-medium mb-4" style={{ color: 'var(--color-accent)' }}>Quick Actions</h3>
+                <div className="space-y-2">
+                  <Link 
+                    to="/AppointmentLIST"
+                    className="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-all"
+                  >
+                    <div className="p-2 rounded-lg mr-3" style={{ backgroundColor: 'var(--color-accent)', opacity: 0.1 }}>
+                      <FaCalendarAlt className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
+                    </div>
+                    <span className="text-gray-800">Appointments</span>
+                  </Link>
+                  
+                  <Link 
+                    to="/product-management"
+                    className="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-all"
+                  >
+                    <div className="p-2 rounded-lg mr-3" style={{ backgroundColor: 'var(--color-accent)', opacity: 0.1 }}>
+                      <FaBox className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
+                    </div>
+                    <span className="text-gray-800">Products</span>
+                  </Link>
+                  
+                  <Link 
+                    to="/provider/order-management"
+                    className="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-all"
+                  >
+                    <div className="p-2 rounded-lg mr-3" style={{ backgroundColor: 'var(--color-accent)', opacity: 0.1 }}>
+                      <FaBox className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
+                    </div>
+                    <span className="text-gray-800">Orders</span>
+                  </Link>
+                  
+                  <Link 
+                    to="/AdReviewComponent"
+                    className="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-all"
+                  >
+                    <div className="p-2 rounded-lg mr-3" style={{ backgroundColor: 'var(--color-accent)', opacity: 0.1 }}>
+                      <FaBullhorn className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
+                    </div>
+                    <span className="text-gray-800">Advertisements</span>
+                  </Link>
+                </div>
               </div>
-              <p className="text-gray-600 mb-6">Manage your upcoming appointments and bookings</p>
-              <Link 
-                to="/AppointmentLIST"
-                className="inline-flex items-center px-6 py-2.5 rounded-full text-white transition-all duration-300 hover:shadow-md"
-                style={{ backgroundColor: 'var(--color-primary)' }}
-              >
-                View Appointments
-              </Link>
             </div>
-
-            {/* Products Card */}
-            <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
-              <div className="flex items-center mb-6">
-                <FaBox className="w-6 h-6 mr-3" style={{ color: 'var(--color-accent)' }} />
-                <h2 className="text-xl font-bold" style={{ color: 'var(--color-accent)' }}>Products</h2>
-              </div>
-              <p className="text-gray-600 mb-6">Manage your product inventory and listings</p>
-              <div className="flex flex-col space-y-3">
+          </div>
+          
+          {/* Main Content */}
+          <div className="lg:col-span-3 space-y-6">
+            {/* Services Section */}
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+              <div className="flex justify-between items-center p-6 border-b border-gray-100">
+                <div className="flex items-center">
+                  <div className="p-2 rounded-lg mr-3" style={{ backgroundColor: 'var(--color-primary)', opacity: 0.1 }}>
+                    <FaCut className="w-5 h-5" style={{ color: 'var(--color-primary)' }} />
+                  </div>
+                  <h2 className="text-xl font-bold" style={{ color: 'var(--color-primary)' }}>My Services</h2>
+                </div>
                 <Link 
-                  to="/product-management"
-                  className="inline-flex items-center px-6 py-2.5 rounded-full text-white transition-all duration-300 hover:shadow-md"
+                  to="/add-service"
+                  className="flex items-center px-4 py-2 rounded-lg text-white transition-all"
                   style={{ backgroundColor: 'var(--color-primary)' }}
                 >
-                  View Products
+                  <FaPlus className="w-4 h-4 mr-2" />
+                  Add Service
                 </Link>
-                <Link 
-                  to="/provider/order-management"
-                  className="inline-flex items-center px-6 py-2.5 rounded-full text-white transition-all duration-300 hover:shadow-md"
-                  style={{ backgroundColor: 'var(--color-accent)' }}
-                >
-                  View Orders
-                </Link>
+              </div>
+              
+              <div className="p-6">
+                {services.length === 0 ? (
+                  <div className="text-center py-12 bg-gray-50 rounded-lg">
+                    <FaCut className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                    <p className="text-gray-500 text-lg">No services added yet</p>
+                    <p className="text-sm text-gray-400 mt-2">Start by adding your first service!</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    {services.map((service) => (
+                      <div key={service._id} className="bg-white rounded-xl border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                        <div className="p-5 border-b border-gray-100">
+                          <div className="flex justify-between items-start">
+                            <h3 className="text-lg font-semibold" style={{ color: 'var(--color-primary)' }}>{service.service_name}</h3>
+                            <span className="bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded-md capitalize">
+                              {service.service_category.replace('_', ' ')}
+                            </span>
+                          </div>
+                          
+                          <p className="text-gray-600 mt-2 text-sm line-clamp-2">{service.description}</p>
+                        </div>
+                        
+                        <div className="p-5 bg-gray-50">
+                          <div className="space-y-2 mb-4">
+                            {service.packages && Object.entries(service.packages).map(([tier, details]) => (
+                              <div key={tier} className="flex justify-between items-center bg-white rounded-md p-2 shadow-sm">
+                                <div>
+                                  <span className="capitalize font-medium text-sm">{tier}</span>
+                                  <p className="text-xs text-gray-500">{details.duration} mins</p>
+                                </div>
+                                <span className="font-semibold text-sm">{formatPrice(details.price)}</span>
+                              </div>
+                            ))}
+                          </div>
+                          
+                          <div className="flex justify-between items-center">
+                            <span className={`px-2 py-1 rounded-md text-xs font-medium ${
+                              service.is_available 
+                                ? 'bg-green-50 text-green-600' 
+                                : 'bg-red-50 text-red-600'
+                            }`}>
+                              {service.is_available ? 'Available' : 'Unavailable'}
+                            </span>
+                            <div className="flex space-x-3">
+                              <Link 
+                                to={`/update-service/${service._id}`} 
+                                className="p-1.5 rounded-md text-gray-400 hover:text-blue-500 hover:bg-blue-50 transition-colors"
+                              >
+                                <FaEdit className="w-4 h-4" />
+                              </Link>
+                              <button 
+                                onClick={() => handleDeleteService(service._id)}
+                                className="p-1.5 rounded-md text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                              >
+                                <FaTrash className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
-              {/* Advertisements */}
-              <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
-              <div className="flex items-center mb-6">
-                <FaBullhorn className="w-6 h-6 mr-3" style={{ color: 'var(--color-accent)' }} />
-                <h2 className="text-xl font-bold" style={{ color: 'var(--color-accent)' }}>Advertisements</h2>
+            {/* Advertisements Section */}
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+              <div className="flex justify-between items-center p-6 border-b border-gray-100">
+                <div className="flex items-center">
+                  <div className="p-2 rounded-lg mr-3" style={{ backgroundColor: 'var(--color-primary)', opacity: 0.1 }}>
+                    <FaBullhorn className="w-5 h-5" style={{ color: 'var(--color-primary)' }} />
+                  </div>
+                  <h2 className="text-xl font-bold" style={{ color: 'var(--color-primary)' }}>My Advertisements</h2>
+                </div>
+                <Link 
+                  to="/AddAdvertisementForm"
+                  className="flex items-center px-4 py-2 rounded-lg text-white transition-all"
+                  style={{ backgroundColor: 'var(--color-primary)' }}
+                >
+                  <FaPlus className="w-4 h-4 mr-2" />
+                  Add Advertisement
+                </Link>
               </div>
-              <p className="text-gray-600 mb-6">Review and manage all your advertisements</p>
-              <Link
-                to="/AdReviewComponent"
-                className="inline-flex items-center px-6 py-2.5 rounded-full text-white transition-all duration-300 hover:shadow-md"
-                style={{ backgroundColor: 'var(--color-primary)' }}
-              >
-                View Advertisements
-              </Link>
+              
+              <div className="p-6">
+                <div className="bg-gray-50 rounded-lg p-6 text-center">
+                  <FaBullhorn className="w-10 h-10 mx-auto mb-3 text-gray-300" />
+                  <p className="text-gray-600">Manage all your advertisements from here.</p>
+                  <Link
+                    to="/AdReviewComponent"
+                    className="inline-flex items-center mt-4 px-4 py-2 rounded-lg text-white transition-all"
+                    style={{ backgroundColor: 'var(--color-accent)' }}
+                  >
+                    View All Advertisements
+                  </Link>
+                </div>
               </div>
+            </div>
           </div>
         </div>
       </div>
       
-      {/* Footer accent */}
+      {/* Footer */}
       <div className="py-8 flex justify-center opacity-30">
         <FaPaw size={20} className="text-gray-300 transform rotate-12 mx-1" />
         <FaPaw size={15} className="text-gray-300 transform -rotate-12 mx-1" />
@@ -527,4 +571,3 @@ function handleDeleteService(serviceId) {
 };
 
 export default ProviderProfile;
-
