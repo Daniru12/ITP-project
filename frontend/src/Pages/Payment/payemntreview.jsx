@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { Download, FileText } from 'lucide-react';
+import { Download, FileText, CreditCard, DollarSign, CircleDollarSign, PieChart, MessageSquare } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const PaymentReviewPage = () => {
   const [payments, setPayments] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [notificationStatus, setNotificationStatus] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,6 +44,14 @@ const PaymentReviewPage = () => {
           : [];
 
         setPayments(paymentsArray);
+        
+        // Initialize notification status for each payment
+        const initialStatus = {};
+        paymentsArray.forEach(payment => {
+          initialStatus[payment._id] = payment.notification_sent || false;
+        });
+        setNotificationStatus(initialStatus);
+        
         setError(null);
       } catch (err) {
         console.error('Error fetching payments:', err);
@@ -58,6 +67,89 @@ const PaymentReviewPage = () => {
 
     fetchPayments();
   }, []);
+
+  // Function to send WhatsApp notification
+  const sendWhatsAppNotification = async (payment) => {
+    try {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+      const token = localStorage.getItem('token');
+      
+      if (!payment.user_phone && !payment.appointment_id?.user_id?.phone) {
+        throw new Error('No phone number available for this payment');
+      }
+      
+      const phoneNumber = payment.user_phone || payment.appointment_id?.user_id?.phone;
+      const amount = payment.amount || 0;
+      const receiptId = payment._id?.slice(-6) || 'N/A';
+      const packageType = payment.package_type || payment.appointment_id?.package_type || 'N/A';
+      
+      // Prepare the message content
+      const message = `Thank you for your payment of $${amount.toFixed(2)} for ${packageType}. Your receipt ID is ${receiptId}. If you have any questions, please contact our support team.`;
+      
+      // Send the notification request to your backend
+      const response = await axios.post(
+        `${backendUrl}/api/notifications/whatsapp`, 
+        {
+          phoneNumber: phoneNumber,
+          message: message,
+          paymentId: payment._id
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      
+      // Update the notification status for this payment
+      setNotificationStatus(prev => ({
+        ...prev,
+        [payment._id]: true
+      }));
+      
+      return response.data;
+    } catch (error) {
+      console.error('Error sending WhatsApp notification:', error);
+      throw error;
+    }
+  };
+
+  // Function to handle sending notification with UI feedback
+  const handleSendNotification = async (payment) => {
+    try {
+      await sendWhatsAppNotification(payment);
+      alert(`WhatsApp notification sent successfully to customer for payment ID: ${payment._id?.slice(-6)}`);
+    } catch (error) {
+      alert(`Failed to send WhatsApp notification: ${error.message}`);
+    }
+  };
+
+  // Function to send notifications to all users who haven't received one
+  const sendBulkNotifications = async () => {
+    if (!confirm('Send WhatsApp notifications to all customers with unsent payment receipts?')) {
+      return;
+    }
+    
+    const unnotifiedPayments = payments.filter(payment => !notificationStatus[payment._id]);
+    
+    if (unnotifiedPayments.length === 0) {
+      alert('All customers have already been notified.');
+      return;
+    }
+    
+    let successCount = 0;
+    let failCount = 0;
+    
+    for (const payment of unnotifiedPayments) {
+      try {
+        await sendWhatsAppNotification(payment);
+        successCount++;
+      } catch (error) {
+        console.error(`Failed to send notification for payment ${payment._id}:`, error);
+        failCount++;
+      }
+    }
+    
+    alert(`Notifications sent: ${successCount} successful, ${failCount} failed.`);
+  };
 
   // Calculate statistics
   const totalRevenue = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
@@ -124,6 +216,7 @@ const PaymentReviewPage = () => {
   };
 
   const generateFullPaymentsPDF = () => {
+    // Existing PDF generation code...
     const doc = new jsPDF();
 
     doc.setFillColor(188, 70, 38);  // #BC4626 - Terracotta Red
@@ -168,11 +261,12 @@ const PaymentReviewPage = () => {
         : '—',
       p.createdAt ? new Date(p.createdAt).toLocaleDateString() : 'N/A',
       p.status || 'Completed',
+      notificationStatus[p._id] ? 'Sent' : 'Not Sent'
     ]);
 
     autoTable(doc, {
       startY: tableStartY,
-      head: [['ID', 'Appointment', 'Package', 'Amount', 'Method', 'Card', 'Date', 'Status']],
+      head: [['ID', 'Appointment', 'Package', 'Amount', 'Method', 'Card', 'Date', 'Status', 'Notification']],
       body: tableData,
       theme: 'striped',
       headStyles: { fillColor: [223, 165, 93] },  // #DFA55D - Sandy Gold
@@ -183,42 +277,146 @@ const PaymentReviewPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <h1 className="text-3xl font-bold mb-8 text-[#BC4626]">Payment Records</h1>
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center">
+          <div className="bg-[#BC4626] p-3 rounded-full mr-4">
+            <CircleDollarSign size={32} className="text-white" />
+          </div>
+          <h1 className="text-3xl font-bold text-[#BC4626]">All Payment Records</h1>
+        </div>
+        <div className="hidden md:block">
+          <img 
+            src="/api/placeholder/180/60" 
+            alt="Payment Logo" 
+            className="h-12 rounded-md" 
+          />
+        </div>
+      </div>
 
       {isLoading ? (
-        <div className="flex justify-center py-8">
-          <div className="animate-spin h-10 w-10 rounded-full border-4 border-[#DFA55D] border-t-transparent"></div>
+        <div className="flex flex-col items-center justify-center py-16">
+          <div className="animate-spin h-12 w-12 rounded-full border-4 border-[#DFA55D] border-t-transparent mb-4"></div>
+          <p className="text-[#347486] font-medium">Loading payment data...</p>
         </div>
       ) : error ? (
-        <div className="bg-red-100 text-[#BC4626] p-4 rounded-lg mb-6">
-          {error}
+        <div className="bg-red-100 text-[#BC4626] p-6 rounded-lg mb-6 flex items-center">
+          <div className="mr-4 p-2 bg-red-200 rounded-full">
+            <PieChart className="text-[#BC4626]" size={24} />
+          </div>
+          <div>
+            <h3 className="font-semibold mb-1">Error Loading Data</h3>
+            <p>{error}</p>
+          </div>
         </div>
       ) : (
         <>
+          {/* Banner Image */}
+          <div className="relative rounded-xl overflow-hidden mb-8 bg-gradient-to-r from-[#347486] to-[#BC4626] h-40 flex items-center">
+            <div className="absolute inset-0 opacity-10">
+              <img src="/api/placeholder/1200/200" alt="Financial background" className="w-full h-full object-cover" />
+            </div>
+            <div className="relative z-10 px-8 text-white">
+              <h2 className="text-2xl font-bold mb-2">Financial Overview</h2>
+              <p className="text-lg opacity-90">Total Revenue: <span className="font-bold">${totalRevenue.toFixed(2)}</span></p>
+              <p className="text-sm opacity-75">From {payments.length} transactions</p>
+            </div>
+          </div>
+
           {/* Stats Section */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white p-6 rounded-lg shadow border-l-4 border-[#BC4626]">
-              <h2 className="text-xl font-semibold mb-2 text-[#347486]">Total Revenue</h2>
-              <p className="text-2xl font-bold text-[#BC4626]">${totalRevenue.toFixed(2)}</p>
-              <p className="text-gray-600">{payments.length} total transactions</p>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div className="bg-white p-6 rounded-lg shadow border-l-4 border-[#BC4626] flex items-start">
+              <div className="bg-[#BC4626]/10 p-3 rounded-lg mr-4">
+                <CircleDollarSign size={24} className="text-[#BC4626]" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold mb-2 text-[#347486]">Total Revenue</h2>
+                <p className="text-2xl font-bold text-[#BC4626]">${totalRevenue.toFixed(2)}</p>
+                <p className="text-gray-600">{payments.length} total transactions</p>
+              </div>
             </div>
             
-            <div className="bg-white p-6 rounded-lg shadow border-l-4 border-[#DFA55D]">
-              <h2 className="text-xl font-semibold mb-2 text-[#347486]">Card Payments</h2>
-              <p className="text-2xl font-bold text-[#DFA55D]">{cardPayments}</p>
-              <p className="text-gray-600">{cardPercentage}% of total</p>
+            <div className="bg-white p-6 rounded-lg shadow border-l-4 border-[#DFA55D] flex items-start">
+              <div className="bg-[#DFA55D]/10 p-3 rounded-lg mr-4">
+                <CreditCard size={24} className="text-[#DFA55D]" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold mb-2 text-[#347486]">Card Payments</h2>
+                <p className="text-2xl font-bold text-[#DFA55D]">{cardPayments}</p>
+                <p className="text-gray-600">{cardPercentage}% of total</p>
+              </div>
             </div>
             
-            <div className="bg-white p-6 rounded-lg shadow border-l-4 border-[#347486]">
-              <h2 className="text-xl font-semibold mb-2 text-[#347486]">Cash Payments</h2>
-              <p className="text-2xl font-bold text-[#347486]">{cashPayments}</p>
-              <p className="text-gray-600">{cashPercentage}% of total</p>
+            <div className="bg-white p-6 rounded-lg shadow border-l-4 border-[#347486] flex items-start">
+              <div className="bg-[#347486]/10 p-3 rounded-lg mr-4">
+                <DollarSign size={24} className="text-[#347486]" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold mb-2 text-[#347486]">Cash Payments</h2>
+                <p className="text-2xl font-bold text-[#347486]">{cashPayments}</p>
+                <p className="text-gray-600">{cashPercentage}% of total</p>
+              </div>
+            </div>
+            
+            <div className="bg-white p-6 rounded-lg shadow border-l-4 border-green-500 flex items-start">
+              <div className="bg-green-500/10 p-3 rounded-lg mr-4">
+                <MessageSquare size={24} className="text-green-500" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold mb-2 text-[#347486]">WhatsApp Notifications</h2>
+                <p className="text-2xl font-bold text-green-500">
+                  {Object.values(notificationStatus).filter(Boolean).length}
+                </p>
+                <p className="text-gray-600">
+                  {payments.length > 0 
+                    ? `${((Object.values(notificationStatus).filter(Boolean).length / payments.length) * 100).toFixed(1)}% sent` 
+                    : '0% sent'}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* WhatsApp Notification Control Panel */}
+          <div className="bg-white rounded-lg shadow overflow-hidden mb-8 border border-green-500">
+            <div className="px-6 py-4 border-b bg-green-600 text-white flex items-center justify-between">
+              <div className="flex items-center">
+                <MessageSquare className="mr-2" size={20} />
+                <h2 className="text-xl font-semibold">WhatsApp Notification Center</h2>
+              </div>
+              <div className="text-sm bg-white/20 px-3 py-1 rounded-full">
+                {Object.values(notificationStatus).filter(Boolean).length} sent / {payments.length} total
+              </div>
+            </div>
+            <div className="p-6">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div>
+                  <h3 className="font-semibold mb-2">Automatic Payment Notifications</h3>
+                  <p className="text-gray-600 text-sm mb-4">Send payment receipts directly to customers via WhatsApp</p>
+                </div>
+                <button
+                  onClick={sendBulkNotifications}
+                  disabled={payments.length === 0 || Object.values(notificationStatus).filter(Boolean).length === payments.length}
+                  className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${
+                    payments.length === 0 || Object.values(notificationStatus).filter(Boolean).length === payments.length
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-green-600 hover:bg-green-700'
+                  } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mt-4 md:mt-0`}
+                >
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Send All Unsent Notifications
+                </button>
+              </div>
             </div>
           </div>
 
           <div className="bg-white rounded-lg shadow overflow-hidden mb-8 border border-[#DFA55D]">
-            <div className="px-6 py-4 border-b bg-[#347486] text-white">
-              <h2 className="text-xl font-semibold">Payment Transactions</h2>
+            <div className="px-6 py-4 border-b bg-[#347486] text-white flex items-center justify-between">
+              <div className="flex items-center">
+                <PieChart className="mr-2" size={20} />
+                <h2 className="text-xl font-semibold">Payment Transactions</h2>
+              </div>
+              <div className="text-sm bg-white/20 px-3 py-1 rounded-full">
+                {payments.length} records
+              </div>
             </div>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
@@ -226,6 +424,7 @@ const PaymentReviewPage = () => {
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-[#BC4626] uppercase tracking-wider">ID</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-[#BC4626] uppercase tracking-wider">Appointment</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-[#BC4626] uppercase tracking-wider">Phone</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-[#BC4626] uppercase tracking-wider">Amount</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-[#BC4626] uppercase tracking-wider">Method</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-[#BC4626] uppercase tracking-wider">Card</th>
@@ -236,8 +435,11 @@ const PaymentReviewPage = () => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {payments.length === 0 ? (
                     <tr>
-                      <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
-                        No payment records found
+                      <td colSpan="8" className="px-6 py-12 text-center">
+                        <div className="flex flex-col items-center">
+                          <img src="/api/placeholder/80/80" alt="No data" className="mb-4 opacity-50" />
+                          <p className="text-gray-500">No payment records found</p>
+                        </div>
                       </td>
                     </tr>
                   ) : (
@@ -247,11 +449,23 @@ const PaymentReviewPage = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-mono">
                           {payment.appointment_id?._id?.slice(-6) || 'N/A'}
                         </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          {payment.user_phone || payment.appointment_id?.user_id?.phone || 'N/A'}
+                        </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#BC4626]">
                           ${(payment.amount || 0).toFixed(2)}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm capitalize">
-                          {payment.payment_method || 'N/A'}
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          <div className="flex items-center">
+                            {payment.payment_method === 'Card' ? (
+                              <CreditCard size={14} className="mr-1 text-[#DFA55D]" />
+                            ) : payment.payment_method?.toLowerCase().includes('cash') ? (
+                              <DollarSign size={14} className="mr-1 text-[#347486]" />
+                            ) : (
+                              <CircleDollarSign size={14} className="mr-1 text-gray-400" />
+                            )}
+                            <span className="capitalize">{payment.payment_method || 'N/A'}</span>
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-mono">
                           {payment.payment_method === 'Card' && payment.card_details?.card_number
@@ -262,13 +476,27 @@ const PaymentReviewPage = () => {
                           {payment.createdAt ? new Date(payment.createdAt).toLocaleDateString() : 'N/A'}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm">
-                          <button
-                            onClick={() => generatePDFReceipt(payment)}
-                            className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-[#347486] hover:bg-[#347486]/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#347486]"
-                          >
-                            <FileText className="h-3 w-3 mr-1" />
-                            Receipt
-                          </button>
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => generatePDFReceipt(payment)}
+                              className="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-[#347486] hover:bg-[#347486]/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#347486]"
+                            >
+                              <FileText className="h-3 w-3 mr-1" />
+                              Receipt
+                            </button>
+                            <button
+                              onClick={() => handleSendNotification(payment)}
+                              disabled={notificationStatus[payment._id]}
+                              className={`inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded shadow-sm text-white ${
+                                notificationStatus[payment._id]
+                                  ? 'bg-gray-400 cursor-not-allowed'
+                                  : 'bg-green-600 hover:bg-green-700'
+                              } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500`}
+                            >
+                              <MessageSquare className="h-3 w-3 mr-1" />
+                              {notificationStatus[payment._id] ? 'Sent' : 'Notify'}
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))
@@ -278,7 +506,19 @@ const PaymentReviewPage = () => {
             </div>
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-end space-x-4">
+            <button
+              onClick={sendBulkNotifications}
+              disabled={payments.length === 0 || Object.values(notificationStatus).filter(Boolean).length === payments.length}
+              className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white ${
+                payments.length === 0 || Object.values(notificationStatus).filter(Boolean).length === payments.length
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-green-600 hover:bg-green-700'
+              } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500`}
+            >
+              <MessageSquare className="h-4 w-4 mr-2" />
+              Send All WhatsApp Notifications
+            </button>
             <button
               onClick={generateFullPaymentsPDF}
               disabled={payments.length === 0}
@@ -294,6 +534,23 @@ const PaymentReviewPage = () => {
           </div>
         </>
       )}
+      
+      {/* Footer with image */}
+      <div className="mt-12 pt-6 border-t border-gray-200">
+        <div className="flex flex-col md:flex-row items-center justify-between">
+          <p className="text-gray-500 text-sm">© 2025 Financial Management System</p>
+          <div className="flex items-center mt-4 md:mt-0">
+            <img src="https://i.postimg.cc/6qNSPZcz/4d03dcbf-fba9-43c7-a30d-18a0f1bc8cd2.png" alt="Payment partners" className="h-8" />
+            <div className="mx-4 h-6 w-px bg-gray-300"></div>
+            <div className="flex items-center">
+              <CreditCard size={16} className="text-[#DFA55D] mr-1" />
+              <DollarSign size={16} className="text-[#347486] mr-1" />
+              <CircleDollarSign size={16} className="text-[#BC4626] mr-1" />
+              <MessageSquare size={16} className="text-green-600" />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
