@@ -21,7 +21,9 @@ import {
   XCircle,
   AlertOctagon,
   ArrowLeft,
-  Clock
+  Clock,
+  ShoppingCart,
+  ClipboardList
 } from 'lucide-react';
 
 const ProductManagement = () => {
@@ -229,7 +231,7 @@ const ProductManagement = () => {
       `}</style>
 
       <div className="max-w-7xl mx-auto">
-        {/* Header Section with Back Button */}
+        {/* Header Section with Icons */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -245,7 +247,39 @@ const ProductManagement = () => {
                 <p className="text-gray-600">Manage your product inventory and track performance</p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
+            
+            {/* Cart and Orders Icons */}
+            <div className="flex items-center gap-6">
+              <Link 
+                to="/cart" 
+                className="relative group"
+              >
+                <div className="p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 group-hover:border-blue-200">
+                  <ShoppingCart className="w-7 h-7 text-gray-600 group-hover:text-blue-600 transition-colors duration-300" />
+                  <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    0
+                  </span>
+                </div>
+                <span className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 text-sm font-medium text-gray-600 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  Cart
+                </span>
+              </Link>
+
+              <Link 
+                to="/orders" 
+                className="relative group"
+              >
+                <div className="p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 group-hover:border-purple-200">
+                  <ClipboardList className="w-7 h-7 text-gray-600 group-hover:text-purple-600 transition-colors duration-300" />
+                  <span className="absolute -top-1 -right-1 bg-purple-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    0
+                  </span>
+                </div>
+                <span className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 text-sm font-medium text-gray-600 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  Orders
+                </span>
+              </Link>
+
               <div className="px-4 py-2 bg-white rounded-xl shadow-sm border border-gray-100">
                 <p className="text-sm text-gray-500">Total Products</p>
                 <p className="text-xl font-bold text-gray-800">{stats.totalProducts}</p>

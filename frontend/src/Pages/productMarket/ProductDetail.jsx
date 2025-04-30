@@ -113,7 +113,7 @@ export const ProductDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-[var(--color-white)]">
       <main className="container mx-auto px-4 py-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -122,13 +122,13 @@ export const ProductDetail = () => {
         >
           <Link
             to="/petMarketplace"
-            className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-6 transition-colors"
+            className="inline-flex items-center text-[var(--color-primary)] hover:text-[var(--color-accent)] mb-6"
           >
             <ArrowLeftIcon className="w-4 h-4 mr-2" />
             Back to Products
           </Link>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-8 rounded-2xl shadow-lg">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Product Image Section */}
             <motion.div 
               className="space-y-4"
@@ -136,20 +136,20 @@ export const ProductDetail = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <div className="relative aspect-square overflow-hidden rounded-xl group">
+              <div className="relative aspect-square overflow-hidden rounded-xl">
                 <img
                   src={product.image?.[0] || 'https://via.placeholder.com/300x200?text=No+Image'}
                   alt={product.name}
-                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover"
                 />
                 {product.quantity < 5 && (
-                  <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                  <div className="absolute top-4 right-4 bg-[var(--color-accent)] text-[var(--text-on-accent)] px-3 py-1 rounded-full text-sm">
                     Only {product.quantity} left!
                   </div>
                 )}
               </div>
 
-              {/* Enhanced Thumbnail Gallery */}
+              {/* Thumbnail Gallery */}
               {product.image && product.image.length > 1 && (
                 <motion.div 
                   className="grid grid-cols-5 gap-2"
@@ -158,17 +158,16 @@ export const ProductDetail = () => {
                   transition={{ delay: 0.4 }}
                 >
                   {product.image.map((img, index) => (
-                    <motion.div 
+                    <div 
                       key={index} 
-                      className="aspect-square rounded-lg overflow-hidden border-2 border-transparent hover:border-blue-500 transition-all cursor-pointer"
-                      whileHover={{ scale: 1.05 }}
+                      className="aspect-square rounded-lg overflow-hidden border border-[var(--color-primary-light)] hover:border-[var(--color-primary)] transition-colors cursor-pointer"
                     >
                       <img
                         src={img}
                         alt={`${product.name} - ${index + 1}`}
                         className="w-full h-full object-cover"
                       />
-                    </motion.div>
+                    </div>
                   ))}
                 </motion.div>
               )}
@@ -182,7 +181,7 @@ export const ProductDetail = () => {
               transition={{ delay: 0.3 }}
             >
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                <h1 className="text-3xl font-bold text-[var(--text-on-secondary)] mb-2">
                   {product.name}
                 </h1>
                 <div className="flex items-center space-x-4 mb-4">
@@ -192,115 +191,91 @@ export const ProductDetail = () => {
                         key={i}
                         className={`w-5 h-5 ${
                           i < (product.rating || 0)
-                            ? 'text-yellow-400'
-                            : 'text-gray-300'
+                            ? 'text-[var(--color-secondary)]'
+                            : 'text-[var(--text-on-secondary)] opacity-20'
                         }`}
                         fill={i < (product.rating || 0) ? 'currentColor' : 'none'}
                       />
                     ))}
                   </div>
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-[var(--text-on-secondary)] opacity-70">
                     ({product.rating || 0} rating)
                   </span>
                 </div>
 
-                {/* Price Section with Animation */}
-                <motion.div 
-                  className="text-4xl font-bold text-blue-600 mb-6"
-                  initial={{ scale: 0.9 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 0.3 }}
-                >
+                <div className="text-3xl font-bold text-[var(--color-primary)] mb-6">
                   Rs.{product.price}
-                </motion.div>
+                </div>
 
                 {/* Product Features */}
                 <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="flex items-center space-x-2 text-gray-600">
-                    <Truck className="w-5 h-5 text-blue-500" />
+                  <div className="flex items-center space-x-2 text-[var(--text-on-secondary)] opacity-70">
+                    <Truck className="w-5 h-5 text-[var(--color-primary)]" />
                     <span>Fast Delivery</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-gray-600">
-                    <Shield className="w-5 h-5 text-blue-500" />
+                  <div className="flex items-center space-x-2 text-[var(--text-on-secondary)] opacity-70">
+                    <Shield className="w-5 h-5 text-[var(--color-primary)]" />
                     <span>Quality Assured</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-gray-600">
-                    <Package className="w-5 h-5 text-blue-500" />
-                    <span>Secure Packaging</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-gray-600">
-                    <BadgeCheck className="w-5 h-5 text-blue-500" />
-                    <span>Verified Product</span>
                   </div>
                 </div>
 
                 {/* Quantity Selector */}
                 <div className="flex items-center space-x-4 mb-6">
-                  <span className="text-gray-700">Quantity:</span>
-                  <div className="flex items-center border rounded-lg overflow-hidden shadow-sm">
-                    <motion.button
-                      whileTap={{ scale: 0.9 }}
+                  <span className="text-[var(--text-on-secondary)]">Quantity:</span>
+                  <div className="flex items-center border border-[var(--color-primary-light)] rounded-lg">
+                    <button
                       onClick={() => handleQuantityChange(quantity - 1)}
                       disabled={quantity <= 1}
-                      className="p-2 hover:bg-gray-100 disabled:opacity-50 transition-colors"
+                      className="p-2 hover:bg-[var(--color-primary-light)] disabled:opacity-50 text-[var(--text-on-secondary)]"
                     >
                       <MinusIcon className="w-4 h-4" />
-                    </motion.button>
+                    </button>
                     <input
                       type="number"
                       min="1"
                       max={product.quantity}
                       value={quantity}
                       onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
-                      className="w-16 text-center border-x py-1 focus:outline-none"
+                      className="w-16 text-center border-x border-[var(--color-primary-light)] py-1 focus:outline-none"
                     />
-                    <motion.button
-                      whileTap={{ scale: 0.9 }}
+                    <button
                       onClick={() => handleQuantityChange(quantity + 1)}
                       disabled={quantity >= product.quantity}
-                      className="p-2 hover:bg-gray-100 disabled:opacity-50 transition-colors"
+                      className="p-2 hover:bg-[var(--color-primary-light)] disabled:opacity-50 text-[var(--text-on-secondary)]"
                     >
                       <PlusIcon className="w-4 h-4" />
-                    </motion.button>
+                    </button>
                   </div>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-[var(--text-on-secondary)] opacity-70">
                     {product.quantity} available
                   </span>
                 </div>
 
                 {/* Add to Cart Button */}
-                <motion.button 
+                <button 
                   onClick={handleAddToCart}
                   disabled={isAddingToCart || quantity < 1}
-                  className="w-full py-4 px-6 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl
+                  className="w-full py-3 px-6 bg-[var(--color-primary)] text-[var(--text-on-primary)] rounded-lg
                     flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed
-                    hover:from-blue-600 hover:to-blue-700 transition-all transform hover:-translate-y-1"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                    hover:bg-[var(--color-accent)] transition-colors"
                 >
                   <ShoppingCartIcon className="w-5 h-5" />
-                  <span className="font-medium">{isAddingToCart ? 'Adding...' : 'Add to Cart'}</span>
-                  <Zap className="w-5 h-5 ml-2" />
-                </motion.button>
+                  <span>{isAddingToCart ? 'Adding...' : 'Add to Cart'}</span>
+                </button>
               </div>
             </motion.div>
           </div>
 
-          {/* Enhanced Tabs Section */}
-          <motion.div 
-            className="mt-8 bg-white rounded-xl shadow-lg overflow-hidden"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <div className="border-b border-gray-200">
+          {/* Product Details Tabs */}
+          <div className="mt-8">
+            <div className="border-b border-[var(--color-primary-light)]">
               <div className="flex space-x-8">
                 <button
                   onClick={() => setSelectedTab('description')}
                   className={`px-4 py-3 text-sm font-medium border-b-2 ${
                     selectedTab === 'description'
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                      ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
+                      : 'border-transparent text-[var(--text-on-secondary)] hover:text-[var(--color-primary)]'
                   }`}
                 >
                   Description
@@ -309,43 +284,43 @@ export const ProductDetail = () => {
                   onClick={() => setSelectedTab('specifications')}
                   className={`px-4 py-3 text-sm font-medium border-b-2 ${
                     selectedTab === 'specifications'
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                      ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
+                      : 'border-transparent text-[var(--text-on-secondary)] hover:text-[var(--color-primary)]'
                   }`}
                 >
                   Specifications
                 </button>
               </div>
             </div>
-            <div className="p-6">
+            <div className="py-6">
               {selectedTab === 'description' && (
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900 mb-4">
+                  <h2 className="text-lg font-bold text-[var(--text-on-secondary)] mb-4">
                     Product Description
                   </h2>
-                  <p className="text-gray-700 whitespace-pre-line">
+                  <p className="text-[var(--text-on-secondary)] opacity-70 whitespace-pre-line">
                     {product.description}
                   </p>
                 </div>
               )}
               {selectedTab === 'specifications' && (
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900 mb-4">
+                  <h2 className="text-lg font-bold text-[var(--text-on-secondary)] mb-4">
                     Specifications
                   </h2>
-                  <ul className="divide-y divide-gray-200">
-                    <li className="py-3 flex justify-between text-gray-700">
+                  <ul className="divide-y divide-[var(--color-primary-light)]">
+                    <li className="py-3 flex justify-between text-[var(--text-on-secondary)] opacity-70">
                       <span>Category</span>
                       <span>{product.category}</span>
                     </li>
-                    <li className="py-3 flex justify-between text-gray-700">
+                    <li className="py-3 flex justify-between text-[var(--text-on-secondary)] opacity-70">
                       <span>Quantity Available</span>
                       <span>{product.quantity}</span>
                     </li>
                     {product.specifications?.map((spec, idx) => (
                       <li
                         key={idx}
-                        className="py-3 flex justify-between text-gray-700"
+                        className="py-3 flex justify-between text-[var(--text-on-secondary)] opacity-70"
                       >
                         <span>{spec.name}</span>
                         <span>{spec.value}</span>
@@ -355,7 +330,7 @@ export const ProductDetail = () => {
                 </div>
               )}
             </div>
-          </motion.div>
+          </div>
         </motion.div>
       </main>
     </div>

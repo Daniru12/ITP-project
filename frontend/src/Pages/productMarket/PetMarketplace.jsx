@@ -259,20 +259,20 @@ const PetMarketplace = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-[var(--color-primary-light)] to-[var(--color-accent-light)]">
       {/* Header with corner icons */}
-      <header className="bg-white shadow-lg relative z-10 py-4">
+      <header className="bg-[var(--color-white)] shadow-lg relative z-10 py-4">
         <div className="container mx-auto px-4">
           {/* Corner Icons */}
           <div className="absolute right-4 top-4 flex items-center gap-3">
             <Link to="/cart" className="relative group">
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="p-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl 
-                  group-hover:from-blue-100 group-hover:to-indigo-100 transition-all shadow-sm"
+                className="p-2 bg-[var(--color-primary-light)] rounded-xl 
+                  group-hover:bg-[var(--color-secondary-light)] transition-all shadow-sm"
               >
-                <ShoppingCartIcon className="w-5 h-5 text-blue-600" />
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 
+                <ShoppingCartIcon className="w-5 h-5 text-[var(--color-primary)]" />
+                <span className="absolute -top-2 -right-2 bg-[var(--color-accent)] text-[var(--text-on-accent)] text-xs w-5 h-5 
                   rounded-full flex items-center justify-center shadow-md">
                   0
                 </span>
@@ -281,10 +281,10 @@ const PetMarketplace = () => {
             <Link to="/orders" className="relative group">
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="p-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl 
-                  group-hover:from-blue-100 group-hover:to-indigo-100 transition-all shadow-sm"
+                className="p-2 bg-[var(--color-primary-light)] rounded-xl 
+                  group-hover:bg-[var(--color-secondary-light)] transition-all shadow-sm"
               >
-                <PackageIcon className="w-5 h-5 text-blue-600" />
+                <PackageIcon className="w-5 h-5 text-[var(--color-primary)]" />
               </motion.div>
             </Link>
           </div>
@@ -298,11 +298,11 @@ const PetMarketplace = () => {
             >
               <motion.div
                 whileHover={{ rotate: 15 }}
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 p-2.5 rounded-xl shadow-md"
+                className="bg-[var(--color-primary)] p-2.5 rounded-xl shadow-md"
               >
-                <PawPrintIcon className="w-7 h-7 text-white" />
+                <PawPrintIcon className="w-7 h-7 text-[var(--text-on-primary)]" />
               </motion.div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] bg-clip-text text-transparent">
                 Pet Products
               </h1>
             </motion.div>
@@ -320,66 +320,66 @@ const PetMarketplace = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <motion.div 
               whileHover={{ y: -5 }}
-              className="bg-white p-4 rounded-2xl shadow-md flex items-center gap-4"
+              className="bg-[var(--color-white)] p-4 rounded-2xl shadow-md flex items-center gap-4"
             >
-              <div className="bg-blue-100 p-3 rounded-xl">
-                <Truck className="w-6 h-6 text-blue-600" />
+              <div className="bg-[var(--color-primary-light)] p-3 rounded-xl">
+                <Truck className="w-6 h-6 text-[var(--color-primary)]" />
               </div>
               <div>
-                <h3 className="font-semibold">Fast Delivery</h3>
-                <p className="text-sm text-gray-500">2-3 business days</p>
+                <h3 className="font-semibold text-[var(--text-on-secondary)]">Fast Delivery</h3>
+                <p className="text-sm text-[var(--text-on-secondary)] opacity-70">2-3 business days</p>
               </div>
             </motion.div>
 
             <motion.div 
               whileHover={{ y: -5 }}
-              className="bg-white p-4 rounded-2xl shadow-md flex items-center gap-4"
+              className="bg-[var(--color-white)] p-4 rounded-2xl shadow-md flex items-center gap-4"
             >
-              <div className="bg-green-100 p-3 rounded-xl">
-                <ShieldCheck className="w-6 h-6 text-green-600" />
+              <div className="bg-[var(--color-secondary-light)] p-3 rounded-xl">
+                <ShieldCheck className="w-6 h-6 text-[var(--color-secondary)]" />
               </div>
               <div>
-                <h3 className="font-semibold">Quality Assured</h3>
-                <p className="text-sm text-gray-500">100% genuine products</p>
+                <h3 className="font-semibold text-[var(--text-on-secondary)]">Quality Assured</h3>
+                <p className="text-sm text-[var(--text-on-secondary)] opacity-70">100% genuine products</p>
               </div>
             </motion.div>
 
             <motion.div 
               whileHover={{ y: -5 }}
-              className="bg-white p-4 rounded-2xl shadow-md flex items-center gap-4"
+              className="bg-[var(--color-white)] p-4 rounded-2xl shadow-md flex items-center gap-4"
             >
-              <div className="bg-purple-100 p-3 rounded-xl">
-                <Star className="w-6 h-6 text-purple-600" />
+              <div className="bg-[var(--color-accent-light)] p-3 rounded-xl">
+                <Star className="w-6 h-6 text-[var(--color-accent)]" />
               </div>
               <div>
-                <h3 className="font-semibold">Best Selection</h3>
-                <p className="text-sm text-gray-500">Curated products</p>
+                <h3 className="font-semibold text-[var(--text-on-secondary)]">Best Selection</h3>
+                <p className="text-sm text-[var(--text-on-secondary)] opacity-70">Curated products</p>
               </div>
             </motion.div>
 
             <motion.div 
               whileHover={{ y: -5 }}
-              className="bg-white p-4 rounded-2xl shadow-md flex items-center gap-4"
+              className="bg-[var(--color-white)] p-4 rounded-2xl shadow-md flex items-center gap-4"
             >
-              <div className="bg-orange-100 p-3 rounded-xl">
-                <Heart className="w-6 h-6 text-orange-600" />
+              <div className="bg-[var(--color-primary-light)] p-3 rounded-xl">
+                <Heart className="w-6 h-6 text-[var(--color-primary)]" />
               </div>
               <div>
-                <h3 className="font-semibold">Pet Approved</h3>
-                <p className="text-sm text-gray-500">Tested & loved</p>
+                <h3 className="font-semibold text-[var(--text-on-secondary)]">Pet Approved</h3>
+                <p className="text-sm text-[var(--text-on-secondary)] opacity-70">Tested & loved</p>
               </div>
             </motion.div>
           </div>
         </motion.section>
 
-        {/* Improved Search and Filter Section */}
+        {/* Search and Filter Section */}
         <motion.section 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
           className="mb-8"
         >
-          <div className="bg-white rounded-2xl shadow-md overflow-hidden">
+          <div className="bg-[var(--color-white)] rounded-2xl shadow-md overflow-hidden">
             {/* Search Bar with Filter Icon */}
             <div className="p-4">
               <div className="flex items-center gap-4">
@@ -395,8 +395,8 @@ const PetMarketplace = () => {
                   onClick={() => setShowFilters(!showFilters)}
                   className={`p-2 rounded-xl transition-all ${
                     showFilters 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      ? 'bg-[var(--color-primary)] text-[var(--text-on-primary)]' 
+                      : 'bg-[var(--color-primary-light)] text-[var(--color-primary)] hover:bg-[var(--color-secondary-light)]'
                   }`}
                 >
                   <SlidersHorizontal className="w-5 h-5" />
@@ -412,9 +412,9 @@ const PetMarketplace = () => {
                   animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="border-t border-gray-100"
+                  className="border-t border-[var(--color-primary-light)]"
                 >
-                  <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50">
+                  <div className="p-4 bg-gradient-to-r from-[var(--color-primary-light)] to-[var(--color-accent-light)]">
                     <div className="grid grid-cols-2 md:grid-cols-6 gap-2">
                       {categories.map((category) => (
                         <motion.button
@@ -424,8 +424,8 @@ const PetMarketplace = () => {
                           onClick={() => handleCategoryChange(category.value)}
                           className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                             activeCategory === category.value
-                              ? 'bg-blue-600 text-white shadow-md'
-                              : 'bg-white text-gray-600 hover:bg-gray-50'
+                              ? 'bg-[var(--color-primary)] text-[var(--text-on-primary)] shadow-md'
+                              : 'bg-[var(--color-white)] text-[var(--text-on-secondary)] hover:bg-[var(--color-secondary-light)]'
                           }`}
                         >
                           {category.name}
@@ -438,18 +438,18 @@ const PetMarketplace = () => {
             </AnimatePresence>
 
             {/* Quick Stats */}
-            <div className="px-4 py-3 bg-gradient-to-r from-blue-50 to-indigo-50 border-t border-gray-100">
+            <div className="px-4 py-3 bg-gradient-to-r from-[var(--color-primary-light)] to-[var(--color-accent-light)] border-t border-[var(--color-primary-light)]">
               <div className="flex justify-between items-center text-sm">
                 <div className="flex items-center gap-2">
-                  <Search className="w-4 h-4 text-blue-600" />
-                  <span className="text-gray-600">
+                  <Search className="w-4 h-4 text-[var(--color-primary)]" />
+                  <span className="text-[var(--text-on-secondary)]">
                     {products.length} products found
                   </span>
                 </div>
                 {activeCategory !== 'all' && (
                   <div className="flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4 text-green-600" />
-                    <span className="text-gray-600">
+                    <TrendingUp className="w-4 h-4 text-[var(--color-accent)]" />
+                    <span className="text-[var(--text-on-secondary)]">
                       Category: {activeCategory}
                     </span>
                   </div>
@@ -484,7 +484,7 @@ const PetMarketplace = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-lg mt-12 overflow-hidden"
+          className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] rounded-2xl shadow-lg mt-12 overflow-hidden"
         >
           <div className="container mx-auto px-6 py-8 relative">
             <motion.div
@@ -499,21 +499,21 @@ const PetMarketplace = () => {
               }}
               className="absolute top-0 right-0 opacity-10"
             >
-              <PawPrintIcon className="w-32 h-32 text-white" />
+              <PawPrintIcon className="w-32 h-32 text-[var(--text-on-primary)]" />
             </motion.div>
             
             <div className="text-center relative z-10">
-              <h3 className="text-2xl font-bold text-white mb-2">
+              <h3 className="text-2xl font-bold text-[var(--text-on-primary)] mb-2">
                 Your Pet's Happiness, Our Priority
               </h3>
-              <p className="text-blue-100 text-sm">
+              <p className="text-[var(--text-on-primary)] opacity-80 text-sm">
                 Shop the best products for your furry friends
               </p>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="mt-4 px-6 py-2 bg-white text-blue-600 rounded-full font-medium text-sm
-                  hover:bg-blue-50 transition-colors shadow-md"
+                className="mt-4 px-6 py-2 bg-[var(--color-white)] text-[var(--color-primary)] rounded-full font-medium text-sm
+                  hover:bg-[var(--color-primary-light)] transition-colors shadow-md"
               >
                 Explore More
               </motion.button>

@@ -89,37 +89,40 @@ const CartPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--color-white)] flex items-center justify-center">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
           className="w-16 h-16"
         >
-          <ShoppingCart className="w-full h-full text-blue-500" />
+          <ShoppingCart className="w-full h-full text-[var(--color-primary)]" />
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-[var(--color-white)] py-8 px-4">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="flex items-center justify-between mb-8">
-            <Link 
-              to="/petMarketplace" 
-              className="flex items-center text-blue-600 hover:text-blue-700 transition-colors"
-            >
-              <ArrowLeftIcon className="w-4 h-4 mr-2" />
-              <span className="font-medium">Continue Shopping</span>
-            </Link>
-            <div className="flex items-center space-x-2">
-              <ShoppingCart className="w-6 h-6 text-blue-600" />
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+          <div className="relative mb-8">
+            <div className="absolute left-0 top-1/2 -translate-y-1/2">
+              <Link 
+                to="/petMarketplace" 
+                className="flex items-center text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-colors"
+              >
+                <ArrowLeftIcon className="w-5 h-5 mr-2" />
+                <span className="font-medium">Continue Shopping</span>
+              </Link>
+            </div>
+            
+            <div className="flex items-center justify-center space-x-3">
+              <ShoppingCart className="w-8 h-8 text-[var(--color-primary)]" />
+              <h1 className="text-3xl font-bold text-[var(--text-on-secondary)]">
                 Your Cart
               </h1>
             </div>
@@ -129,15 +132,15 @@ const CartPage = () => {
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="text-center py-16 bg-white rounded-2xl shadow-lg"
+              className="text-center py-16 bg-[var(--color-white)] rounded-2xl shadow-md"
             >
-              <ShoppingCart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600 mb-6">Your cart is empty</p>
+              <ShoppingCart className="w-16 h-16 text-[var(--text-on-secondary)] opacity-20 mx-auto mb-4" />
+              <p className="text-[var(--text-on-secondary)] opacity-70 mb-6">Your cart is empty</p>
               <Link 
                 to="/petMarketplace"
-                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 
-                  text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all transform 
-                  hover:-translate-y-1 shadow-md hover:shadow-lg"
+                className="inline-flex items-center px-6 py-3 bg-[var(--color-primary)] 
+                  text-[var(--text-on-primary)] rounded-xl hover:bg-[var(--color-accent)] 
+                  transition-colors shadow-sm"
               >
                 <Package className="w-5 h-5 mr-2" />
                 Discover Products
@@ -145,56 +148,41 @@ const CartPage = () => {
             </motion.div>
           ) : (
             <div className="space-y-6">
-              {/* Cart Summary Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <motion.div 
-                  className="bg-white p-4 rounded-xl shadow-md"
-                  whileHover={{ scale: 1.02 }}
-                >
+                <div className="bg-[var(--color-white)] p-4 rounded-xl shadow-sm">
                   <div className="flex items-center space-x-3">
-                    <Package className="w-5 h-5 text-blue-500" />
+                    <Package className="w-5 h-5 text-[var(--color-primary)]" />
                     <div>
-                      <p className="text-sm text-gray-500">Total Items</p>
-                      <p className="text-lg font-bold">{cart.items.length}</p>
+                      <p className="text-sm text-[var(--text-on-secondary)] opacity-70">Total Items</p>
+                      <p className="text-lg font-bold text-[var(--text-on-secondary)]">{cart.items.length}</p>
                     </div>
                   </div>
-                </motion.div>
-                <motion.div 
-                  className="bg-white p-4 rounded-xl shadow-md"
-                  whileHover={{ scale: 1.02 }}
-                >
+                </div>
+                <div className="bg-[var(--color-white)] p-4 rounded-xl shadow-sm">
                   <div className="flex items-center space-x-3">
-                    <CreditCard className="w-5 h-5 text-green-500" />
+                    <CreditCard className="w-5 h-5 text-[var(--color-primary)]" />
                     <div>
-                      <p className="text-sm text-gray-500">Total Amount</p>
-                      <p className="text-lg font-bold">
+                      <p className="text-sm text-[var(--text-on-secondary)] opacity-70">Total Amount</p>
+                      <p className="text-lg font-bold text-[var(--text-on-secondary)]">
                         Rs.{cart.items.reduce((total, item) => 
                           total + (item.product.price * item.quantity), 0).toFixed(2)}
                       </p>
                     </div>
                   </div>
-                </motion.div>
-                <motion.div 
-                  className="bg-white p-4 rounded-xl shadow-md"
-                  whileHover={{ scale: 1.02 }}
-                >
+                </div>
+                <div className="bg-[var(--color-white)] p-4 rounded-xl shadow-sm">
                   <div className="flex items-center space-x-3">
-                    <Shield className="w-5 h-5 text-purple-500" />
+                    <Shield className="w-5 h-5 text-[var(--color-primary)]" />
                     <div>
-                      <p className="text-sm text-gray-500">Secure Checkout</p>
-                      <p className="text-lg font-bold">Protected</p>
+                      <p className="text-sm text-[var(--text-on-secondary)] opacity-70">Secure Checkout</p>
+                      <p className="text-lg font-bold text-[var(--text-on-secondary)]">Protected</p>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               </div>
 
-              {/* Cart Items */}
-              <motion.div 
-                className="bg-white rounded-2xl shadow-lg overflow-hidden"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                <div className="divide-y divide-gray-100">
+              <div className="bg-[var(--color-white)] rounded-2xl shadow-sm overflow-hidden">
+                <div className="divide-y divide-[var(--color-primary-light)]">
                   <AnimatePresence>
                     {cart.items.map((item) => (
                       <motion.div
@@ -202,17 +190,16 @@ const CartPage = () => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="p-6 flex items-center hover:bg-gray-50 transition-colors"
+                        className="p-6 flex items-center hover:bg-[var(--color-primary-light)] transition-colors"
                       >
-                        <div className="relative group">
+                        <div className="relative">
                           <img 
                             src={item.product.image?.[0] || 'placeholder-url'} 
                             alt={item.product.name}
-                            className="w-24 h-24 object-cover rounded-xl shadow-md 
-                              group-hover:scale-105 transition-transform duration-300"
+                            className="w-24 h-24 object-cover rounded-xl shadow-sm"
                           />
                           {item.product.quantity < 5 && (
-                            <div className="absolute -top-2 -right-2 bg-red-500 text-white 
+                            <div className="absolute -top-2 -right-2 bg-[var(--color-accent)] text-[var(--text-on-accent)] 
                               text-xs px-2 py-1 rounded-full flex items-center space-x-1">
                               <AlertCircle className="w-3 h-3" />
                               <span>Low Stock</span>
@@ -221,67 +208,61 @@ const CartPage = () => {
                         </div>
                         
                         <div className="ml-6 flex-1">
-                          <h3 className="text-lg font-semibold text-gray-800">{item.product.name}</h3>
+                          <h3 className="text-lg font-semibold text-[var(--text-on-secondary)]">{item.product.name}</h3>
                           <div className="flex items-center mt-2 space-x-6">
                             <div className="flex items-center space-x-1">
-                              <motion.button 
-                                whileTap={{ scale: 0.9 }}
+                              <button 
                                 onClick={() => handleUpdateQuantity(item.product._id, item.quantity - 1)}
-                                className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 
-                                  hover:text-gray-700 transition-colors"
+                                className="p-1.5 rounded-lg hover:bg-[var(--color-primary-light)] text-[var(--text-on-secondary)] 
+                                  hover:text-[var(--color-primary)] transition-colors"
                               >
                                 <MinusIcon className="w-4 h-4" />
-                              </motion.button>
-                              <span className="w-8 text-center font-medium">{item.quantity}</span>
-                              <motion.button 
-                                whileTap={{ scale: 0.9 }}
+                              </button>
+                              <span className="w-8 text-center font-medium text-[var(--text-on-secondary)]">{item.quantity}</span>
+                              <button 
                                 onClick={() => handleUpdateQuantity(item.product._id, item.quantity + 1)}
-                                className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 
-                                  hover:text-gray-700 transition-colors"
+                                className="p-1.5 rounded-lg hover:bg-[var(--color-primary-light)] text-[var(--text-on-secondary)] 
+                                  hover:text-[var(--color-primary)] transition-colors"
                               >
                                 <PlusIcon className="w-4 h-4" />
-                              </motion.button>
+                              </button>
                             </div>
-                            <p className="text-lg font-semibold text-blue-600">
+                            <p className="text-lg font-semibold text-[var(--color-primary)]">
                               Rs.{(item.product.price * item.quantity).toFixed(2)}
                             </p>
                           </div>
                         </div>
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
+                        <button
                           onClick={() => handleRemoveItem(item.product._id)}
-                          className="text-red-500 hover:text-red-700 p-2 rounded-lg 
-                            hover:bg-red-50 transition-colors"
+                          className="text-[var(--color-accent)] hover:text-[var(--color-primary)] p-2 rounded-lg 
+                            hover:bg-[var(--color-primary-light)] transition-colors"
                         >
                           <TrashIcon className="w-5 h-5" />
-                        </motion.button>
+                        </button>
                       </motion.div>
                     ))}
                   </AnimatePresence>
                 </div>
 
-                {/* Checkout Section */}
-                <div className="p-6 bg-gradient-to-b from-gray-50 to-white">
+                <div className="p-6 bg-[var(--color-white)]">
                   <div className="flex justify-between items-center text-lg font-semibold mb-4">
-                    <span>Total Amount:</span>
-                    <span className="text-blue-600">
+                    <span className="text-[var(--text-on-secondary)]">Total Amount:</span>
+                    <span className="text-[var(--color-primary)]">
                       Rs.{cart.items.reduce((total, item) => 
                         total + (item.product.price * item.quantity), 0).toFixed(2)}
                     </span>
                   </div>
                   <Link
                     to="/order-confirm"
-                    className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r 
-                      from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl 
-                      hover:from-blue-600 hover:to-blue-700 transition-all transform 
-                      hover:-translate-y-1 shadow-md hover:shadow-lg"
+                    className="w-full flex items-center justify-center space-x-2 bg-[var(--color-primary)] 
+                      text-[var(--text-on-primary)] px-6 py-3 rounded-xl hover:bg-[var(--color-accent)] 
+                      transition-colors shadow-sm"
                   >
                     <CreditCard className="w-5 h-5" />
                     <span>Proceed to Checkout</span>
                   </Link>
                 </div>
-              </motion.div>
+              </div>
             </div>
           )}
         </motion.div>
