@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const AddAdvertisementForm = ({ onClose }) => {
   const [title, setTitle] = useState('');
@@ -11,6 +12,7 @@ const AddAdvertisementForm = ({ onClose }) => {
   const [end_date, setEndDate] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,6 +36,7 @@ const AddAdvertisementForm = ({ onClose }) => {
       );
 
       toast.success('Advertisement added successfully!');
+      navigate('/provider-profile'); // Redirect to the ads page after successful addition
       setTitle('');
       setDescription('');
       setCategory('Service');

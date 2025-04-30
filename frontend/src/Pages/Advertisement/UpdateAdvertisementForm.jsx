@@ -78,7 +78,7 @@ const UpdateAdvertisementForm = () => {
       );
 
       toast.success("Advertisement updated successfully!");
-      navigate("/AdReviewComponent"); // Redirect after update
+      // navigate("/admin/AdvertisingManagement"); // Redirect after update
     } catch (err) {
       if (err.response?.status === 401) {
         toast.error("Unauthorized: Please log in again.");

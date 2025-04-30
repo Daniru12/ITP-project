@@ -252,14 +252,6 @@ export default function LoginPage() {
                                     </label>
                                 </div>
 
-                                <motion.div 
-                                    className="text-sm"
-                                    whileHover={{ scale: 1.05 }}
-                                >
-                                    <a href="#" className="font-medium text-[var(--color-accent)] hover:text-[var(--color-primary)] transition-colors duration-300">
-                                        Forgot password?
-                                    </a>
-                                </motion.div>
                             </motion.div>
 
                             {/* Submit Button */}
