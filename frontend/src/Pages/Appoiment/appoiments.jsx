@@ -379,7 +379,7 @@ const AppointmentsList = () => {
     // Create CSV content
     let csvContent = "Pet Name,Owner Name,Service,Category,Status,Date,Package,Discount\n";
     reportData.forEach(item => {
-      csvContent += `${item.petName},${item.ownerName},${item.service},${item.category},${item.status},${item.date},${item.package},$${item.discount}\n`;
+      csvContent += `${item.petName},${item.ownerName},${item.service},${item.category},${item.status},${item.date},${item.package},${item.discount}%\n`;
     });
     // Create and trigger download
     const blob = new Blob([csvContent], { type: 'text/csv' });
@@ -456,7 +456,7 @@ const AppointmentsList = () => {
           <td>${appointment.status}</td>
           <td>${new Date(appointment.appointment_date).toLocaleDateString()}</td>
           <td>${appointment.package_type || 'Standard'}</td>
-          <td>Rs.${appointment.discount_applied || 0}</td>
+          <td>.${appointment.discount_applied || 0}%</td>
         </tr>
       `;
     });
