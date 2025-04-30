@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 
-const AverageRating = () => {
-  const { serviceId } = useParams();
+const AverageRating = ({ serviceId, compact = false }) => {
   const [ratingData, setRatingData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -19,7 +17,7 @@ const AverageRating = () => {
         setRatingData(response.data);
       } catch (error) {
         setError(error.response?.data?.message || "Error loading ratings");
-        toast.error(error.response?.data?.message || "Error loading ratings");
+        console.error("Error loading ratings:", error);
       } finally {
         setLoading(false);
       }
@@ -28,66 +26,96 @@ const AverageRating = () => {
     fetchAverageRating();
   }, [serviceId, backendUrl]);
 
-  const renderStars = (rating) => {
+  const renderStars = (rating, size = "text-lg") => {
     const fullStars = Math.floor(rating);
     const decimalPart = rating - fullStars;
+    const emptyStars = 5 - fullStars - (decimalPart >= 0.5 ? 1 : 0);
     let stars = [];
-    
+
+    // Add full stars
     for (let i = 0; i < fullStars; i++) {
-      stars.push(<span key={i} className="text-3xl">⭐</span>);
+      stars.push(<FaStar key={`full-${i}`} className={`${size} text-yellow-500`} />);
+    }
+
+    // Add half star if needed
+    if (decimalPart >= 0.5) {
+      stars.push(<FaStarHalfAlt key="half" className={`${size} text-yellow-500`} />);
     }
     
-    if (decimalPart >= 0.5) {
-      stars.push(<span key="half" className="text-3xl">⭐</span>);
+    // Add empty stars
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(<FaRegStar key={`empty-${i}`} className={`${size} text-gray-300`} />);
     }
 
     return stars;
   };
 
   if (loading) {
-    return <div className="text-center mt-8">Loading ratings...</div>;
+    return compact ? (
+      <div className="flex items-center text-sm text-gray-500">
+        <span className="animate-pulse">Loading...</span>
+      </div>
+    ) : (
+      <div className="flex justify-center items-center p-4">
+        <div className="w-6 h-6 border-2 border-t-blue-500 rounded-full animate-spin"></div>
+        <span className="ml-2">Loading ratings...</span>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="text-center mt-8 text-red-500">{error}</div>;
+    return compact ? (
+      <div className="text-sm text-red-500">Error loading rating</div>
+    ) : (
+      <div className="p-4 text-red-500 text-center">
+        <p>Failed to load ratings</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-2 px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+        >
+          Retry
+        </button>
+      </div>
+    );
   }
 
   if (!ratingData || ratingData.averageRating === undefined) {
-    return <div className="text-center mt-8 text-red-500">Failed to load rating data.</div>;
+    return compact ? (
+      <div className="text-sm text-red-500">No data available</div>
+    ) : (
+      <div className="p-4 text-gray-500 text-center">No rating data available</div>
+    );
   }
 
+  const rating = Number(ratingData.averageRating) || 0;
+  const reviewCount = ratingData.totalReviews || 0;
+
+  // Compact version for use in the left corner of other components
+  if (compact) {
+    return (
+      <div className="flex items-center space-x-1 min-w-max">
+        <div className="flex">{renderStars(rating, "text-sm")}</div>
+        <span className="text-sm font-medium whitespace-nowrap">
+          {rating.toFixed(1)} ({reviewCount})
+        </span>
+      </div>
+    );
+  }
+
+  // Full version with more details
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md mt-8">
-      <h2 className="text-2xl font-bold mb-4 text-center">
-        Service Rating Overview
-      </h2>
+    <div className="bg-white rounded-lg shadow-md p-4 flex flex-col sm:flex-row sm:items-center w-full max-w-3xl">
+      <div className="flex-1">
+        <div className="flex items-center mb-2">
+          <div className="flex mr-2">{renderStars(rating)}</div>
+          <span className="font-bold text-lg">                       {rating.toFixed(1)}</span>
+        </div>
+        <p className="text-gray-600 text-sm">Based on {reviewCount} {reviewCount === 1 ? 'review' : 'reviews'}</p>
+      </div>
       
-      {ratingData.averageRating === "0" || ratingData.averageRating === 0 ? (
-        <p className="text-center text-gray-500">
-          No ratings available for this service yet
-        </p>
-      ) : (
-        <div className="text-center">
-          <div className="mb-4">
-            <div className="flex justify-center items-center gap-1 mb-2">
-              {renderStars(Number(ratingData.averageRating))}
-            </div>
-            <p className="text-xl font-semibold">
-              {ratingData.averageRating} out of 5
-            </p>
-            <p className="text-gray-600">
-              ({ratingData.totalReviews} reviews)
-            </p>
-          </div>
+      {reviewCount > 0 && (
+        <div className="mt-3 sm:mt-0">
           
-          <div className="mt-6">
-            <button
-              onClick={() => window.history.back()}
-              className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
-            >
-              Back to Service
-            </button>
-          </div>
         </div>
       )}
     </div>
