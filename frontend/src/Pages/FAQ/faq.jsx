@@ -20,6 +20,8 @@ const CreateFaq = () => {
     white: "#FFFFFF",      // White
   };
 
+  
+
   // Validate token on initial load
   useEffect(() => {
     // Simulate authentication check
