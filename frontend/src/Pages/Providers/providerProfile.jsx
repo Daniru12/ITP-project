@@ -617,6 +617,17 @@ const ProviderProfile = () => {
                               {service.is_available ? 'Available' : 'Unavailable'}
                             </span>
                             <div className="flex space-x-3">
+
+                            <Link 
+                                to={`/services/reviews/${service._id}`} 
+                                className="p-2 rounded-full text-gray-400 hover:text-blue-500 hover:bg-blue-50 transition-colors"
+                                title="Review Service"
+                              >
+                                <MdStar  className="w-4 h-4" style={{ color: '#347486' }} />
+                              </Link>
+                            
+
+                              
                               <Link 
                                 to={`/update-service/${service._id}`} 
                                 className="p-2 rounded-full text-gray-400 hover:text-blue-500 hover:bg-blue-50 transition-colors"
