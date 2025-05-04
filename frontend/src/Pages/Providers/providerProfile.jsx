@@ -340,8 +340,20 @@ const ProviderProfile = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Header Section with Profile Info */}
-      <div className="bg-gradient-to-r from-red-500 to-amber-40" style={{ backgroundColor: 'var(--color-primary)' }}>
-        <div className="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+      <div className="relative bg-gradient-to-r from-gray-900/95 to-gray-900/90">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 z-0 overflow-hidden"
+          style={{
+            backgroundImage: "url('https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1738&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            opacity: '0.4'
+          }}
+        />
+
+        <div className="relative z-10 max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center md:items-end md:justify-between">
             <div className="flex flex-col items-center md:items-start mb-6 md:mb-0">
               <div className="relative mb-4">
@@ -349,11 +361,11 @@ const ProviderProfile = () => {
                   <img
                     src={providerInfo.profile_picture}
                     alt="Profile"
-                    className="w-28 h-28 rounded-full object-cover ring-4 ring-white shadow-lg transform hover:scale-105 transition-all duration-300"
+                    className="w-32 h-32 rounded-full object-cover ring-4 ring-white/50 shadow-xl transform hover:scale-105 transition-all duration-300"
                   />
                 ) : (
                   <div className="w-28 h-28 rounded-full bg-white flex items-center justify-center ring-4 ring-white shadow-lg transform hover:scale-105 transition-all duration-300">
-                    <MdPerson className="w-12 h-12 text-gray-400" />
+                    <MdPerson className="w-12 h-12" style={{ color: '#347486' }} />
                   </div>
                 )}
                 <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-2 border-2 border-white">
@@ -361,17 +373,17 @@ const ProviderProfile = () => {
                 </div>
               </div>
               <div className="text-center md:text-left">
-                <h1 className="text-3xl font-bold text-white">
+                <h1 className="text-4xl font-bold text-white mb-2">
                   {providerInfo?.full_name || "Service Provider"}
                 </h1>
-                <p className="text-white opacity-90 mt-1">Professional Pet Care Provider</p>
+                <p className="text-white/80 text-lg">Professional Pet Care Provider</p>
               </div>
             </div>
             
             <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
               <Link 
                 to="/edit-profile" 
-                className="flex items-center justify-center px-6 py-3 rounded-lg border border-white text-white bg-transparent hover:bg-white hover:text-red-500 transition-all shadow-md"
+                className="flex items-center justify-center px-6 py-3 rounded-lg border border-white text-white bg-transparent hover:bg-white hover:text-[#347486] transition-all shadow-md"
               >
                 <MdEdit className="w-4 h-4 mr-2" />
                 Edit Profile
@@ -379,7 +391,8 @@ const ProviderProfile = () => {
               
               <button
                 onClick={generateServiceReport}
-                className="flex items-center justify-center px-6 py-3 rounded-lg bg-white text-red-500 hover:bg-gray-100 transition-all shadow-md"
+                className="flex items-center justify-center px-6 py-3 rounded-lg bg-white hover:bg-gray-100 transition-all shadow-md"
+                style={{ color: '#347486' }}
               >
                 <MdFileDownload className="w-4 h-4 mr-2" />
                 Download Report
@@ -389,52 +402,60 @@ const ProviderProfile = () => {
         </div>
         
         {/* Stats Cards */}
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mb-14">
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mb-20">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white rounded-xl shadow-md p-5 transform hover:-translate-y-1 transition-all duration-300">
+            <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-lg p-6 transform hover:-translate-y-1 transition-all duration-300 border border-white/10">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-gray-500 uppercase font-semibold">Total Services</p>
-                  <p className="text-2xl font-bold mt-1" style={{ color: 'var(--color-primary)' }}>{stats.totalServices}</p>
+                  <p className="text-xs text-white/60 uppercase font-semibold tracking-wider">Total Services</p>
+                  <p className="text-2xl font-bold text-white mt-1">{stats.totalServices}</p>
                 </div>
-                <div className="p-3 rounded-lg" style={{ backgroundColor: 'var(--color-primary)', opacity: 0.1 }}>
-                  <MdContentCut className="w-6 h-6" style={{ color: 'var(--color-primary)' }} />
+                <div className="p-3 rounded-lg bg-white/10">
+                  <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'rgba(52, 116, 134, 0.1)' }}>
+                    <MdContentCut className="w-6 h-6 text-white" />
+                  </div>
                 </div>
               </div>
             </div>
             
-            <div className="bg-white rounded-xl shadow-md p-5 transform hover:-translate-y-1 transition-all duration-300">
+            <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-lg p-6 transform hover:-translate-y-1 transition-all duration-300 border border-white/10">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-gray-500 uppercase font-semibold">Available</p>
-                  <p className="text-2xl font-bold mt-1" style={{ color: 'var(--color-primary)' }}>{stats.availableServices}</p>
+                  <p className="text-xs text-white/60 uppercase font-semibold tracking-wider">Available</p>
+                  <p className="text-2xl font-bold text-white mt-1">{stats.availableServices}</p>
                 </div>
-                <div className="p-3 rounded-lg" style={{ backgroundColor: 'var(--color-primary)', opacity: 0.1 }}>
-                  <MdCheckCircle className="w-6 h-6" style={{ color: 'var(--color-primary)' }} />
+                <div className="p-3 rounded-lg bg-white/10">
+                  <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'rgba(52, 116, 134, 0.1)' }}>
+                    <MdCheckCircle className="w-6 h-6 text-white" />
+                  </div>
                 </div>
               </div>
             </div>
             
-            <div className="bg-white rounded-xl shadow-md p-5 transform hover:-translate-y-1 transition-all duration-300">
+            <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-lg p-6 transform hover:-translate-y-1 transition-all duration-300 border border-white/10">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-gray-500 uppercase font-semibold">Packages</p>
-                  <p className="text-2xl font-bold mt-1" style={{ color: 'var(--color-primary)' }}>{stats.totalPackages}</p>
+                  <p className="text-xs text-white/60 uppercase font-semibold tracking-wider">Packages</p>
+                  <p className="text-2xl font-bold text-white mt-1">{stats.totalPackages}</p>
                 </div>
-                <div className="p-3 rounded-lg" style={{ backgroundColor: 'var(--color-primary)', opacity: 0.1 }}>
-                  <MdInventory className="w-6 h-6" style={{ color: 'var(--color-primary)' }} />
+                <div className="p-3 rounded-lg bg-white/10">
+                  <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'rgba(52, 116, 134, 0.1)' }}>
+                    <MdInventory className="w-6 h-6 text-white" />
+                  </div>
                 </div>
               </div>
             </div>
             
-            <div className="bg-white rounded-xl shadow-md p-5 transform hover:-translate-y-1 transition-all duration-300">
+            <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-lg p-6 transform hover:-translate-y-1 transition-all duration-300 border border-white/10">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-gray-500 uppercase font-semibold">Avg. Price</p>
-                  <p className="text-2xl font-bold mt-1" style={{ color: 'var(--color-primary)' }}>{formatPrice(stats.averagePrice)}</p>
+                  <p className="text-xs text-white/60 uppercase font-semibold tracking-wider">Avg. Price</p>
+                  <p className="text-2xl font-bold text-white mt-1">{formatPrice(stats.averagePrice)}</p>
                 </div>
-                <div className="p-3 rounded-lg" style={{ backgroundColor: 'var(--color-primary)', opacity: 0.1 }}>
-                  <MdInsights className="w-6 h-6" style={{ color: 'var(--color-primary)' }} />
+                <div className="p-3 rounded-lg bg-white/10">
+                  <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'rgba(52, 116, 134, 0.1)' }}>
+                    <MdInsights className="w-6 h-6 text-white" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -453,8 +474,8 @@ const ProviderProfile = () => {
                 <h3 className="text-lg font-bold mb-5" style={{ color: 'var(--color-accent)' }}>Contact Info</h3>
                 <div className="space-y-4">
                   <div className="flex items-center transform hover:translate-x-2 transition-all duration-300">
-                    <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'var(--color-primary)', opacity: 0.1 }}>
-                      <MdEmail className="w-5 h-5" style={{ color: 'var(--color-primary)' }} />
+                    <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'rgba(52, 116, 134, 0.1)' }}>
+                      <MdEmail className="w-5 h-5" style={{ color: '#347486' }} />
                     </div>
                     <div>
                       <p className="text-xs text-gray-500 uppercase tracking-wider">Email</p>
@@ -463,8 +484,8 @@ const ProviderProfile = () => {
                   </div>
                   
                   <div className="flex items-center transform hover:translate-x-2 transition-all duration-300">
-                    <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'var(--color-primary)', opacity: 0.1 }}>
-                      <MdPhone className="w-5 h-5" style={{ color: 'var(--color-primary)' }} />
+                    <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'rgba(52, 116, 134, 0.1)' }}>
+                      <MdPhone className="w-5 h-5" style={{ color: '#347486' }} />
                     </div>
                     <div>
                       <p className="text-xs text-gray-500 uppercase tracking-wider">Phone</p>
@@ -482,8 +503,8 @@ const ProviderProfile = () => {
                     to="/AppointmentLIST"
                     className="flex items-center p-4 rounded-lg hover:bg-gray-50 transition-all transform hover:translate-x-2 duration-300"
                   >
-                    <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'var(--color-accent)', opacity: 0.1 }}>
-                      <MdCalendarToday className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
+                    <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'rgba(52, 116, 134, 0.1)' }}>
+                      <MdCalendarToday className="w-5 h-5" style={{ color: '#347486' }} />
                     </div>
                     <span className="text-gray-800 font-medium">Appointments</span>
                   </Link>
@@ -492,8 +513,8 @@ const ProviderProfile = () => {
                     to="/product-management"
                     className="flex items-center p-4 rounded-lg hover:bg-gray-50 transition-all transform hover:translate-x-2 duration-300"
                   >
-                    <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'var(--color-accent)', opacity: 0.1 }}>
-                      <MdInventory className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
+                    <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'rgba(52, 116, 134, 0.1)' }}>
+                      <MdInventory className="w-5 h-5" style={{ color: '#347486' }} />
                     </div>
                     <span className="text-gray-800 font-medium">Products</span>
                   </Link>
@@ -502,8 +523,8 @@ const ProviderProfile = () => {
                     to="/provider/order-management"
                     className="flex items-center p-4 rounded-lg hover:bg-gray-50 transition-all transform hover:translate-x-2 duration-300"
                   >
-                    <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'var(--color-accent)', opacity: 0.1 }}>
-                      <MdInventory className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
+                    <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'rgba(52, 116, 134, 0.1)' }}>
+                      <MdInventory className="w-5 h-5" style={{ color: '#347486' }} />
                     </div>
                     <span className="text-gray-800 font-medium">Orders</span>
                   </Link>
@@ -512,8 +533,8 @@ const ProviderProfile = () => {
                     to="/AdReviewComponent"
                     className="flex items-center p-4 rounded-lg hover:bg-gray-50 transition-all transform hover:translate-x-2 duration-300"
                   >
-                    <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'var(--color-accent)', opacity: 0.1 }}>
-                      <MdCampaign className="w-5 h-5" style={{ color: 'var(--color-accent)' }} />
+                    <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'rgba(52, 116, 134, 0.1)' }}>
+                      <MdCampaign className="w-5 h-5" style={{ color: '#347486' }} />
                     </div>
                     <span className="text-gray-800 font-medium">Advertisements</span>
                   </Link>
@@ -529,15 +550,15 @@ const ProviderProfile = () => {
               <div className="flex justify-between items-center p-6 border-b border-gray-100" 
                    style={{ background: 'linear-gradient(to right, rgba(188,70,38,0.07), rgba(52,116,134,0.05))' }}>
                 <div className="flex items-center">
-                  <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'var(--color-primary)', opacity: 0.1 }}>
-                    <MdContentCut className="w-6 h-6" style={{ color: 'var(--color-primary)' }} />
+                  <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'rgba(52, 116, 134, 0.1)' }}>
+                    <MdContentCut className="w-6 h-6" style={{ color: '#347486' }} />
                   </div>
                   <h2 className="text-2xl font-bold" style={{ color: 'var(--color-primary)' }}>My Services</h2>
                 </div>
                 <Link 
                   to="/add-service"
                   className="flex items-center px-5 py-2.5 rounded-lg text-white transition-all shadow-md transform hover:translate-y-0.5 hover:shadow-lg"
-                  style={{ backgroundColor: 'var(--color-primary)' }}
+                  style={{ backgroundColor: '#347486' }}
                 >
                   <MdAdd className="w-4 h-4 mr-2" />
                   Add Service
@@ -547,13 +568,13 @@ const ProviderProfile = () => {
               <div className="p-6">
                 {services.length === 0 ? (
                   <div className="text-center py-16 bg-gray-50 rounded-lg border border-dashed border-gray-200">
-                    <MdContentCut className="w-16 h-16 mx-auto mb-6 text-gray-300" />
+                    <MdContentCut className="w-16 h-16 mx-auto mb-6" style={{ color: '#347486' }} />
                     <p className="text-gray-500 text-xl font-medium">No services added yet</p>
                     <p className="text-gray-400 mt-2 mb-6">Start by adding your first service!</p>
                     <Link 
                       to="/add-service"
                       className="inline-flex items-center px-5 py-2.5 rounded-lg text-white transition-all shadow-md"
-                      style={{ backgroundColor: 'var(--color-primary)' }}
+                      style={{ backgroundColor: '#347486' }}
                     >
                       <MdAdd className="w-4 h-4 mr-2" />
                       Add Your First Service
@@ -601,14 +622,14 @@ const ProviderProfile = () => {
                                 className="p-2 rounded-full text-gray-400 hover:text-blue-500 hover:bg-blue-50 transition-colors"
                                 title="Edit Service"
                               >
-                                <MdEdit className="w-4 h-4" />
+                                <MdEdit className="w-4 h-4" style={{ color: '#347486' }} />
                               </Link>
                               <button 
                                 onClick={() => handleDeleteService(service._id)}
                                 className="p-2 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
                                 title="Delete Service"
                               >
-                                <MdDelete className="w-4 h-4" />
+                                <MdDelete className="w-4 h-4" style={{ color: '#347486' }} />
                               </button>
                             </div>
                           </div>
@@ -625,15 +646,15 @@ const ProviderProfile = () => {
               <div className="flex justify-between items-center p-6 border-b border-gray-100"
                    style={{ background: 'linear-gradient(to right, rgba(188,70,38,0.07), rgba(52,116,134,0.05))' }}>
                 <div className="flex items-center">
-                  <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'var(--color-primary)', opacity: 0.1 }}>
-                    <MdCampaign className="w-6 h-6" style={{ color: 'var(--color-primary)' }} />
+                  <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'rgba(52, 116, 134, 0.1)' }}>
+                    <MdCampaign className="w-6 h-6" style={{ color: '#347486' }} />
                   </div>
                   <h2 className="text-2xl font-bold" style={{ color: 'var(--color-primary)' }}>My Advertisements</h2>
                 </div>
                 <Link 
                   to="/AddAdvertisementForm"
                   className="flex items-center px-5 py-2.5 rounded-lg text-white transition-all shadow-md transform hover:translate-y-0.5 hover:shadow-lg"
-                  style={{ backgroundColor: 'var(--color-primary)' }}
+                  style={{ backgroundColor: '#347486' }}
                 >
                   <MdAdd className="w-4 h-4 mr-2" />
                   Add Advertisement
@@ -643,7 +664,7 @@ const ProviderProfile = () => {
               <div className="p-6">
                 <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg p-8 text-center border border-dashed border-gray-200">
                   <div className="rounded-full bg-white p-4 w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-md" style={{ borderColor: 'var(--color-accent)', borderWidth: '2px' }}>
-                    <MdCampaign className="w-7 h-7" style={{ color: 'var(--color-primary)' }} />
+                    <MdCampaign className="w-7 h-7" style={{ color: '#347486' }} />
                   </div>
                   <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--color-accent)' }}>Boost Your Business</h3>
                   <p className="text-gray-600 mb-6">Create eye-catching advertisements to attract more customers to your services.</p>
@@ -651,7 +672,7 @@ const ProviderProfile = () => {
                     <Link
                       to="/AddAdvertisementForm"
                       className="inline-flex items-center px-5 py-2.5 rounded-lg text-white transition-all shadow-md"
-                      style={{ backgroundColor: 'var(--color-primary)' }}
+                      style={{ backgroundColor: '#347486' }}
                     >
                       <MdAdd className="w-4 h-4 mr-2" />
                       Create New Ad
@@ -673,8 +694,8 @@ const ProviderProfile = () => {
               <div className="flex justify-between items-center p-6 border-b border-gray-100"
                    style={{ background: 'linear-gradient(to right, rgba(52,116,134,0.07), rgba(188,70,38,0.05))' }}>
                 <div className="flex items-center">
-                  <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'var(--color-accent)', opacity: 0.1 }}>
-                    <MdInsights className="w-6 h-6" style={{ color: 'var(--color-accent)' }} />
+                  <div className="p-3 rounded-lg mr-4" style={{ backgroundColor: 'rgba(52, 116, 134, 0.1)' }}>
+                    <MdInsights className="w-6 h-6" style={{ color: '#347486' }} />
                   </div>
                   <h2 className="text-2xl font-bold" style={{ color: 'var(--color-accent)' }}>Analytics Summary</h2>
                 </div>
@@ -683,7 +704,7 @@ const ProviderProfile = () => {
                   className="flex items-center px-5 py-2.5 rounded-lg transition-all shadow-md transform hover:translate-y-0.5 hover:shadow-lg"
                   style={{ backgroundColor: 'rgba(52, 116, 134, 0.1)', color: 'var(--color-accent)' }}
                 >
-                  <MdFileDownload className="w-4 h-4 mr-2" />
+                  <MdFileDownload className="w-4 h-4 mr-2" style={{ color: '#347486' }} />
                   Full Report
                 </button>
               </div>
@@ -760,7 +781,7 @@ const ProviderProfile = () => {
                     className="inline-flex items-center px-6 py-3 rounded-lg text-white transition-all shadow-md"
                     style={{ backgroundColor: 'var(--color-accent)' }}
                   >
-                    <MdFileDownload className="w-4 h-4 mr-2" />
+                    <MdFileDownload className="w-4 h-4 mr-2" style={{ color: '#347486' }} />
                     Generate Detailed Report
                   </button>
                 </div>
@@ -773,9 +794,9 @@ const ProviderProfile = () => {
       {/* Footer */}
       <div className="py-12 flex flex-col items-center">
         <div className="flex justify-center mb-3">
-          <MdPets size={20} className="text-gray-300 transform rotate-12 mx-1 animate-bounce" style={{ animationDuration: '2s', animationDelay: '0.1s' }} />
-          <MdPets size={15} className="text-gray-300 transform -rotate-12 mx-1 animate-bounce" style={{ animationDuration: '2s', animationDelay: '0.3s' }} />
-          <MdPets size={20} className="text-gray-300 transform rotate-12 mx-1 animate-bounce" style={{ animationDuration: '2s', animationDelay: '0.5s' }} />
+          <MdPets size={20} className="text-[#347486] transform rotate-12 mx-1 animate-bounce" style={{ animationDuration: '2s', animationDelay: '0.1s' }} />
+          <MdPets size={15} className="text-[#347486] transform -rotate-12 mx-1 animate-bounce" style={{ animationDuration: '2s', animationDelay: '0.3s' }} />
+          <MdPets size={20} className="text-[#347486] transform rotate-12 mx-1 animate-bounce" style={{ animationDuration: '2s', animationDelay: '0.5s' }} />
         </div>
         <p className="text-gray-400 text-sm">© 2025 Pet Care Services. All rights reserved.</p>
       </div>
