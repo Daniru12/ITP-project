@@ -4,7 +4,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import Home from './Pages/Home/home'
 import LoginPage from './Pages/Login/login'
 import { Toaster } from 'react-hot-toast'
-import AdminDashboard from './Pages/Admin/adminDashboard'
+import AdminDashboard, { DashboardHome } from './Pages/Admin/adminDashboard'
 import RegisterPage from './Pages/Register/register'
 import NavBar from './Components/NavBar'
 import Profile from './Pages/PetOwner/profile'
@@ -19,6 +19,8 @@ import CreateFaq from './Pages/FAQ/faq'
 import PetBookPage from './Pages/PetOwner/PetBookPage'
 import AdvertisingManagement from './Pages/Admin/advertiseManagement'
 import Form from './Pages/Admin/form'
+import AdminProductManagement from './Pages/Admin/AdminProductManagement'
+import PromoCodeManagement from './Pages/Admin/PromoCodeManagement'
 
 import PaymentPage from './Pages/Payment/PaymentPage'
 import ServiceSummary from './Pages/Payment/AppointmentSummary'
@@ -82,6 +84,9 @@ import CartPage from './Pages/productMarket/CartPage'
 import OrderConfirmPage from './Pages/productMarket/OrderConfirmPage'
 import OrdersPage from './Pages/productMarket/OrdersPage'
 import ProviderOrderManagement from './Pages/Orders/ProviderOrderManagement'
+
+
+
 // Wrapper component to handle NavBar conditional rendering
 const AppContent = () => {
   const location = useLocation();
@@ -99,17 +104,18 @@ const AppContent = () => {
 
           {/* Admin Dashboard with nested routes */}
           <Route path='/admin' element={<AdminDashboard />}>
+            <Route index element={<DashboardHome />} />
             <Route path="users" element={<UserManagement />} />
             <Route path="users/update/:id" element={<UpdateUser />} />
             <Route path="services/update/:id" element={<AdminUpdateService />} />
             <Route path="pets/update/:id" element={<AdminUpdatePet />} />
-            <Route path="products" element={<div className="p-6"><h2 className="text-2xl font-semibold mb-6">Products Management</h2></div>} />
+            <Route path="products" element={<AdminProductManagement />} />
             <Route path="Services" element={<ServiceManagement />} />
             <Route path="AllPets" element={<PetsManagement />} />
             <Route path="faq" element={<FaqAdmin />} />
             <Route path="settings" element={<div className="p-6"><h2 className="text-2xl font-semibold mb-6">Admin Settings</h2></div>} />
             <Route path="AdvertisingManagement" element={<AdvertisingManagement />} />
-            
+            <Route path="promocodes" element={<PromoCodeManagement />} />
             <Route path="Form" element={<Form />} />
           </Route>
 

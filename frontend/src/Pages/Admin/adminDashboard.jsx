@@ -11,12 +11,14 @@ import {
   FaTimes as FiX,
   FaDesktop as FiMonitor,
   FaPaw,
-} from "react-icons/fa";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import FaqAdmin from "./FaqAnswers";
+  FaTag as Tag
+} from 'react-icons/fa';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import FaqAdmin from './FaqAnswers'
+
 // Dashboard components
-const DashboardHome = () => {
+export const DashboardHome = () => {
   // State to store the counts
   const [counts, setCounts] = useState({
     users: 0,
@@ -296,21 +298,26 @@ const AdminDashboard = () => {
                 active={activeItem === "advertisements"}
                 onClick={() => setActiveItem("advertisements")}
               />
-
+              <SidebarItem
+                icon={<Tag />}
+                text="Promo Codes"
+                to="/admin/promocodes"
+                active={activeItem === "promocodes"}
+                onClick={() => setActiveItem("promocodes")}
+              />
               <SidebarItem
                 icon={<FiMessageSquare />}
-                text="FAQs"
+                text="FAQ"
                 to="/admin/faq"
-                active={activeItem === "faqs"}
-                onClick={() => setActiveItem("faqs")}
+                active={activeItem === "faq"}
+                onClick={() => setActiveItem("faq")}
               />
-
-              <SidebarItem
-                icon={<FiSettings />}
-                text="Settings"
-                to="/admin/settings"
-                active={activeItem === "settings"}
-                onClick={() => setActiveItem("settings")}
+              <SidebarItem 
+                icon={<FiSettings />} 
+                text="Settings" 
+                to="/admin/settings" 
+                active={activeItem === 'settings'} 
+                onClick={() => setActiveItem('settings')}
               />
             </div>
           </div>

@@ -16,6 +16,7 @@ import productRouter from "./routes/Products/productRouter.js";
 import orderRouter from "./routes/Products/orderRouter.js";
 import petBookRouter from "./routes/petBookRoutes.js";
 import cartRouter from "./routes/Products/cartRouter.js";
+import promoCodeRoutes from './routes/promoCodeRoutes.js';
 
 
 
@@ -64,6 +65,7 @@ app.use("/api/faqAll", faqAllRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/petbook", petBookRouter);
 app.use("/api/cart", cartRouter);
+app.use('/api/promocodes', promoCodeRoutes);
 
 // Add this after your routes but before app.listen
 app.use((err, req, res, next) => {

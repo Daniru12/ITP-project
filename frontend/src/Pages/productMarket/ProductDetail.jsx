@@ -6,10 +6,15 @@ import {
   StarIcon,
   ArrowLeftIcon,
   ShoppingCartIcon,
-  HeartIcon,
+  Truck,
+  Shield,
+  Package,
+  BadgeCheck,
+  Zap,
   MinusIcon,
   PlusIcon
 } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 export const ProductDetail = () => {
   const { id } = useParams()
@@ -108,198 +113,233 @@ export const ProductDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[var(--color-white)]">
       <main className="container mx-auto px-4 py-6">
-        <Link
-          to="/petMarketplace"
-          className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-6"
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          <ArrowLeftIcon className="w-4 h-4 mr-2" />
-          Back to Products
-        </Link>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded-xl shadow-sm">
-          {/* Product Image */}
-          <div className="space-y-4">
-            <div className="relative aspect-square overflow-hidden rounded-lg">
-              <img
-                src={product.image?.[0] || 'https://via.placeholder.com/300x200?text=No+Image'}
-                alt={product.name}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            {/* Thumbnail Gallery */}
-            {product.image && product.image.length > 1 && (
-              <div className="grid grid-cols-5 gap-2">
-                {product.image.map((img, index) => (
-                  <div key={index} className="aspect-square rounded-lg overflow-hidden">
-                    <img
-                      src={img}
-                      alt={`${product.name} - ${index + 1}`}
-                      className="w-full h-full object-cover cursor-pointer hover:opacity-75 transition-opacity"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          {/* Product Info */}
-          <div className="space-y-6">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                {product.name}
-              </h1>
-              <div className="flex items-center space-x-2">
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <StarIcon
-                      key={i}
-                      className={`w-5 h-5 ${
-                        i < (product.rating || 0)
-                          ? 'text-yellow-400'
-                          : 'text-gray-300'
-                      }`}
-                      fill={i < (product.rating || 0) ? 'currentColor' : 'none'}
-                    />
-                  ))}
-                </div>
-                <span className="text-sm text-gray-600">
-                  ({product.rating || 0} rating)
-                </span>
-              </div>
-            </div>
-            <div className="text-3xl font-bold text-gray-900">
-              Rs.{product.price}
-            </div>
+          <Link
+            to="/petMarketplace"
+            className="inline-flex items-center text-[var(--color-primary)] hover:text-[var(--color-accent)] mb-6"
+          >
+            <ArrowLeftIcon className="w-4 h-4 mr-2" />
+            Back to Products
+          </Link>
 
-            {/* Quantity Selector */}
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-700">Quantity:</span>
-              <div className="flex items-center border rounded-md">
-                <button
-                  onClick={() => handleQuantityChange(quantity - 1)}
-                  disabled={quantity <= 1}
-                  className="p-2 hover:bg-gray-100 disabled:opacity-50"
-                >
-                  <MinusIcon className="w-4 h-4" />
-                </button>
-                <input
-                  type="number"
-                  min="1"
-                  max={product.quantity}
-                  value={quantity}
-                  onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
-                  className="w-16 text-center border-x py-1"
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Product Image Section */}
+            <motion.div 
+              className="space-y-4"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <div className="relative aspect-square overflow-hidden rounded-xl">
+                <img
+                  src={product.image?.[0] || 'https://via.placeholder.com/300x200?text=No+Image'}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
                 />
-                <button
-                  onClick={() => handleQuantityChange(quantity + 1)}
-                  disabled={quantity >= product.quantity}
-                  className="p-2 hover:bg-gray-100 disabled:opacity-50"
+                {product.quantity < 5 && (
+                  <div className="absolute top-4 right-4 bg-[var(--color-accent)] text-[var(--text-on-accent)] px-3 py-1 rounded-full text-sm">
+                    Only {product.quantity} left!
+                  </div>
+                )}
+              </div>
+
+              {/* Thumbnail Gallery */}
+              {product.image && product.image.length > 1 && (
+                <motion.div 
+                  className="grid grid-cols-5 gap-2"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
                 >
-                  <PlusIcon className="w-4 h-4" />
+                  {product.image.map((img, index) => (
+                    <div 
+                      key={index} 
+                      className="aspect-square rounded-lg overflow-hidden border border-[var(--color-primary-light)] hover:border-[var(--color-primary)] transition-colors cursor-pointer"
+                    >
+                      <img
+                        src={img}
+                        alt={`${product.name} - ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </motion.div>
+              )}
+            </motion.div>
+
+            {/* Product Info Section */}
+            <motion.div 
+              className="space-y-6"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <div>
+                <h1 className="text-3xl font-bold text-[var(--text-on-secondary)] mb-2">
+                  {product.name}
+                </h1>
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="flex">
+                    {[...Array(5)].map((_, i) => (
+                      <StarIcon
+                        key={i}
+                        className={`w-5 h-5 ${
+                          i < Math.floor(4.5)
+                            ? 'text-[var(--color-secondary)]'
+                            : i < 4.5
+                            ? 'text-[var(--color-secondary)]'
+                            : 'text-[var(--text-on-secondary)] opacity-20'
+                        }`}
+                        fill={i < Math.floor(4.5) ? 'currentColor' : i < 4.5 ? 'url(#half)' : 'none'}
+                      />
+                    ))}
+                    <defs>
+                      <linearGradient id="half">
+                        <stop offset="50%" stopColor="currentColor" />
+                        <stop offset="50%" stopColor="transparent" />
+                      </linearGradient>
+                    </defs>
+                  </div>
+                  <span className="text-sm text-[var(--text-on-secondary)] opacity-70">
+                    (4.5 rating)
+                  </span>
+                </div>
+
+                <div className="text-3xl font-bold text-[var(--color-primary)] mb-6">
+                  Rs.{product.price}
+                </div>
+
+                {/* Product Features */}
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="flex items-center space-x-2 text-[var(--text-on-secondary)] opacity-70">
+                    <Truck className="w-5 h-5 text-[var(--color-primary)]" />
+                    <span>Fast Delivery</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-[var(--text-on-secondary)] opacity-70">
+                    <Shield className="w-5 h-5 text-[var(--color-primary)]" />
+                    <span>Quality Assured</span>
+                  </div>
+                </div>
+
+                {/* Quantity Selector */}
+                <div className="flex items-center space-x-4 mb-6">
+                  <span className="text-[var(--text-on-secondary)]">Quantity:</span>
+                  <div className="flex items-center border border-[var(--color-primary-light)] rounded-lg">
+                    <button
+                      onClick={() => handleQuantityChange(quantity - 1)}
+                      disabled={quantity <= 1}
+                      className="p-2 hover:bg-[var(--color-primary-light)] disabled:opacity-50 text-[var(--text-on-secondary)]"
+                    >
+                      <MinusIcon className="w-4 h-4" />
+                    </button>
+                    <input
+                      type="number"
+                      min="1"
+                      max={product.quantity}
+                      value={quantity}
+                      onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
+                      className="w-16 text-center border-x border-[var(--color-primary-light)] py-1 focus:outline-none"
+                    />
+                    <button
+                      onClick={() => handleQuantityChange(quantity + 1)}
+                      disabled={quantity >= product.quantity}
+                      className="p-2 hover:bg-[var(--color-primary-light)] disabled:opacity-50 text-[var(--text-on-secondary)]"
+                    >
+                      <PlusIcon className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <span className="text-sm text-[var(--text-on-secondary)] opacity-70">
+                    {product.quantity} available
+                  </span>
+                </div>
+
+                {/* Add to Cart Button */}
+                <button 
+                  onClick={handleAddToCart}
+                  disabled={isAddingToCart || quantity < 1}
+                  className="w-full py-3 px-6 bg-[var(--color-primary)] text-[var(--text-on-primary)] rounded-lg
+                    flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed
+                    hover:bg-[var(--color-accent)] transition-colors"
+                >
+                  <ShoppingCartIcon className="w-5 h-5" />
+                  <span>{isAddingToCart ? 'Adding...' : 'Add to Cart'}</span>
                 </button>
               </div>
-              <span className="text-sm text-gray-500">
-                {product.quantity} available
-              </span>
-            </div>
-
-            {/* Total Price */}
-            <div className="text-lg text-gray-700">
-              Total: Rs.{(product.price * quantity).toFixed(2)}
-            </div>
-
-            <div className="space-y-4">
-              <button 
-                onClick={handleAddToCart}
-                disabled={isAddingToCart || quantity < 1}
-                className="w-full py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 
-                  flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ShoppingCartIcon className="w-5 h-5" />
-                <span>{isAddingToCart ? 'Adding...' : 'Add to Cart'}</span>
-              </button>
-              
-              <button className="w-full py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 
-                flex items-center justify-center space-x-2"
-              >
-                <HeartIcon className="w-5 h-5" />
-                <span>Add to Wishlist</span>
-              </button>
-            </div>
-
-            {/* Stock Warning */}
-            {product.quantity < 5 && (
-              <p className="text-orange-500 text-sm">
-                Only {product.quantity} items left in stock!
-              </p>
-            )}
+            </motion.div>
           </div>
-        </div>
-        {/* Tabs */}
-        <div className="mt-8 bg-white rounded-xl shadow-sm overflow-hidden">
-          <div className="border-b border-gray-200">
-            <div className="flex space-x-8">
-              <button
-                onClick={() => setSelectedTab('description')}
-                className={`px-4 py-3 text-sm font-medium border-b-2 ${
-                  selectedTab === 'description'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                Description
-              </button>
-              <button
-                onClick={() => setSelectedTab('specifications')}
-                className={`px-4 py-3 text-sm font-medium border-b-2 ${
-                  selectedTab === 'specifications'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                Specifications
-              </button>
-            </div>
-          </div>
-          <div className="p-6">
-            {selectedTab === 'description' && (
-              <div>
-                <h2 className="text-lg font-bold text-gray-900 mb-4">
-                  Product Description
-                </h2>
-                <p className="text-gray-700 whitespace-pre-line">
-                  {product.description}
-                </p>
-              </div>
-            )}
-            {selectedTab === 'specifications' && (
-              <div>
-                <h2 className="text-lg font-bold text-gray-900 mb-4">
+
+          {/* Product Details Tabs */}
+          <div className="mt-8">
+            <div className="border-b border-[var(--color-primary-light)]">
+              <div className="flex space-x-8">
+                <button
+                  onClick={() => setSelectedTab('description')}
+                  className={`px-4 py-3 text-sm font-medium border-b-2 ${
+                    selectedTab === 'description'
+                      ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
+                      : 'border-transparent text-[var(--text-on-secondary)] hover:text-[var(--color-primary)]'
+                  }`}
+                >
+                  Description
+                </button>
+                <button
+                  onClick={() => setSelectedTab('specifications')}
+                  className={`px-4 py-3 text-sm font-medium border-b-2 ${
+                    selectedTab === 'specifications'
+                      ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
+                      : 'border-transparent text-[var(--text-on-secondary)] hover:text-[var(--color-primary)]'
+                  }`}
+                >
                   Specifications
-                </h2>
-                <ul className="divide-y divide-gray-200">
-                  <li className="py-3 flex justify-between text-gray-700">
-                    <span>Category</span>
-                    <span>{product.category}</span>
-                  </li>
-                  <li className="py-3 flex justify-between text-gray-700">
-                    <span>Quantity Available</span>
-                    <span>{product.quantity}</span>
-                  </li>
-                  {product.specifications?.map((spec, idx) => (
-                    <li
-                      key={idx}
-                      className="py-3 flex justify-between text-gray-700"
-                    >
-                      <span>{spec.name}</span>
-                      <span>{spec.value}</span>
-                    </li>
-                  ))}
-                </ul>
+                </button>
               </div>
-            )}
+            </div>
+            <div className="py-6">
+              {selectedTab === 'description' && (
+                <div>
+                  <h2 className="text-lg font-bold text-[var(--text-on-secondary)] mb-4">
+                    Product Description
+                  </h2>
+                  <p className="text-[var(--text-on-secondary)] opacity-70 whitespace-pre-line">
+                    {product.description}
+                  </p>
+                </div>
+              )}
+              {selectedTab === 'specifications' && (
+                <div>
+                  <h2 className="text-lg font-bold text-[var(--text-on-secondary)] mb-4">
+                    Specifications
+                  </h2>
+                  <ul className="divide-y divide-[var(--color-primary-light)]">
+                    <li className="py-3 flex justify-between text-[var(--text-on-secondary)] opacity-70">
+                      <span>Category</span>
+                      <span>{product.category}</span>
+                    </li>
+                    <li className="py-3 flex justify-between text-[var(--text-on-secondary)] opacity-70">
+                      <span>Quantity Available</span>
+                      <span>{product.quantity}</span>
+                    </li>
+                    {product.specifications?.map((spec, idx) => (
+                      <li
+                        key={idx}
+                        className="py-3 flex justify-between text-[var(--text-on-secondary)] opacity-70"
+                      >
+                        <span>{spec.name}</span>
+                        <span>{spec.value}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        </motion.div>
       </main>
     </div>
   )

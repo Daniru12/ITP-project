@@ -2,7 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import { ArrowLeftIcon, TrashIcon, MinusIcon, PlusIcon } from 'lucide-react';
+import { 
+  ArrowLeftIcon, 
+  TrashIcon, 
+  MinusIcon, 
+  PlusIcon, 
+  ShoppingCart, 
+  Package, 
+  CreditCard,
+  Shield,
+  AlertCircle
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const CartPage = () => {
   const [cart, setCart] = useState(null);
@@ -78,91 +89,187 @@ const CartPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen bg-[var(--color-white)] flex items-center justify-center">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          className="w-16 h-16"
+        >
+          <ShoppingCart className="w-full h-full text-[var(--color-primary)]" />
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-[var(--color-white)] py-8 px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <Link to="/petMarketplace" className="flex items-center text-blue-600 hover:text-blue-700">
-            <ArrowLeftIcon className="w-4 h-4 mr-2" />
-            Continue Shopping
-          </Link>
-          <h1 className="text-2xl font-bold">Shopping Cart</h1>
-        </div>
-
-        {!cart || cart.items.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg shadow">
-            <p className="text-gray-600">Your cart is empty</p>
-            <Link 
-              to="/petMarketplace"
-              className="mt-4 inline-block bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700"
-            >
-              Start Shopping
-            </Link>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="relative mb-8">
+            <div className="absolute left-0 top-1/2 -translate-y-1/2">
+              <Link 
+                to="/petMarketplace" 
+                className="flex items-center text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-colors"
+              >
+                <ArrowLeftIcon className="w-5 h-5 mr-2" />
+                <span className="font-medium">Continue Shopping</span>
+              </Link>
+            </div>
+            
+            <div className="flex items-center justify-center space-x-3">
+              <ShoppingCart className="w-8 h-8 text-[var(--color-primary)]" />
+              <h1 className="text-3xl font-bold text-[var(--text-on-secondary)]">
+                Your Cart
+              </h1>
+            </div>
           </div>
-        ) : (
-          <div className="bg-white rounded-lg shadow overflow-hidden">
-            <div className="divide-y divide-gray-200">
-              {cart.items.map((item) => (
-                <div key={item._id} className="p-6 flex items-center">
-                  <img 
-                    src={item.product.image?.[0] || 'placeholder-url'} 
-                    alt={item.product.name}
-                    className="w-24 h-24 object-cover rounded-md"
-                  />
-                  <div className="ml-6 flex-1">
-                    <h3 className="text-lg font-semibold">{item.product.name}</h3>
-                    <div className="flex items-center mt-2 space-x-4">
-                      <div className="flex items-center space-x-2">
-                        <button 
-                          onClick={() => handleUpdateQuantity(item.product._id, item.quantity - 1)}
-                          className="p-1 rounded-full hover:bg-gray-100"
-                        >
-                          <MinusIcon className="w-4 h-4" />
-                        </button>
-                        <span className="w-8 text-center">{item.quantity}</span>
-                        <button 
-                          onClick={() => handleUpdateQuantity(item.product._id, item.quantity + 1)}
-                          className="p-1 rounded-full hover:bg-gray-100"
-                        >
-                          <PlusIcon className="w-4 h-4" />
-                        </button>
-                      </div>
-                      <p className="text-gray-800 font-medium">
-                        Rs.{(item.product.price * item.quantity).toFixed(2)}
+
+          {!cart || cart.items.length === 0 ? (
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-16 bg-[var(--color-white)] rounded-2xl shadow-md"
+            >
+              <ShoppingCart className="w-16 h-16 text-[var(--text-on-secondary)] opacity-20 mx-auto mb-4" />
+              <p className="text-[var(--text-on-secondary)] opacity-70 mb-6">Your cart is empty</p>
+              <Link 
+                to="/petMarketplace"
+                className="inline-flex items-center px-6 py-3 bg-[var(--color-primary)] 
+                  text-[var(--text-on-primary)] rounded-xl hover:bg-[var(--color-accent)] 
+                  transition-colors shadow-sm"
+              >
+                <Package className="w-5 h-5 mr-2" />
+                Discover Products
+              </Link>
+            </motion.div>
+          ) : (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="bg-[var(--color-white)] p-4 rounded-xl shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <Package className="w-5 h-5 text-[var(--color-primary)]" />
+                    <div>
+                      <p className="text-sm text-[var(--text-on-secondary)] opacity-70">Total Items</p>
+                      <p className="text-lg font-bold text-[var(--text-on-secondary)]">{cart.items.length}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-[var(--color-white)] p-4 rounded-xl shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <CreditCard className="w-5 h-5 text-[var(--color-primary)]" />
+                    <div>
+                      <p className="text-sm text-[var(--text-on-secondary)] opacity-70">Total Amount</p>
+                      <p className="text-lg font-bold text-[var(--text-on-secondary)]">
+                        Rs.{cart?.items?.reduce((total, item) => 
+                          total + ((item?.product?.price || 0) * (item?.quantity || 0)), 0).toFixed(2)}
                       </p>
                     </div>
                   </div>
-                  <button
-                    onClick={() => handleRemoveItem(item.product._id)}
-                    className="text-red-500 hover:text-red-700 p-2"
-                  >
-                    <TrashIcon className="w-5 h-5" />
-                  </button>
                 </div>
-              ))}
-            </div>
-            <div className="p-6 bg-gray-50">
-              <div className="flex justify-between items-center text-lg font-semibold">
-                <span>Total:</span>
-                <span>Rs.{cart.items.reduce((total, item) => 
-                  total + (item.product.price * item.quantity), 0).toFixed(2)}
-                </span>
+                <div className="bg-[var(--color-white)] p-4 rounded-xl shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <Shield className="w-5 h-5 text-[var(--color-primary)]" />
+                    <div>
+                      <p className="text-sm text-[var(--text-on-secondary)] opacity-70">Secure Checkout</p>
+                      <p className="text-lg font-bold text-[var(--text-on-secondary)]">Protected</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <Link
-                to="/order-confirm"
-                className="mt-4 w-full block text-center bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700"
-              >
-                Proceed to Checkout
-              </Link>
+
+              <div className="bg-[var(--color-white)] rounded-2xl shadow-sm overflow-hidden">
+                <div className="divide-y divide-[var(--color-primary-light)]">
+                  <AnimatePresence>
+                    {cart.items.map((item) => (
+                      <motion.div
+                        key={item._id}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="p-6 flex items-center hover:bg-[var(--color-primary-light)] transition-colors"
+                      >
+                        <div className="relative">
+                          <img 
+                            src={item?.product?.image?.[0] || 'placeholder-url'} 
+                            alt={item?.product?.name || 'Product'}
+                            className="w-24 h-24 object-cover rounded-xl shadow-sm"
+                          />
+                          {item?.product?.quantity < 5 && (
+                            <div className="absolute -top-2 -right-2 bg-[var(--color-accent)] text-[var(--text-on-accent)] 
+                              text-xs px-2 py-1 rounded-full flex items-center space-x-1">
+                              <AlertCircle className="w-3 h-3" />
+                              <span>Low Stock</span>
+                            </div>
+                          )}
+                        </div>
+                        
+                        <div className="ml-6 flex-1">
+                          <h3 className="text-lg font-semibold text-[var(--text-on-secondary)]">
+                            {item?.product?.name || 'Unnamed Product'}
+                          </h3>
+                          <div className="flex items-center mt-2 space-x-6">
+                            <div className="flex items-center space-x-1">
+                              <button 
+                                onClick={() => handleUpdateQuantity(item?.product?._id, item?.quantity - 1)}
+                                className="p-1.5 rounded-lg hover:bg-[var(--color-primary-light)] text-[var(--text-on-secondary)] 
+                                  hover:text-[var(--color-primary)] transition-colors"
+                              >
+                                <MinusIcon className="w-4 h-4" />
+                              </button>
+                              <span className="w-8 text-center font-medium text-[var(--text-on-secondary)]">
+                                {item?.quantity || 0}
+                              </span>
+                              <button 
+                                onClick={() => handleUpdateQuantity(item?.product?._id, item?.quantity + 1)}
+                                className="p-1.5 rounded-lg hover:bg-[var(--color-primary-light)] text-[var(--text-on-secondary)] 
+                                  hover:text-[var(--color-primary)] transition-colors"
+                              >
+                                <PlusIcon className="w-4 h-4" />
+                              </button>
+                            </div>
+                            <p className="text-lg font-semibold text-[var(--color-primary)]">
+                              Rs.{((item?.product?.price || 0) * (item?.quantity || 0)).toFixed(2)}
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => handleRemoveItem(item.product._id)}
+                          className="text-[var(--color-accent)] hover:text-[var(--color-primary)] p-2 rounded-lg 
+                            hover:bg-[var(--color-primary-light)] transition-colors"
+                        >
+                          <TrashIcon className="w-5 h-5" />
+                        </button>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
+
+                <div className="p-6 bg-[var(--color-white)]">
+                  <div className="flex justify-between items-center text-lg font-semibold mb-4">
+                    <span className="text-[var(--text-on-secondary)]">Total Amount:</span>
+                    <span className="text-[var(--color-primary)]">
+                      Rs.{cart?.items?.reduce((total, item) => 
+                        total + ((item?.product?.price || 0) * (item?.quantity || 0)), 0).toFixed(2)}
+                    </span>
+                  </div>
+                  <Link
+                    to="/order-confirm"
+                    className="w-full flex items-center justify-center space-x-2 bg-[var(--color-primary)] 
+                      text-[var(--text-on-primary)] px-6 py-3 rounded-xl hover:bg-[var(--color-accent)] 
+                      transition-colors shadow-sm"
+                  >
+                    <CreditCard className="w-5 h-5" />
+                    <span>Proceed to Checkout</span>
+                  </Link>
+                </div>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </motion.div>
       </div>
     </div>
   );

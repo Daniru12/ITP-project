@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import PromoCode from "./PromoCode.js";
 
 const orderSchema = new mongoose.Schema(
   {
@@ -42,6 +43,14 @@ const orderSchema = new mongoose.Schema(
       postalCode: { type: String, required: [true, "Postal code is required"] },
       country: { type: String, required: [true, "Country is required"] },
     },
+    promo_code_applied: {
+      type: String,
+      default: null
+    },
+    discount_amount: {
+      type: Number,
+      default: 0
+    }
   },
   { timestamps: true } //it will automatically create fields for when the order was created and updated
 );
