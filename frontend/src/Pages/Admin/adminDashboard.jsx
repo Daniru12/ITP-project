@@ -10,13 +10,14 @@ import {
   FaBars as FiMenu,
   FaTimes as FiX,
   FaDesktop as FiMonitor,
-  FaPaw
+  FaPaw,
+  FaTag as Tag
 } from 'react-icons/fa';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 // Dashboard components
-const DashboardHome = () => {
+export const DashboardHome = () => {
   // State to store the counts
   const [counts, setCounts] = useState({
     users: 0,
@@ -295,6 +296,13 @@ const AdminDashboard = () => {
                 to="/admin/AdvertisingManagement"
                 active={activeItem === "advertisements"}
                 onClick={() => setActiveItem("advertisements")}
+              />
+              <SidebarItem
+                icon={<Tag />}
+                text="Promo Codes"
+                to="/admin/promocodes"
+                active={activeItem === "promocodes"}
+                onClick={() => setActiveItem("promocodes")}
               />
               <SidebarItem 
                 icon={<FiSettings />} 
