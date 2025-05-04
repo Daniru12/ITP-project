@@ -119,7 +119,7 @@ const AppContent = () => {
             <Route path="Form" element={<Form />} />
           </Route>
 
-          <Route path='register' element={<RegisterPage />} />
+          <Route path='/register' element={<RegisterPage />} />
           <Route path='/booking' element={<PetCareBooking />} />
           
           <Route path='/AppointmentLIST' element={<AppointmentsList />} />
