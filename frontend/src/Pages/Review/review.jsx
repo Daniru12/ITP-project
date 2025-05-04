@@ -105,28 +105,28 @@ const CreateReview = () => {
 
   return (
     <div 
-      className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center"
-      style={{
-        position: 'relative',
-        backgroundImage: 'url("https://images.pexels.com/photos/2559941/pexels-photo-2559941.jpeg")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
-      {/* Blur overlay */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)',
-          backgroundColor: 'rgba(255, 255, 255, 0.7)',
-          zIndex: 0,
-        }}
-      />
+  className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center"
+  style={{
+    position: 'relative',
+    backgroundImage: 'url("https://i.postimg.cc/dtYgNTQL/dog-and-cat-on-bed.jpg")',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  }}
+>
+  {/* Reduced blur overlay */}
+  <div
+    style={{
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backdropFilter: 'blur(4px)', // Changed from 8px to 4px
+      WebkitBackdropFilter: 'blur(4px)', // Changed from 8px to 4px
+      backgroundColor: 'rgba(255, 255, 255, 0.5)', // Reduced opacity from 0.7 to 0.5
+      zIndex: 0,
+    }}
+  />
 
       <div className="w-full max-w-xl" style={{ position: 'relative', zIndex: 1 }}>
         <div

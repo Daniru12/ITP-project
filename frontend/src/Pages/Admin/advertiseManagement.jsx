@@ -48,7 +48,7 @@ const AdvertisingManagement = () => {
         imageUrl: ad.image_url || '',
         startDate: ad.start_date ? new Date(ad.start_date).toLocaleDateString() : 'N/A',
         endDate: ad.end_date ? new Date(ad.end_date).toLocaleDateString() : 'N/A',
-        approvalStatus: ad.status || 'pending', // ← use backend status
+        approvalStatus: ad.status || 'pending',
       }));
 
       setAds(formattedAds);
@@ -156,7 +156,7 @@ const AdvertisingManagement = () => {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <h2 className="text-4xl font-bold text-[#333333] mb-4 md:mb-0">Advertisement Management</h2>
         <button 
-          onClick={() => navigate('/AddAdvertisementForm')}
+          onClick={() => navigate('/admin/Form')}
           className="flex items-center bg-[#BC4626] text-white px-6 py-3 rounded-lg hover:bg-[#a33d21] shadow-md transition-all text-lg"
         >
           <FiPlusCircle className="mr-2" />
@@ -207,7 +207,11 @@ const AdvertisingManagement = () => {
               {filteredAds.map((ad) => (
                 <tr key={ad.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 flex items-center">
-                    <img src={ad.imageUrl} alt="Ad" className="h-12 w-12 rounded-full object-cover mr-4" />
+                    <img
+                      src={ad.imageUrl}
+                      alt="Ad"
+                      className="h-20 w-32 rounded-lg object-cover mr-4 border border-gray-200 shadow-sm"
+                    />
                     <div>
                       <div className="font-medium">{ad.title}</div>
                       <div className="text-sm text-gray-500">{ad.description}</div>

@@ -1,37 +1,55 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 
-const ServiceReviewsList = () => {
-  const { serviceId } = useParams();
+const ReviewsList = ({ serviceId }) => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
-    const fetchServiceReviews = async () => {
+    const fetchReviews = async () => {
       try {
         const response = await axios.get(
-          `${backendUrl}/api/reviews/service/${serviceId}`
+          `${import.meta.env.VITE_BACKEND_URL}/api/reviews/service/${serviceId}`
         );
         setReviews(response.data);
       } catch (err) {
-        setError(err.response?.data?.message || "Error fetching reviews");
+        setError(err.message);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchServiceReviews();
-  }, [serviceId, backendUrl]);
+    fetchReviews();
+  }, [serviceId]);
 
-  const renderStars = (rating) => {
-    return "⭐".repeat(rating);
+  const renderStars = (rating, size = "text-lg") => {
+    const fullStars = Math.floor(rating);
+    const decimalPart = rating - fullStars;
+    const emptyStars = 5 - fullStars - (decimalPart >= 0.5 ? 1 : 0);
+    let stars = [];
+
+    // Add full stars
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(<FaStar key={`full-${i}`} className={`${size} text-yellow-500`} />);
+    }
+
+    // Add half star if needed
+    if (decimalPart >= 0.5) {
+      stars.push(<FaStarHalfAlt key="half" className={`${size} text-yellow-500`} />);
+    }
+
+    // Add empty stars
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(<FaRegStar key={`empty-${i}`} className={`${size} text-gray-300`} />);
+    }
+
+    return stars;
   };
 
-  if (loading) return <div className="text-center p-4">Loading reviews...</div>;
-  if (error) return <div className="text-red-500 text-center p-4">{error}</div>;
+  if (loading) return <div>Loading reviews...</div>;
+  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -39,40 +57,22 @@ const ServiceReviewsList = () => {
         <h2 className="text-2xl font-bold mb-6">Customer Reviews</h2>
 
         {reviews.length === 0 ? (
-          <p className="text-gray-500 text-center">
-            No reviews available for this service yet.
-          </p>
+          <p>No reviews available for this service yet.</p>
         ) : (
           <div className="space-y-6">
             {reviews.map((review) => (
-              <div 
-                key={review._id} 
-                className={`border-b pb-6 last:border-b-0 ${
-                  review.rating < 2 ? 'bg-red-50' : 
-                  review.rating > 3 ? 'bg-green-50' : ''
-                }`}
-              >
+              <div key={review._id} className="border-b pb-6">
                 <div className="flex items-center justify-between mb-3">
                   <div>
-                    <h4 className="font-semibold text-lg">
-                      {review.user?.full_name || "Anonymous User"}
-                    </h4>
-                    <p className="text-gray-500 text-sm">
-                      {new Date(review.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </p>
+                    <h4 className="font-semibold text-lg">{review.user?.full_name || "Anonymous"}</h4>
+                    <p className="text-gray-500 text-sm">{new Date(review.createdAt).toLocaleDateString()}</p>
                   </div>
-                  <div className="text-yellow-500 text-xl">
-                    {renderStars(review.rating)}
-                    <span className="text-sm text-gray-600 ml-2">
-                      ({review.rating}/5)
-                    </span>
+                  <div className="text-yellow-500">
+                    {renderStars(review.rating, "text-lg")}
+                    <span className="text-sm text-gray-600 ml-2">({review.rating}/5)</span>
                   </div>
                 </div>
-                <p className="text-gray-700">{review.review}</p>
+                <p>{review.review}</p>
               </div>
             ))}
           </div>
@@ -82,4 +82,4 @@ const ServiceReviewsList = () => {
   );
 };
 
-export default ServiceReviewsList;
+export default ReviewsList;
