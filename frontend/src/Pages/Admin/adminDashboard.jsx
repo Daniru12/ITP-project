@@ -15,6 +15,7 @@ import {
 } from 'react-icons/fa';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import FaqAdmin from './FaqAnswers'
 
 // Dashboard components
 export const DashboardHome = () => {
@@ -303,6 +304,13 @@ const AdminDashboard = () => {
                 to="/admin/promocodes"
                 active={activeItem === "promocodes"}
                 onClick={() => setActiveItem("promocodes")}
+              />
+              <SidebarItem
+                icon={<FiMessageSquare />}
+                text="FAQ"
+                to="/admin/faq"
+                active={activeItem === "faq"}
+                onClick={() => setActiveItem("faq")}
               />
               <SidebarItem 
                 icon={<FiSettings />} 
