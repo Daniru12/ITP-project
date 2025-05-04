@@ -46,11 +46,11 @@ export const addService = async (req, res) => {
       }
 
       // Validate duration minimum
-      // if (package_tier.duration < 15) {
-      //   return res.status(400).json({
-      //     message: `${tier} package duration must be at least 15 minutes`,
-      //   });
-      // }
+      if (package_tier.duration < 5) {
+        return res.status(400).json({
+          message: `${tier} package duration must be at least 15 minutes`,
+        });
+      }
 
       // Validate price is not negative
       if (package_tier.price < 0) {

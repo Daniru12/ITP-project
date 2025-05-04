@@ -8,8 +8,8 @@ const paymentSchema = new mongoose.Schema(
       required: [true, "Appointment reference is required"],
     },
     owner_id: {
-      type: mongoose.Schema.Types.ObjectId, // Reference to the User model
-      ref: "User", // Links to the User model
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: [true, "Owner ID is required"],
     },
     amount: {
@@ -24,6 +24,10 @@ const paymentSchema = new mongoose.Schema(
       type: String,
       enum: ["Cash", "Card"],
       required: [true, "Payment method is required"],
+    },
+    phone_number: {
+      type: String,
+      required: false, // Optional: only required if using WhatsApp notification
     },
     card_details: {
       card_number: {
@@ -56,7 +60,6 @@ const paymentSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
 
 const Payment = mongoose.model("Payment", paymentSchema);
 

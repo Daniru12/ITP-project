@@ -84,11 +84,7 @@ export const deleteAdvertisement = async (req, res) => {
     if (!ad) {
       return res.status(404).json({ message: "Advertisement not found" });
     }
-
-    if (ad.advertiser_id.toString() !== req.user._id.toString() && req.user.role !== "admin") {
-      return res.status(403).json({ message: "Not authorized to delete this advertisement" });
-    }
-
+    
     await ad.deleteOne();
     res.status(200).json({ message: "Advertisement deleted successfully" });
   } catch (error) {
