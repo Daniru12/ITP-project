@@ -25,7 +25,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:5173",  // Make sure to set FRONTEND_URL in .env
+  origin: process.env.FRONTEND_URL || "http://localhost:5173",  
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
