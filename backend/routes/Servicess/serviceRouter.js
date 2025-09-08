@@ -3,7 +3,8 @@ import {
   addService,
   getProviderServices,
   getServicesByCategory,
-} from "../../controller/Servicess/groomingController.js";
+  updateService
+} from "../../controller/Servicess/serviceController.js";
 import { protect } from "../../middleware/authMiddleware.js";
 
 const groomingRouter = express.Router();
@@ -14,5 +15,6 @@ groomingRouter.get("/category/:category", getServicesByCategory);
 // Protected routes
 groomingRouter.post("/service", protect, addService);
 groomingRouter.get("/provider", protect, getProviderServices);
+groomingRouter.put("/service/:id", protect, updateService);
 
 export default groomingRouter;

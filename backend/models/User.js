@@ -28,6 +28,7 @@ const userSchema = new mongoose.Schema(
     user_type: {
       type: String,
       enum: ['pet_owner', 'service_provider', 'admin'],
+      default: 'pet_owner',
       required: [true, 'User type is required'],
     },
     profile_picture: {
@@ -37,6 +38,10 @@ const userSchema = new mongoose.Schema(
     loyalty_points: {
       type: Number,
       default: 0,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
     },
   },
   {

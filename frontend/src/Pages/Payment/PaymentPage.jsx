@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import ServiceSummary from './ServiceSummary'
+import ServiceSummary from './AppointmentSummary'
 import PaymentForm from './PaymentForm'
 import OrderSummary from './OrderSummary'
 import { ArrowLeftIcon } from 'lucide-react'
+
 
 const PaymentPage = () => {
   const [paymentMethod, setPaymentMethod] = useState('credit')
@@ -33,29 +34,25 @@ const PaymentPage = () => {
     setPaymentMethod(method)
   }
   return (
-    <div className="bg-gray-50 min-h-screen w-full">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <button className="flex items-center text-gray-600 hover:text-gray-800 mb-6">
-          <ArrowLeftIcon className="h-5 w-5 mr-2" />
-          <span>Back to services</span>
-        </button>
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">
-          Complete Your Booking
-        </h1>
-        <div className="flex flex-col lg:flex-row gap-8">
-          <div className="lg:w-2/3">
-            <ServiceSummary service={serviceData} />
-            <PaymentForm
-              paymentMethod={paymentMethod}
-              onPaymentMethodChange={handlePaymentMethodChange}
-            />
-          </div>
-          <div className="lg:w-1/3">
-            <OrderSummary service={serviceData} paymentMethod={paymentMethod} />
-          </div>
-        </div>
-      </div>
+    <div className="p-6 bg-white shadow-md rounded-lg w-96">
+      <h2 className="text-lg font-bold mb-4">Payment Form</h2>
+      <form onSubmit={handleSubmit}>
+        <input type="text" name="appointment_id" placeholder="Appointment ID" onChange={handleChange} required className="w-full p-2 mb-2 border rounded" />
+        <input type="text" name="user_id" placeholder="User ID" onChange={handleChange} required className="w-full p-2 mb-2 border rounded" />
+        <input type="text" name="pet_id" placeholder="Pet ID" onChange={handleChange} required className="w-full p-2 mb-2 border rounded" />
+        <input type="text" name="service_id" placeholder="Service ID" onChange={handleChange} required className="w-full p-2 mb-2 border rounded" />
+        <input type="number" name="amount" placeholder="Amount" onChange={handleChange} required className="w-full p-2 mb-2 border rounded" />
+        
+        <h3 className="text-md font-semibold">Card Details</h3>
+        <input type="text" name="card_number" placeholder="Card Number" onChange={handleChange} required className="w-full p-2 mb-2 border rounded" />
+        <input type="text" name="card_holder_name" placeholder="Card Holder Name" onChange={handleChange} required className="w-full p-2 mb-2 border rounded" />
+        <input type="text" name="expiration_date" placeholder="Expiration Date (MM/YY)" onChange={handleChange} required className="w-full p-2 mb-2 border rounded" />
+        <input type="text" name="cvv" placeholder="CVV" onChange={handleChange} required className="w-full p-2 mb-2 border rounded" />
+
+        <button type="submit" className="w-full bg-blue-500 text-white py-2 mt-3 rounded">Submit Payment</button>
+      </form>
     </div>
-  )
-}
-export default PaymentPage
+  );
+};
+
+export default PaymentPage;

@@ -59,8 +59,8 @@ const groomingServiceSchema = new mongoose.Schema(
       required: [true, "Location is required"],
     },
     image: {
-      type: String,
-      default: "https://via.placeholder.com/150",
+      type: [String],
+      default: [],
     },
   },
   {

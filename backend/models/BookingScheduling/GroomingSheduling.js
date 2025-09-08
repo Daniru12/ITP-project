@@ -12,7 +12,7 @@ const GroomingSchema = new mongoose.Schema(
         },
         service_id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Service",
+            ref: "Services",
             required: [true, "Service is required"],
         },
         appointment_id: {

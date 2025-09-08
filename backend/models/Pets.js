@@ -30,8 +30,8 @@ const petSchema = new mongoose.Schema(
       required: [true, "Gender is required"],
     },
     pet_image: {
-      type: String,
-      default: "https://via.placeholder.com/150", // Default image
+      type: [String],
+      default: [], // Default image
     },
   },
   {

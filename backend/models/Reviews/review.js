@@ -9,7 +9,7 @@ const reviewSchema = new mongoose.Schema(
     },
     service: { 
       type: mongoose.Schema.Types.ObjectId, 
-      ref: "Service", 
+      ref: "Services", 
       required: true 
     },
     rating: { 
@@ -27,7 +27,7 @@ const reviewSchema = new mongoose.Schema(
       default: false 
     }
   },
-  { timestamps: true } // ✅ Adds `createdAt` and `updatedAt` automatically
+  { timestamps: true } 
 );
 
 const Review = mongoose.model("Review", reviewSchema);

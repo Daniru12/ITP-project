@@ -1,9 +1,10 @@
 import './App.css'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import Home from './Pages/Home/home'
 import LoginPage from './Pages/Login/login'
 import { Toaster } from 'react-hot-toast'
-import AdminDashboard from './Pages/Admin/adminDashboard'
+import AdminDashboard, { DashboardHome } from './Pages/Admin/adminDashboard'
 import RegisterPage from './Pages/Register/register'
 import NavBar from './Components/NavBar'
 import Profile from './Pages/PetOwner/profile'
@@ -14,15 +15,75 @@ import PetsManagement from './Pages/Admin/PetsManagement'
 import AddGrooming from './Pages/Providers/addGrooming'
 import AddService from './Pages/Providers/addService'
 import RegisterPet from './Pages/PetOwner/registerPet'
-import FAQ from './Pages/FAQ/faq'
+import CreateFaq from './Pages/FAQ/faq'
+import PetBookPage from './Pages/PetOwner/PetBookPage'
+import AdvertisingManagement from './Pages/Admin/advertiseManagement'
+import Form from './Pages/Admin/form'
+import AdminProductManagement from './Pages/Admin/AdminProductManagement'
+import PromoCodeManagement from './Pages/Admin/PromoCodeManagement'
+
 import PaymentPage from './Pages/Payment/PaymentPage'
+import ServiceSummary from './Pages/Payment/AppointmentSummary'
 import PaymentForm from './Pages/Payment/PaymentForm'
-import OrderSummary from './Pages/Payment/OrderSummary'
-import ServiceSummary from './Pages/Payment/ServiceSummary'
+import AppointmentSummary from './Pages/Payment/OrderSummary'
+
+import AddAdvertisementForm from './Pages/Providers/AddAdvertisementForm'
+import AdReviewComponent from './Pages/Providers/AdReviewComponent'
+import UpdateAdvertisementForm from './Pages/Admin/UpdateAdvertisementForm'
+
+
+import UpdateUser from './Pages/Admin/UpdateUser'
+import AdminUpdatePet from './Pages/Admin/UpdatePet'
+import AdminUpdateService from './Pages/Admin/UpdateService'
+
 import { PetCareBooking } from './Pages/Booking/Create/PetCareBooking'
-import Schedule from './Pages/Schedule/groomingSchedule'
+
 import ProductDetail from './Pages/productMarket/ProductDetail'
 import PetMarketplace from './Pages/productMarket/PetMarketplace' 
+import CreateProduct from './Pages/productMarket/CreateProduct'
+import UpdateProduct from './Pages/productMarket/UpdateProduct'
+import DeleteProduct from './Pages/productMarket/deleteProducts'
+import ProductManagement from './Pages/productMarket/ProductManagement'
+
+
+import AppointmentsList from './Pages/Appoiment/appoiments'
+import UpdateAppointment from './Pages/Appoiment/UpdateAppointment'
+import AppointmentCreate from './Pages/Appoiment/AppointmentCreate'
+import UserAppointments from './Pages/Appoiment/UserAppointments'
+import CreateReview from './Pages/Review/review'
+import AverageRating from './Components/AverageRatings'
+import FaqList from './Pages/FAQ/faqCategory'
+import FaqAdmin from './Pages/Admin/FaqAnswers'
+import FaqAdminTable from './Pages/FAQ/AdminfaqCategory'
+import AllReviews from './Pages/Review/reviewdisplay'
+import ServiceReviews from './Components/ServiceReviews';
+import ServiceReviewsList from './Components/ServiceReviewsList';
+import DisplayServices from './Pages/Home/displayServices'
+import ServiceOverview from './Pages/Home/serviceOverview'
+import AddBoarding from './Pages/Providers/addBoarding'
+import AddTraining from './Pages/Providers/addTraining'
+import UpdateSchedule from "./Pages/Schedule/PetGrromingScheduling/UpdateSchedule"
+import UpdatePet from './Pages/PetOwner/updatePet'
+import UpdateService from './Pages/Providers/updateService'
+import CreateBoedingScheduleForm from './Pages/Schedule/bordingschedule/CreateScheduleForm'
+import BoardingScheduleList from './Pages/Schedule/bordingschedule/ScheduleList';
+import UpdateBoedingScheduleForm from './Pages/Schedule/bordingschedule/UpdateBoedingScheduleForm'
+import CreateGroomingScheduleForm from './Pages/Schedule/PetGrromingScheduling/CreateGroomingScheduleForm'
+import GroomingScheduleList from "./Pages/Schedule/PetGrromingScheduling/GroomingScheduleList";
+import TrainingScheduleView from './Pages/Schedule/TrainingSchedule/showSchedule'
+import CreateTrainingSchedule from './Pages/Schedule/TrainingSchedule/createSchedule'
+import FaqManager from './Pages/FAQ/faqall'
+import VeiwOwnerOerders from './Pages/Orders/viewOwnerOrders'
+
+import PaymentReviewPage from './Pages/Payment/payemntreview'
+import EditProfile from './Pages/Providers/EditProfile'
+import EditProfilePetOwner from './Pages/PetOwner/EditProfile'
+import GeminiChatApp from './Components/GeminiAPI'
+import { ShoppingCart } from './Components/ShoppingCart';
+import CartPage from './Pages/productMarket/CartPage'
+import OrderConfirmPage from './Pages/productMarket/OrderConfirmPage'
+import OrdersPage from './Pages/productMarket/OrdersPage'
+import ProviderOrderManagement from './Pages/Orders/ProviderOrderManagement'
 
 
 
@@ -30,44 +91,111 @@ import PetMarketplace from './Pages/productMarket/PetMarketplace'
 const AppContent = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
-
+  const isHomePage = location.pathname === '/'; 
   return (
-    <>
+    <GoogleOAuthProvider clientId="758186960483-nfdtc5n6je1spmkfvu3764emq9qmo41q.apps.googleusercontent.com">
       <Toaster position="bottom-right" />
       {!isAdminRoute && <NavBar />}
       <div className={`${!isAdminRoute ? 'pt-15' : ''}`}>
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/login' element={<LoginPage />} />
           
+          <Route path='/login' element={<LoginPage />} />
+
           {/* Admin Dashboard with nested routes */}
           <Route path='/admin' element={<AdminDashboard />}>
+            <Route index element={<DashboardHome />} />
             <Route path="users" element={<UserManagement />} />
-            <Route path="products" element={<div className="p-6"><h2 className="text-2xl font-semibold mb-6">Products Management</h2></div>} />
-            <Route path="Services" element={<ServiceManagement/>}/>
-            <Route path="AllPets" element={<PetsManagement/>}/>
+            <Route path="users/update/:id" element={<UpdateUser />} />
+            <Route path="services/update/:id" element={<AdminUpdateService />} />
+            <Route path="pets/update/:id" element={<AdminUpdatePet />} />
+            <Route path="products" element={<AdminProductManagement />} />
+            <Route path="Services" element={<ServiceManagement />} />
+            <Route path="AllPets" element={<PetsManagement />} />
+            <Route path="faq" element={<FaqAdmin />} />
             <Route path="settings" element={<div className="p-6"><h2 className="text-2xl font-semibold mb-6">Admin Settings</h2></div>} />
+            <Route path="AdvertisingManagement" element={<AdvertisingManagement />} />
+            <Route path="promocodes" element={<PromoCodeManagement />} />
+            <Route path="Form" element={<Form />} />
           </Route>
-          
+
           <Route path='/register' element={<RegisterPage />} />
           <Route path='/booking' element={<PetCareBooking />} />
-          <Route path='/schedule' element={<Schedule />} />
-
+          
+          <Route path='/AppointmentLIST' element={<AppointmentsList />} />
+          <Route path='/Appointmentadd/:id' element={<AppointmentCreate />} />
+          <Route path='/Appointment' element={<UserAppointments />} />
+          <Route path="/appointments/update/:id" element={<UpdateAppointment />} />
+          <Route path="/Trainingscheduleadd" element={<CreateTrainingSchedule />} />
+          <Route path="/schedule/training" element={<TrainingScheduleView />} />
+          <Route path="/Groomingscheduleadd" element={<CreateGroomingScheduleForm />} />
+          <Route path="/update-groomingschedule/:id" element={<UpdateSchedule />} />
+          <Route path="/schedule/grooming" element={<GroomingScheduleList />} />
+          <Route path="/Bordingscheduleadd" element={<CreateBoedingScheduleForm />} />
+          <Route path="/schedule/boarding" element={<BoardingScheduleList />} />
+          <Route path="/scheduling/boarding/:id" element={<UpdateBoedingScheduleForm />} />
           <Route path='/profile' element={<Profile />} />
           <Route path='/provider-profile' element={<ProviderProfile />} />
+          <Route path='/edit-profile' element={<EditProfile />} />
+          <Route path='/edit-profile-petowner' element={<EditProfilePetOwner />} />
           <Route path='/add-grooming' element={<AddGrooming />} />
+          <Route path='/add-boarding' element={<AddBoarding />} />
+          <Route path='/add-training' element={<AddTraining />} />
           <Route path='/add-service' element={<AddService />} />
           <Route path='/register-pet' element={<RegisterPet />} />
-          <Route path='/faq' element={<FAQ />} />
+          <Route path='/Faq' element={<CreateFaq />} />  
+          <Route path='/FaqAll' element={<FaqManager />} /> 
           <Route path='/PaymentPage' element={<PaymentPage />} />
-          <Route path='/PaymentForm' element={<PaymentForm />} />
-          <Route path='/OrderSummary' element={<OrderSummary />} />
-          <Route path='/ServiceSummary' element={<ServiceSummary />} />
+          <Route path='/ServiceSummary' element={<ServiceSummary/>}/>
+
+          <Route path='/payment/:id' element={<PaymentForm/>}/>
+          <Route path='/payments' element={< PaymentReviewPage/>}/>
+         
+          <Route path='/AppointmentSummary' element={<AppointmentSummary/>}/>
+
+          <Route path='/AddAdvertisementForm' element={<AddAdvertisementForm/>}/>
+          <Route path="/UpdateAdvertisementForm/:adId" element={<UpdateAdvertisementForm />} />
+          <Route path='/AdReviewComponent' element={<AdReviewComponent/>}/>
+          <Route path='/update-ad/:id' element={<UpdateAdvertisementForm/>}/>
+        
+
           <Route path='/petmarketplace' element={<PetMarketplace />} /> 
+          <Route path='/create-product' element={<CreateProduct />} />
+          <Route path='/update-product/:id' element={<UpdateProduct />} />
+          <Route path='/delete-product' element={<DeleteProduct />} />
           <Route path="/product/:id" element={<ProductDetail />} />
+
+          <Route path="/product-management" element={<ProductManagement />} />
+          <Route path="/provider/order-management" element={<ProviderOrderManagement />} />
+
+          <Route path='/display-services' element={<DisplayServices />} />
+          <Route path='/service-overview/:id' element={<ServiceOverview />} />
+
+          <Route path='/reviews/:serviceId' element={<CreateReview />} /> 
+
+          <Route path='/edit-pet/:id' element={<UpdatePet />} />
+          <Route path='/update-service/:id' element={<UpdateService />} />
+          <Route path='/faqList' element={<FaqList />} />
+          
+          <Route path='/reviewdisplay' element={<AllReviews/>}/>
+          <Route path="/services/reviews/:serviceId" element={<ServiceReviews />} />
+          <Route path="/services/reviewlist/:serviceId" element={<ServiceReviewsList />} />
+          <Route path="/average/:serviceId" element={<AverageRating />} />
+          <Route path='/adminList' element={<FaqAdminTable/>}/>
+          <Route path='/ownerOrders' element={<VeiwOwnerOerders/>}/>
+          <Route path="/cart" element={<CartPage />} />
+
+          <Route path='/petbook/:petId' element={<PetBookPage />} />
+          <Route path="/order-confirm" element={<OrderConfirmPage />} />
+          <Route path="/orders" element={<OrdersPage />} />
+
+          <Route path="/my-orders" element={<OrdersPage />} />
+          <Route path="/provider/orders" element={<OrdersPage />} />
+          <Route path="/admin/orders" element={<OrdersPage />} />
         </Routes>
+        {isHomePage && <GeminiChatApp />}
       </div>
-    </>
+    </GoogleOAuthProvider>
   );
 };
 
@@ -76,7 +204,7 @@ function App() {
     <BrowserRouter>
       <AppContent />
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;

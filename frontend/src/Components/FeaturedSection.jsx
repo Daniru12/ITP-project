@@ -1,64 +1,69 @@
-import React from 'react';
-import { Star } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Star, MapPin, Clock, ArrowRight } from 'lucide-react';
+import axios from 'axios';
 
 const FeaturedSection = () => {
-  const featuredProviders = [
-    {
-      name: "Sarah's Pet Paradise",
-      image:
-        'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
-      service: 'Pet Boarding',
-      rating: 4.9,
-      reviews: 124,
-      price: '$45',
-      unit: 'night',
-    },
-    {
-      name: 'Glamour Paws',
-      image:
-        'https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
-      service: 'Pet Grooming',
-      rating: 4.8,
-      reviews: 89,
-      price: '$60',
-      unit: 'session',
-    },
-    {
-      name: 'Master Trainers',
-      image:
-        'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
-      service: 'Pet Training',
-      rating: 4.9,
-      reviews: 156,
-      price: '$75',
-      unit: 'session',
-    },
-  ];
+  // State to store featured providers and products
+  const [featuredProviders, setFeaturedProviders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchFeaturedProviders = async () => {
+      try {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        // Fetch all services to get provider details
+        const response = await axios.get(`${backendUrl}/api/users/services`);
+        
+        // Process and format the services data
+        const processedProviders = response.data.services
+          // Group services by provider
+          .reduce((acc, service) => {
+            const providerId = service.provider_id._id;
+            if (!acc[providerId]) {
+              acc[providerId] = {
+                id: providerId,
+                name: service.provider_id.full_name,
+                image: service.provider_id.profile_picture || 'https://img.freepik.com/free-vector/user-blue-gradient_78370-4692.jpg?t=st=1745931716~exp=1745935316~hmac=1020c145ddd9dffabf79f1a03646eb0447025bfcaed911167f4b616add4137ba&w=740',
+                service: service.service_category.replace('_', ' '),
+                unit: service.service_category === 'pet_boarding' ? 'night' : 'session',
+                location: service.location,
+                rating: 4.5, // You can add actual rating logic here
+              };
+            }
+            return acc;
+          }, {});
+
+        // Convert to array and take first 3 providers
+        setFeaturedProviders(Object.values(processedProviders).slice(0, 3));
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching featured providers:', error);
+        setError('Failed to load featured providers');
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedProviders();
+  }, []);
 
   const featuredProducts = [
     {
       name: 'Premium Dog Food',
       image:
         'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
-      rating: 4.7,
-      reviews: 213,
-      price: '$39.99',
     },
     {
       name: 'Interactive Cat Toy',
       image:
         'https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
-      rating: 4.6,
-      reviews: 87,
-      price: '$24.99',
+
     },
     {
       name: 'Cozy Pet Bed',
       image:
         'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
-      rating: 4.8,
-      reviews: 142,
-      price: '$59.99',
+
     },
   ];
 
@@ -69,54 +74,81 @@ const FeaturedSection = () => {
         <div className="mb-16">
           <div className="flex justify-between items-end mb-8">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900">
+              <h2 className="text-3xl font-bold" style={{ color: 'var(--color-accent)' }}>
                 Featured Service Providers
               </h2>
               <p className="mt-2 text-gray-600">
                 Top-rated professionals in your area
               </p>
             </div>
-            <a href="#" className="text-blue-600 hover:text-blue-800 font-medium">
-              View all
-            </a>
           </div>
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {featuredProviders.map((provider, index) => (
-              <div
-                key={index}
-                className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300"
-              >
-                <div className="p-6">
-                  <div className="flex items-center">
+          
+          {loading ? (
+            // Loading state
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="animate-pulse bg-gray-100 rounded-lg h-48"></div>
+              ))}
+            </div>
+          ) : error ? (
+            // Error state
+            <div className="text-center text-red-500 py-8">
+              {error}
+            </div>
+          ) : (
+            // Display providers
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {featuredProviders.map((provider, index) => (
+                <div
+                  key={provider.id}
+                  className="group bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                >
+                  {/* Card Header with Image */}
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
                     <img
                       src={provider.image}
                       alt={provider.name}
-                      className="h-16 w-16 rounded-full object-cover"
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                     />
-                    <div className="ml-4">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        {provider.name}
-                      </h3>
-                      <p className="text-blue-600">{provider.service}</p>
+                    {/* Rating Badge */}
+                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1 z-20">
+                      <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                      <span className="font-medium">{provider.rating}</span>
                     </div>
                   </div>
-                  <div className="mt-4 flex items-center">
-                    <Star size={18} className="text-yellow-400 fill-current" />
-                    <span className="ml-1 text-gray-700 font-medium">{provider.rating}</span>
-                    <span className="mx-2 text-gray-500">•</span>
-                    <span className="text-gray-500">{provider.reviews} reviews</span>
-                  </div>
-                  <div className="mt-4 flex justify-between items-center">
-                    <span className="text-lg font-bold text-gray-900">{provider.price}</span>
-                    <span className="text-gray-600">/{provider.unit}</span>
-                    <a href="#" className="bg-blue-100 text-blue-700 hover:bg-blue-200 px-4 py-2 rounded-md text-sm font-medium">
-                      Book Now
-                    </a>
+
+                  {/* Card Content */}
+                  <div className="p-6">
+                    {/* Provider Info */}
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="text-xl font-semibold text-gray-800 group-hover:text-primary transition-colors">
+                          {provider.name}
+                        </h3>
+                        <p className="text-accent font-medium mt-1 capitalize">
+                          {provider.service}
+                        </p>
+                      </div>
+
+                      {/* Location and Details */}
+                      <div className="space-y-2">
+                        <div className="flex items-center text-gray-600">
+                          <MapPin className="w-4 h-4 mr-2" />
+                          <span className="text-sm">{provider.location}</span>
+                        </div>
+                        <div className="flex items-center text-gray-600">
+                          <Clock className="w-4 h-4 mr-2" />
+                          <span className="text-sm">Available per {provider.unit}</span>
+                        </div>
+                      </div>
+
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>

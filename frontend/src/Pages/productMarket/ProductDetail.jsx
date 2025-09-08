@@ -1,309 +1,348 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import axios from 'axios'
+import { toast } from 'react-hot-toast'
 import {
   StarIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
   ArrowLeftIcon,
   ShoppingCartIcon,
-  HeartIcon,
+  Truck,
+  Shield,
+  Package,
+  BadgeCheck,
+  Zap,
+  MinusIcon,
+  PlusIcon
 } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 export const ProductDetail = () => {
   const { id } = useParams()
-  const [selectedImage, setSelectedImage] = useState(0)
   const [selectedTab, setSelectedTab] = useState('description')
+  const [product, setProduct] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [quantity, setQuantity] = useState(1)
+  const [isAddingToCart, setIsAddingToCart] = useState(false)
 
-  // Mock product data - in a real app, fetch this based on the ID
-  const product = {
-    id: 1,
-    name: 'Premium Dog Food',
-    price: 29.99,
-    images: [
-      'https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1602584386319-fa8eb4361c2c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    ],
-    description: `High-quality nutrition for your adult dog with real chicken as the first ingredient.
-    Key Benefits:
-    • Made with real chicken as the first ingredient
-    • Contains essential vitamins and minerals
-    • Supports healthy digestion
-    • Promotes strong muscles
-    • Suitable for all adult dog breeds
-    Ingredients:
-    Chicken, Chicken Meal, Brown Rice, Barley, Oatmeal, Chicken Fat, Natural Flavor, Dried Beet Pulp...`,
-    rating: 4.8,
-    category: 'food',
-    specifications: [
-      {
-        name: 'Weight',
-        value: '15 kg',
-      },
-      {
-        name: 'Age Range',
-        value: 'Adult',
-      },
-      {
-        name: 'Type',
-        value: 'Dry Food',
-      },
-      {
-        name: 'Main Ingredient',
-        value: 'Chicken',
-      },
-      {
-        name: 'Special Diet',
-        value: 'All Natural',
-      },
-    ],
-    reviews: [
-      {
-        id: 1,
-        user: 'John D.',
-        rating: 5,
-        date: '2023-10-15',
-        comment: 'My dog loves this food! His coat has never looked better.',
-        avatar:
-          'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=32&h=32&q=80',
-      },
-      {
-        id: 2,
-        user: 'Sarah M.',
-        rating: 4,
-        date: '2023-10-10',
-        comment:
-          'Good quality food, but a bit pricey. Still worth it for the quality.',
-        avatar:
-          'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=32&h=32&q=80',
-      },
-      {
-        id: 3,
-        user: 'Mike R.',
-        rating: 5,
-        date: '2023-10-05',
-        comment: 'Excellent product! My picky eater actually enjoys this food.',
-        avatar:
-          'https://images.unsplash.com/photo-1527980965255-d3b416303d12?ixlib=rb-4.0.3&auto=format&fit=crop&w=32&h=32&q=80',
-      },
-    ],
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (!id) {
+        setError('Invalid product ID');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+        const response = await axios.get(`${backendUrl}/api/products/details/${id}`);
+        
+        if (!response.data) {
+          throw new Error('Product not found');
+        }
+        
+        setProduct(response.data);
+      } catch (err) {
+        console.error('Error fetching product:', err);
+        setError(err.response?.data?.message || 'Failed to load product details');
+        toast.error('Failed to load product details');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  const handleQuantityChange = (newQuantity) => {
+    // Ensure quantity is within valid range
+    if (newQuantity >= 1 && newQuantity <= product.quantity) {
+      setQuantity(newQuantity)
+    }
   }
 
-  const nextImage = () => {
-    setSelectedImage((prev) => (prev + 1) % product.images.length)
+  const handleAddToCart = async () => {
+    try {
+      setIsAddingToCart(true)
+      const token = localStorage.getItem('token')
+      const backendUrl = import.meta.env.VITE_BACKEND_URL
+
+      await axios.post(
+        `${backendUrl}/api/cart/add`,
+        {
+          productId: product._id,
+          quantity: quantity
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      )
+
+      toast.success('Added to cart successfully')
+    } catch (error) {
+      console.error('Error adding to cart:', error)
+      toast.error(error.response?.data?.message || 'Failed to add to cart')
+    } finally {
+      setIsAddingToCart(false)
+    }
   }
 
-  const prevImage = () => {
-    setSelectedImage(
-      (prev) => (prev - 1 + product.images.length) % product.images.length,
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
+
+  if (error || !product) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-red-500 mb-4">Error</h2>
+          <p className="text-gray-600">{error || 'Product not found'}</p>
+          <Link
+            to="/petMarketplace"
+            className="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          >
+            Back to Marketplace
+          </Link>
+        </div>
+      </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[var(--color-white)]">
       <main className="container mx-auto px-4 py-6">
-        <Link
-          to="/"
-          className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-6"
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          <ArrowLeftIcon className="w-4 h-4 mr-2" />
-          Back to Products
-        </Link>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded-xl shadow-sm">
-          {/* Product Images */}
-          <div className="space-y-4">
-            <div className="relative aspect-square overflow-hidden rounded-lg">
-              <img
-                src={product.images[selectedImage]}
-                alt={product.name}
-                className="w-full h-full object-cover"
-              />
-              <button
-                onClick={prevImage}
-                className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 hover:bg-white shadow-md"
-              >
-                <ChevronLeftIcon className="w-5 h-5" />
-              </button>
-              <button
-                onClick={nextImage}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 hover:bg-white shadow-md"
-              >
-                <ChevronRightIcon className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="flex space-x-2">
-              {product.images.map((img, idx) => (
+          <Link
+            to="/petMarketplace"
+            className="inline-flex items-center text-[var(--color-primary)] hover:text-[var(--color-accent)] mb-6"
+          >
+            <ArrowLeftIcon className="w-4 h-4 mr-2" />
+            Back to Products
+          </Link>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Product Image Section */}
+            <motion.div 
+              className="space-y-4"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <div className="relative aspect-square overflow-hidden rounded-xl">
+                <img
+                  src={product.image?.[0] || 'https://via.placeholder.com/300x200?text=No+Image'}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                />
+                {product.quantity < 5 && (
+                  <div className="absolute top-4 right-4 bg-[var(--color-accent)] text-[var(--text-on-accent)] px-3 py-1 rounded-full text-sm">
+                    Only {product.quantity} left!
+                  </div>
+                )}
+              </div>
+
+              {/* Thumbnail Gallery */}
+              {product.image && product.image.length > 1 && (
+                <motion.div 
+                  className="grid grid-cols-5 gap-2"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  {product.image.map((img, index) => (
+                    <div 
+                      key={index} 
+                      className="aspect-square rounded-lg overflow-hidden border border-[var(--color-primary-light)] hover:border-[var(--color-primary)] transition-colors cursor-pointer"
+                    >
+                      <img
+                        src={img}
+                        alt={`${product.name} - ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </motion.div>
+              )}
+            </motion.div>
+
+            {/* Product Info Section */}
+            <motion.div 
+              className="space-y-6"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <div>
+                <h1 className="text-3xl font-bold text-[var(--text-on-secondary)] mb-2">
+                  {product.name}
+                </h1>
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="flex">
+                    {[...Array(5)].map((_, i) => (
+                      <StarIcon
+                        key={i}
+                        className={`w-5 h-5 ${
+                          i < Math.floor(4.5)
+                            ? 'text-[var(--color-secondary)]'
+                            : i < 4.5
+                            ? 'text-[var(--color-secondary)]'
+                            : 'text-[var(--text-on-secondary)] opacity-20'
+                        }`}
+                        fill={i < Math.floor(4.5) ? 'currentColor' : i < 4.5 ? 'url(#half)' : 'none'}
+                      />
+                    ))}
+                    <defs>
+                      <linearGradient id="half">
+                        <stop offset="50%" stopColor="currentColor" />
+                        <stop offset="50%" stopColor="transparent" />
+                      </linearGradient>
+                    </defs>
+                  </div>
+                  <span className="text-sm text-[var(--text-on-secondary)] opacity-70">
+                    (4.5 rating)
+                  </span>
+                </div>
+
+                <div className="text-3xl font-bold text-[var(--color-primary)] mb-6">
+                  Rs.{product.price}
+                </div>
+
+                {/* Product Features */}
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="flex items-center space-x-2 text-[var(--text-on-secondary)] opacity-70">
+                    <Truck className="w-5 h-5 text-[var(--color-primary)]" />
+                    <span>Fast Delivery</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-[var(--text-on-secondary)] opacity-70">
+                    <Shield className="w-5 h-5 text-[var(--color-primary)]" />
+                    <span>Quality Assured</span>
+                  </div>
+                </div>
+
+                {/* Quantity Selector */}
+                <div className="flex items-center space-x-4 mb-6">
+                  <span className="text-[var(--text-on-secondary)]">Quantity:</span>
+                  <div className="flex items-center border border-[var(--color-primary-light)] rounded-lg">
+                    <button
+                      onClick={() => handleQuantityChange(quantity - 1)}
+                      disabled={quantity <= 1}
+                      className="p-2 hover:bg-[var(--color-primary-light)] disabled:opacity-50 text-[var(--text-on-secondary)]"
+                    >
+                      <MinusIcon className="w-4 h-4" />
+                    </button>
+                    <input
+                      type="number"
+                      min="1"
+                      max={product.quantity}
+                      value={quantity}
+                      onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
+                      className="w-16 text-center border-x border-[var(--color-primary-light)] py-1 focus:outline-none"
+                    />
+                    <button
+                      onClick={() => handleQuantityChange(quantity + 1)}
+                      disabled={quantity >= product.quantity}
+                      className="p-2 hover:bg-[var(--color-primary-light)] disabled:opacity-50 text-[var(--text-on-secondary)]"
+                    >
+                      <PlusIcon className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <span className="text-sm text-[var(--text-on-secondary)] opacity-70">
+                    {product.quantity} available
+                  </span>
+                </div>
+
+                {/* Add to Cart Button */}
+                <button 
+                  onClick={handleAddToCart}
+                  disabled={isAddingToCart || quantity < 1}
+                  className="w-full py-3 px-6 bg-[var(--color-primary)] text-[var(--text-on-primary)] rounded-lg
+                    flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed
+                    hover:bg-[var(--color-accent)] transition-colors"
+                >
+                  <ShoppingCartIcon className="w-5 h-5" />
+                  <span>{isAddingToCart ? 'Adding...' : 'Add to Cart'}</span>
+                </button>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Product Details Tabs */}
+          <div className="mt-8">
+            <div className="border-b border-[var(--color-primary-light)]">
+              <div className="flex space-x-8">
                 <button
-                  key={idx}
-                  onClick={() => setSelectedImage(idx)}
-                  className={`relative aspect-square w-20 rounded-lg overflow-hidden ${
-                    selectedImage === idx
-                      ? 'ring-2 ring-blue-500'
-                      : 'hover:opacity-75'
+                  onClick={() => setSelectedTab('description')}
+                  className={`px-4 py-3 text-sm font-medium border-b-2 ${
+                    selectedTab === 'description'
+                      ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
+                      : 'border-transparent text-[var(--text-on-secondary)] hover:text-[var(--color-primary)]'
                   }`}
                 >
-                  <img
-                    src={img}
-                    alt=""
-                    className="w-full h-full object-cover"
-                  />
+                  Description
                 </button>
-              ))}
-            </div>
-          </div>
-          {/* Product Info */}
-          <div className="space-y-6">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                {product.name}
-              </h1>
-              <div className="flex items-center space-x-2">
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <StarIcon
-                      key={i}
-                      className={`w-5 h-5 ${
-                        i < product.rating
-                          ? 'text-yellow-400'
-                          : 'text-gray-300'
-                      }`}
-                      fill={i < product.rating ? 'currentColor' : 'none'}
-                    />
-                  ))}
-                </div>
-                <span className="text-sm text-gray-600">
-                  ({product.rating} rating)
-                </span>
-              </div>
-            </div>
-            <div className="text-3xl font-bold text-gray-900">
-              ${product.price}
-            </div>
-            <div className="space-y-4">
-              <button className="w-full py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center justify-center space-x-2">
-                <ShoppingCartIcon className="w-5 h-5" />
-                <span>Add to Cart</span>
-              </button>
-              <button className="w-full py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center justify-center space-x-2">
-                <HeartIcon className="w-5 h-5" />
-                <span>Add to Wishlist</span>
-              </button>
-            </div>
-          </div>
-        </div>
-        {/* Tabs */}
-        <div className="mt-8 bg-white rounded-xl shadow-sm overflow-hidden">
-          <div className="border-b border-gray-200">
-            <div className="flex space-x-8">
-              <button
-                onClick={() => setSelectedTab('description')}
-                className={`px-4 py-3 text-sm font-medium border-b-2 ${
-                  selectedTab === 'description'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                Description
-              </button>
-              <button
-                onClick={() => setSelectedTab('specifications')}
-                className={`px-4 py-3 text-sm font-medium border-b-2 ${
-                  selectedTab === 'specifications'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                Specifications
-              </button>
-              <button
-                onClick={() => setSelectedTab('reviews')}
-                className={`px-4 py-3 text-sm font-medium border-b-2 ${
-                  selectedTab === 'reviews'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                Reviews
-              </button>
-            </div>
-          </div>
-          <div className="p-6">
-            {selectedTab === 'description' && (
-              <div>
-                <h2 className="text-lg font-bold text-gray-900 mb-4">
-                  Product Description
-                </h2>
-                <p className="text-gray-700 whitespace-pre-line">
-                  {product.description}
-                </p>
-              </div>
-            )}
-            {selectedTab === 'specifications' && (
-              <div>
-                <h2 className="text-lg font-bold text-gray-900 mb-4">
+                <button
+                  onClick={() => setSelectedTab('specifications')}
+                  className={`px-4 py-3 text-sm font-medium border-b-2 ${
+                    selectedTab === 'specifications'
+                      ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
+                      : 'border-transparent text-[var(--text-on-secondary)] hover:text-[var(--color-primary)]'
+                  }`}
+                >
                   Specifications
-                </h2>
-                <ul className="divide-y divide-gray-200">
-                  {product.specifications.map((spec, idx) => (
-                    <li
-                      key={idx}
-                      className="py-3 flex justify-between text-gray-700"
-                    >
-                      <span>{spec.name}</span>
-                      <span>{spec.value}</span>
-                    </li>
-                  ))}
-                </ul>
+                </button>
               </div>
-            )}
-            {selectedTab === 'reviews' && (
-              <div>
-                <h2 className="text-lg font-bold text-gray-900 mb-4">
-                  Customer Reviews
-                </h2>
-                <ul className="space-y-6">
-                  {product.reviews.map((review) => (
-                    <li key={review.id} className="flex space-x-4">
-                      <img
-                        src={review.avatar}
-                        alt={review.user}
-                        className="w-10 h-10 rounded-full"
-                      />
-                      <div>
-                        <div className="flex items-center space-x-2">
-                          <div className="text-sm font-bold text-gray-900">
-                            {review.user}
-                          </div>
-                          <div className="text-sm text-gray-600">
-                            {review.date}
-                          </div>
-                        </div>
-                        <div className="flex items-center mt-1">
-                          {[...Array(5)].map((_, i) => (
-                            <StarIcon
-                              key={i}
-                              className={`w-4 h-4 ${
-                                i < review.rating
-                                  ? 'text-yellow-400'
-                                  : 'text-gray-300'
-                              }`}
-                              fill={i < review.rating ? 'currentColor' : 'none'}
-                            />
-                          ))}
-                        </div>
-                        <p className="mt-2 text-sm text-gray-700">
-                          {review.comment}
-                        </p>
-                      </div>
+            </div>
+            <div className="py-6">
+              {selectedTab === 'description' && (
+                <div>
+                  <h2 className="text-lg font-bold text-[var(--text-on-secondary)] mb-4">
+                    Product Description
+                  </h2>
+                  <p className="text-[var(--text-on-secondary)] opacity-70 whitespace-pre-line">
+                    {product.description}
+                  </p>
+                </div>
+              )}
+              {selectedTab === 'specifications' && (
+                <div>
+                  <h2 className="text-lg font-bold text-[var(--text-on-secondary)] mb-4">
+                    Specifications
+                  </h2>
+                  <ul className="divide-y divide-[var(--color-primary-light)]">
+                    <li className="py-3 flex justify-between text-[var(--text-on-secondary)] opacity-70">
+                      <span>Category</span>
+                      <span>{product.category}</span>
                     </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+                    <li className="py-3 flex justify-between text-[var(--text-on-secondary)] opacity-70">
+                      <span>Quantity Available</span>
+                      <span>{product.quantity}</span>
+                    </li>
+                    {product.specifications?.map((spec, idx) => (
+                      <li
+                        key={idx}
+                        className="py-3 flex justify-between text-[var(--text-on-secondary)] opacity-70"
+                      >
+                        <span>{spec.name}</span>
+                        <span>{spec.value}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        </motion.div>
       </main>
     </div>
   )
 }
+
 export default ProductDetail
